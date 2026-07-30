@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+.next/
+out/
+dist/
+build/
+
+# Environment — NEVER commit real secrets (only .env.example is tracked)
+.env
+.env.*
+!.env.example
+
+# Test / coverage
+coverage/
+playwright-report/
+test-results/
+.nyc_output/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Vercel / provider caches
+.vercel/
+.turbo/
+
+# Local scratch
+*.local
+tmp/
+
+# Claude Code local (user-owned) settings — keep out of VCS
+.claude/settings.local.json

@@ -1,0 +1,22 @@
+# Normalize line endings — enforce LF in the repo
+* text=auto eol=lf
+
+# Windows-specific scripts keep CRLF
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# Binary assets — never diff/normalize
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.mp4 binary
+
+# Lockfile: keep merge conflicts explicit
+pnpm-lock.yaml -diff
