@@ -1,26 +1,29 @@
 # NEXT_PHASE
 
 ## NEXT_PHASE_NAME
-`WAVE_02_FOUNDATION`
+`WAVE_03_DATA_AUTH_STORAGE`
 
 ## WHY_NOW
-Architecture, governance, data model, threat model, and ADRs are captured and review-ready. The next value step is a runnable foundation that enforces those boundaries in code.
+The application foundation, strict typing, runtime env-validation boundary, and architecture enforcement are proven locally (Wave 02: typecheck/lint/test/arch/build all green). The next value step is a secure persistent backend and the Owner-Admin identity boundary.
 
 ## PRECONDITIONS
-- Wave 01 PR reviewed/merged by Owner (or Owner approves proceeding on the feature branch).
-- Latest stable versions of Next.js/React/Tailwind verified at implementation time (do not hardcode from memory).
+- Owner reviews the Wave 02 branch/PR.
+- Neon **development** project connection prepared securely (never pasted into chat or committed).
+- Supabase **development** project prepared securely (URL + keys as env, not in VCS).
+- Exact Wave 03 scope approved.
 
 ## ALLOWED_ACTIONS
-- `pnpm` bootstrap of Next.js (App Router, strict TS), Tailwind + design tokens, shadcn/ui init.
-- ESLint + import-boundary rules + dependency-cruiser + `tests/architecture` harness.
-- `src/config/env.ts` env validation (server/client split, fail-closed).
-- Base public/admin layout skeletons. Local production build proof.
+- Neon schema + Drizzle ORM/Kit models and migrations (per `docs/architecture/data-model.md`).
+- Repository implementations behind application ports; transaction helper.
+- Supabase Auth (GitHub OAuth) SSR integration + admin authorization (allow-list + `app_users`).
+- Supabase Storage bucket policies (public/private) + verification script.
+- Audit-log foundation; integration tests against a dev/preview database.
 
 ## FORBIDDEN_ACTIONS
-- No data/auth/storage integration (Wave 03). No external service provisioning. No secrets. No deployment. No DNS.
+- No production DB migration; no `db push` on shared/prod. No prod secrets in preview. No deployment/DNS mutation. No GitHub Actions (Wave 07).
 
 ## EXPECTED_VERDICT
-`FOUNDATION_LOCAL_PASS`
+`DATA_AUTH_LOCAL_PASS_WITH_TARGET_PROOF_PENDING`
 
 ## WHAT_IT_UNLOCKS
-A typed, lint-clean, architecture-enforced base on which data/auth/storage and features can be built without vibe coding.
+A secure persistent backend and Owner-Admin identity boundary for the Public Portfolio (Wave 04) and Admin CMS (Wave 05).

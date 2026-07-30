@@ -7,6 +7,9 @@ node_modules/
 out/
 dist/
 build/
+*.tsbuildinfo
+next-env.d.ts
+.pnp.*
 
 # Environment — NEVER commit real secrets (only .env.example is tracked)
 .env

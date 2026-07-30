@@ -29,10 +29,19 @@ Visitor-only public users · OWNER_ADMIN only (EDITOR schema-ready, UI off) · a
 
 Feature-first modular monolith, Clean Architecture layers. Neon = single primary DB. Supabase = Auth + Storage only. Vercel = runtime + CD authority. GitHub Actions = CI authority. See `docs/architecture/`.
 
+## Wave 02 foundation (landed on branch `feat/wave-02-foundation`)
+
+- Bootstrap mode: **MODE A** (isolated `create-next-app` scaffold outside repo → configs adapted in-repo; scaffold deleted).
+- Resolved stable versions (pinned via `pnpm-lock.yaml`): next 16.2.12 · react/react-dom 19.2.4 · typescript 5.9.3 · eslint 9.39.5 · eslint-config-next 16.2.12 · tailwindcss 4.3.3 · zod 4.4.3 · vitest 4.1.10. (Registry offered newer majors — TS 7 / ESLint 10 / React 19.2.8 — intentionally not used; the generator's compatible set was chosen.)
+- Architecture enforcement: ESLint import-boundary rules (`eslint.config.mjs`) + `tests/architecture/dependency-rules.test.ts` (real graph scan + fixture). dependency-cruiser deferred (not needed).
+- Local validation GREEN: typecheck ✅ · lint ✅ · vitest 7/7 ✅ · test:architecture 3/3 ✅ · production build ✅ (routes `/`, `/_not-found`, `/admin` static).
+
 ## Current capability levels
 
-All modules: **L0_NOT_PRESENT** (source not yet created). Wave 01 delivers design docs only (no runtime capability).
+- Application foundation: **L3_OFFLINE_PROVEN** · Design system foundation: **L3** · Architecture boundary enforcement: **L3**.
+- Public content: **L1** (skeleton only) · Admin content operations: **L1** (shell, no auth).
+- Database / Auth / Storage / CI / Preview / Production: **L0_NOT_PRESENT**.
 
 ## Environment state
 
-No external services connected. No secrets provisioned. `.env.example` is a placeholder template only.
+No external services connected. No secrets provisioned. `.env.example` is a placeholder template only. Wave 02 builds and runs with no populated `.env`.

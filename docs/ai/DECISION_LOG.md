@@ -36,6 +36,21 @@
 - **Trade-offs:** Avoids double-proxy/cache pitfalls and false "WAF protects us" claims.
 - **Evidence/owner:** Prompt contract + ADR-0005.
 
+## D-008 — Wave 02 stack versions chosen for compatibility, not "latest"
+- **Decision:** Use the version set produced by the official `create-next-app` generator (next 16.2.12, react 19.2.4, typescript 5.9.x, eslint 9.x) rather than the registry `latest` majors (TS 7, ESLint 10, React 19.2.8).
+- **Alternatives:** Hand-pick registry `latest` for every package.
+- **Trade-offs:** Generator set is a proven-compatible graph → reliable green build; slightly behind bleeding edge. Upgrades happen deliberately later with validation.
+- **Evidence/owner:** Wave 02 execution; `pnpm build`/`typecheck`/`lint` PASS. Pinned via `pnpm-lock.yaml`.
+
+## D-009 — Architecture enforcement via ESLint boundaries + Vitest graph test
+- **Decision:** Enforce Clean Architecture with ESLint `no-restricted-imports` layer zones + a Vitest architecture test that scans the real import graph (with a fixture proving the detector works). dependency-cruiser deferred.
+- **Trade-offs:** Fewer dependencies, deterministic and readable failures; slightly less exhaustive than a full dep-cruiser ruleset (revisit if modules grow complex).
+- **Evidence/owner:** `tests/architecture/dependency-rules.test.ts` 3/3 PASS.
+
+## D-010 — Next 16 removed the `eslint` build option
+- **Decision:** `next.config.ts` keeps only `reactStrictMode`; lint is a standalone `pnpm lint` gate (Next 16 no longer runs ESLint during `next build`).
+- **Evidence/owner:** typecheck error `TS2353 'eslint' does not exist in type 'NextConfig'` → removed; typecheck/build PASS.
+
 ## D-007 — Git workflow: per-Wave feature branch + PR; bootstrap main once
 - **Decision:** Reconcile prompt §X (Wave 09 land) with Owner's per-Wave push policy → adopt per-Wave branch+PR+CI. Empty remote → one bootstrap commit to `main`, then PR-only.
 - **Trade-offs:** Incremental CI feedback per Wave (better) vs one big land. AI never auto-merges; Owner merges.
