@@ -6,8 +6,10 @@ export default function AdminDashboardPage() {
         Placeholder shell. Authentication, content operations and CRUD are added in
         later Waves. No admin functionality is active yet.
       </p>
-      <div className="mt-8 rounded-lg border border-warning/40 bg-warning/10 px-4 py-3 text-sm text-warning">
-        Not protected yet — route authorization is implemented in Wave 03.
+      <div className="mt-8 rounded-lg border border-info/40 bg-info/10 px-4 py-3 text-sm text-info">
+        Protected by middleware authentication + server-side authorization
+        (allow-list + active owner_admin). Live sign-in requires a configured
+        Supabase project — target proof pending.
       </div>
     </div>
   );

@@ -36,6 +36,15 @@
 - **Trade-offs:** Avoids double-proxy/cache pitfalls and false "WAF protects us" claims.
 - **Evidence/owner:** Prompt contract + ADR-0005.
 
+## D-013 — Wave 03 auth architecture (composition root + server-only)
+- **Decision:** Presentation reaches persistence/auth only through a **composition root** (`src/composition/*`), never a concrete repository. Server-only secrets isolated in `env.server.ts` (`server-only`); DB/auth adapters import `server-only`. Neon uses the **neon-http** driver (lazy, no build-time connection). Migrations are **generated offline**; `db:migrate` is human-approved and never auto-run against prod.
+- **Arch rule refinement:** presentation boundary test forbids importing the **database/repository** specifically (scenario 6), allowing standard Next+Supabase auth-client usage at the UI boundary.
+- **Evidence/owner:** typecheck/lint/test(17)/arch(6)/build green; `src/composition/identity.ts`.
+
+## D-014 — Wave 03 branch stacked on Wave 02 (Owner-authorized)
+- **Decision:** `gh` absent → Owner authorized stacking `feat/wave-03-data-auth-storage` on `feat/wave-02-foundation` (explicit Git-strategy change per Wave 02B §S). When Wave 02 PR merges, Wave 03 follows.
+- **Evidence/owner:** OWNER_CONFIRMED (2026-07-30).
+
 ## D-011 — Selective skill adoption (Wave 02B)
 - **Decision:** Treat the 3 Owner README sources as advisory. Adopt only tool-neutral rules that align with project authority: strict TS inference / `z.infer` (mattpocock MP-08 → CLAUDE §8), selective skill activation + plan-then-act (cline/kilo), reinforce memory/exact-path/self-healing (already present). Full matrix in `docs/skills/`.
 - **Rejected:** numbered folders (ADR-0001), Kilo `--auto` full-autonomy, README plugin/CLI auto-installs.

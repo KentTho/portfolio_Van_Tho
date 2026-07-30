@@ -1,25 +1,22 @@
 # CURRENT_SCOPE
 
 ## CURRENT_WAVE
-`WAVE_02B_SKILL_INTAKE_AND_BRANCH_RECONCILIATION` — on `feat/wave-02-foundation` (adds skill governance + ROADMAP + strengthened arch test + safe env check to the Wave 02 branch). Next: `WAVE_03_DATA_AUTH_STORAGE`.
-
-## Wave 02B allowed paths
-`CLAUDE.md`, `ROADMAP.md`, `docs/skills/**`, `docs/ai/**`, `tests/architecture/**`, `scripts/check-env.mjs`, `package.json` (script only). NOT modifying: `docs/architecture/**`, `docs/security/**`, `src/**` feature code, env files, README sources (kept untracked).
+`WAVE_03_DATA_AUTH_STORAGE` — delivered locally on `feat/wave-03-data-auth-storage` (stacked on `feat/wave-02-foundation`). Next: `WAVE_04_PUBLIC_EXPERIENCE`.
 
 ## Branch
-`feat/wave-02-foundation` (from `main` @ `8b487c7`). PR-only into `main`; no direct main pushes; AI does not merge.
+`feat/wave-03-data-auth-storage` (from `feat/wave-02-foundation` @ `a6d2a0d`, Owner-authorized stack). PR-only into `main`; AI does not merge; no direct main pushes.
 
-## Wave 02 allowed paths (delivered)
-`package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `tsconfig.json`, `next.config.ts`, `postcss.config.mjs`, `eslint.config.mjs`, `components.json`, `vitest.config.ts`, `.gitignore` (merge), `src/**`, `tests/**`, `docs/ai/**`.
+## Wave 03 allowed paths (delivered)
+`package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `drizzle.config.ts`, `src/config/env.ts` + `env.server.ts` + `permissions.ts`, `src/infrastructure/**`, `src/modules/identity/**`, `src/composition/**`, `src/middleware.ts`, `src/app/{admin,admin-login,auth}/**`, `src/components/layout/admin-shell.tsx`, `supabase/migrations/storage-policies.sql`, `tests/**`, `ROADMAP.md`, `docs/ai/**`.
 
 ## Protected paths (unchanged this Wave)
-`.github/**`, `supabase/**`, `infra/**`, `docs/architecture/**`, `docs/security/**`, Git history, `main`, production config, real env files, `.claude/settings.local.json`.
+`.github/**`, `infra/**`, `docs/architecture/**`, `docs/security/**`, `docs/skills/**`, Git history, `main`, production config, real env files (`.env.local`), README sources, `.claude/settings.local.json`.
 
 ## Out of scope this Wave (deferred)
-Neon/Drizzle, Supabase Auth/Storage, admin/project/contact CRUD, Turnstile, email, analytics, Sentry, Cloudflare, Vercel deploy config, GitHub Actions, i18n routing, real personal content.
+Live Neon migration apply, live Supabase OAuth end-to-end, storage bucket creation, owner seed (all = target proof). Project/article/contact CRUD (Wave 05), public pages/i18n/SEO (Wave 04), Turnstile/email/analytics (Wave 06), GitHub Actions (Wave 07).
 
 ## Validation plan (executed)
-`pnpm typecheck` ✅ · `pnpm lint` ✅ · `pnpm test` (7/7) ✅ · `pnpm test:architecture` (3/3) ✅ · `pnpm build` ✅ · git diff + secret scan ✅.
+`pnpm typecheck` ✅ · `pnpm lint` ✅ · `pnpm test` (17/17) ✅ · `pnpm test:architecture` (6/6) ✅ · `pnpm build` ✅ · `pnpm db:generate` ✅ (offline) · git diff + secret scan ✅.
 
-## Next scope (Wave 03 — not started)
-Branch `feat/wave-03-data-auth-storage`. Requires Neon dev + Supabase dev project info supplied securely (never pasted into chat/committed).
+## Next scope (Wave 04 — not started)
+Branch `feat/wave-04-public-portfolio`. Public pages, i18n routing (vi/en), SEO, accessibility, responsive; read published data via ports.

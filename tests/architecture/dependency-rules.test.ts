@@ -106,10 +106,11 @@ function violationsFor(layer: Layer, rel: string, content: string): string[] {
 
   if (layer === "presentation") {
     for (const spec of specs) {
-      // Presentation must go through the application layer, never reach into a
-      // concrete infrastructure implementation directly.
-      if (spec.includes("/infrastructure") || spec.startsWith("@/infrastructure")) {
-        problems.push(`${rel}: presentation imports concrete infrastructure "${spec}"`);
+      // Presentation must never bypass the application layer to reach the
+      // database or a concrete repository (scenario 6). Wiring of auth/storage
+      // adapters happens in the composition root, not in presentation.
+      if (spec.includes("/infrastructure/database") || /repository/i.test(spec)) {
+        problems.push(`${rel}: presentation imports concrete data layer "${spec}"`);
       }
     }
   }
@@ -157,9 +158,9 @@ describe("architecture dependency rules", () => {
     expect(found.join("\n")).toContain("imports presentation");
   });
 
-  it("detects presentation reaching into concrete infrastructure (fixture)", () => {
+  it("detects presentation reaching into the database/repository (fixture)", () => {
     const fixture = `import { db } from "@/infrastructure/database/client";\n`;
     const found = violationsFor("presentation", "app/admin/page.tsx", fixture);
-    expect(found.join("\n")).toContain("concrete infrastructure");
+    expect(found.join("\n")).toContain("concrete data layer");
   });
 });

@@ -44,11 +44,22 @@ Feature-first modular monolith, Clean Architecture layers. Neon = single primary
 - Env: `.env.local` present, gitignored, untracked. `pnpm check:env` → Wave 03 keys (Neon/Supabase) PRESENT (presence ≠ connectivity); email/Sentry partial/PENDING_OPERATOR.
 - Architecture test strengthened: now covers domain, application, infrastructure→presentation, presentation→infrastructure + 4 fixtures.
 
+## Wave 03 data/auth/storage (branch `feat/wave-03-data-auth-storage`, stacked on Wave 02)
+
+- Deps: drizzle-orm, @neondatabase/serverless, @supabase/ssr, @supabase/supabase-js, lucide-react, server-only (+ drizzle-kit). Pinned in lockfile.
+- Neon Drizzle schema (8 tables: app_users, profiles, projects, media_assets, skills, contact_messages, audit_logs, site_settings) + neon-http client (`server-only`) + migration `0000_boring_skullbuster.sql` generated **offline** (not applied).
+- Auth: Supabase SSR clients (server/browser/middleware) + service storage client; identity module (feature-first) with pure `evaluateAdminAccess` policy, `RequireAdmin` use-case, Supabase auth adapter, Drizzle app-user repo; composition root `src/composition/identity.ts`; `middleware.ts` gate + `/admin-login`, `/auth/callback`, `/auth/error`; admin layout enforces authorization.
+- env split: `env.ts` (public) + `env.server.ts` (`server-only` secrets). `permissions.ts`, audit writer, storage-policies.sql.
+- Validation green: typecheck/lint/test(17)/arch(6)/build. Self-heal: 1 (test fixture message after rule refinement).
+- **Target proof PENDING:** live Neon migration, Supabase GitHub OAuth sign-in, storage bucket creation, owner `app_users` seed. Keys PRESENT ≠ connectivity.
+
 ## Current capability levels
 
-- Application foundation: **L3_OFFLINE_PROVEN** · Design system foundation: **L3** · Architecture boundary enforcement: **L3**.
-- Public content: **L1** (skeleton only) · Admin content operations: **L1** (shell, no auth).
-- Database / Auth / Storage / CI / Preview / Production: **L0_NOT_PRESENT**.
+- Application foundation / Design system / Architecture enforcement: **L3_OFFLINE_PROVEN**.
+- Admin authorization policy: **L3** (pure, unit-proven).
+- Database / Auth / Storage integration: **L1–L2** (source + migration generated; live connectivity = target proof pending).
+- Public content: **L1** (skeleton) · Admin content operations: **L1** (shell + protected route).
+- CI / Preview / Production: **L0_NOT_PRESENT**.
 
 ## Environment state
 
