@@ -53,13 +53,23 @@ Feature-first modular monolith, Clean Architecture layers. Neon = single primary
 - Validation green: typecheck/lint/test(17)/arch(6)/build. Self-heal: 1 (test fixture message after rule refinement).
 - **Target proof PENDING:** live Neon migration, Supabase GitHub OAuth sign-in, storage bucket creation, owner `app_users` seed. Keys PRESENT ≠ connectivity.
 
+## Wave 03R integration & target proof (branch `feat/wave-03-data-auth-storage` + `ci/wave-03r-baseline-gate`)
+
+- **Baseline verified:** main=8b487c7, wave-02=a6d2a0d, wave-03=e48a95f; wave-03 based on wave-02; no in-progress git op/lock/stash. 3 untracked Owner READMEs kept local (not staged/deleted).
+- **Storage authority corrected → server-mediated.** `src/modules/media/**` (pure upload policy + `AuthorizeMediaUpload` use-case + server-only Supabase signed-upload adapter + composition root + `POST /api/media/upload-url`). `storage-policies.sql` rewritten (undefined `is_owner_admin()` removed; browser roles zero-write; Neon = sole role authority). Bucket names single-sourced in the media domain.
+- **Security tests:** media upload policy + use-case authorization + server-only boundary → suite **35/35** (was 17). No client module can import the service secret (proven by test).
+- **Minimal CI prepared:** `.github/workflows/ci.yml` on `ci/wave-03r-baseline-gate` (from main). Not yet merged/green.
+- **Progress matrices:** `docs/status/{FEATURE_PROGRESS_MATRIX,STACK_PROGRESS,DB_CONTENT_GAP_MATRIX}.md`. Aggregate: FRONTEND ~10 · BACKEND ~40 · DATABASE ~25 · INFRASTRUCTURE ~30 · OVERALL ~26.
+- **Integration status:** `MAIN_INTEGRATION_STATUS = PENDING_PR_MERGE`; `TARGET_PROOF_STATUS = PENDING_OPERATOR`. Merges/target-proof require Owner (no `gh`).
+- Known warning: Next 16 deprecates `middleware` file convention → `proxy` (non-blocking; deferred).
+
 ## Current capability levels
 
 - Application foundation / Design system / Architecture enforcement: **L3_OFFLINE_PROVEN**.
-- Admin authorization policy: **L3** (pure, unit-proven).
+- Admin authorization policy / Media upload authorization: **L3** (pure, unit-proven).
 - Database / Auth / Storage integration: **L1–L2** (source + migration generated; live connectivity = target proof pending).
 - Public content: **L1** (skeleton) · Admin content operations: **L1** (shell + protected route).
-- CI / Preview / Production: **L0_NOT_PRESENT**.
+- CI / Preview / Production: **L0_NOT_PRESENT** (CI branch prepared, not merged/green).
 
 ## Environment state
 

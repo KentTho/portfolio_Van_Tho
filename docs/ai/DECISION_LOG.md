@@ -74,3 +74,17 @@
 - **Decision:** Reconcile prompt §X (Wave 09 land) with Owner's per-Wave push policy → adopt per-Wave branch+PR+CI. Empty remote → one bootstrap commit to `main`, then PR-only.
 - **Trade-offs:** Incremental CI feedback per Wave (better) vs one big land. AI never auto-merges; Owner merges.
 - **Evidence/owner:** OWNER_CONFIRMED (2026-07-30), `REMOTE_EMPTY` verified.
+
+## D-015 — Storage authorization is server-mediated; Neon stays the sole role authority (Wave 03R)
+- **Decision:** Adopt `SERVER_MEDIATED_STORAGE_AUTHORIZATION`. The Next.js server verifies the Supabase session, checks active `owner_admin` in **Neon**, validates bucket/MIME/size/path (pure domain policy), then uses the server-only **service key** to mint a short-lived signed upload URL. `storage-policies.sql` no longer references the undefined `is_owner_admin()`; browser roles get **zero write** access (service key is RLS-exempt by design). New `src/modules/media/**` + `POST /api/media/upload-url` + `src/composition/media.ts`.
+- **Alternatives:** Duplicate admin role into Supabase Postgres; custom JWT role claims. **Rejected** in V1 (dual authority / needs separate ADR).
+- **Trade-offs:** All writes flow through the server (one authorization seam, easy to audit) at the cost of an extra request hop. SVG disallowed by default; object names generated (never trust client filename).
+- **Evidence/owner:** `tests/unit/media-upload-policy.test.ts`, `tests/unit/authorize-media-upload.test.ts`, `tests/architecture/server-only-boundary.test.ts`; typecheck/lint/test(35)/build green. Live signing = target-proof pending.
+
+## D-016 — Minimal CI gate pulled forward from Wave 07 (Wave 03R)
+- **Decision:** Extract only a minimal `ci.yml` (lint/typecheck/test/arch/build + tracked-env check + candidate secret scan) onto branch `ci/wave-03r-baseline-gate` from `main`, so a quality gate exists **before** application source merges. The workflow tolerates the governance-only `main` (skips app gates when no `package.json`) — honest, not a fake-green. Advanced CI (preview DB branching, migration workflow, deploy/security/rollback) stays Wave 07.
+- **Evidence/owner:** OWNER_AUTHORIZATION (Wave 03R prompt). `gh` absent locally → PR is prepared via compare URL; Owner performs the final merge click.
+
+## D-017 — Main integration is PR-prepared, not landed; no auto-merge (Wave 03R)
+- **Decision:** ROADMAP reconciled: `main` stays governance-only until PRs merge; Wave 03 is a *remote feature branch updated*, not "main-landed". Merge order: CI → main, then Wave 02 → main, then Wave 03 → main. AI prepares branches/PRs/URLs and stops at the merge click (no `gh`, no direct main push, no history rewrite).
+- **Evidence/owner:** baseline preflight (main=8b487c7, 02=a6d2a0d, 03=e48a95f, 03 based on 02); `ROADMAP.md` §1 fields.

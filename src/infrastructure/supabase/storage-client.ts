@@ -2,11 +2,10 @@ import "server-only";
 import { createClient } from "@supabase/supabase-js";
 import { publicEnv } from "@/config/env";
 import { serverEnv } from "@/config/env.server";
+import { STORAGE_BUCKET } from "@/modules/media/domain/value-objects/upload-constraints";
 
-export const STORAGE_BUCKETS = {
-  public: "portfolio-public",
-  private: "portfolio-private",
-} as const;
+/** Bucket names are owned by the media domain (single source of truth). */
+export const STORAGE_BUCKETS = STORAGE_BUCKET;
 
 export type StorageBucket = (typeof STORAGE_BUCKETS)[keyof typeof STORAGE_BUCKETS];
 

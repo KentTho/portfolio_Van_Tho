@@ -20,3 +20,11 @@ export const ROLE_PERMISSIONS: Record<"owner_admin" | "editor" | "viewer", reado
   editor: ["content.read", "content.write", "content.publish", "media.write", "messages.read"],
   viewer: ["content.read", "messages.read", "audit.read"],
 };
+
+/** Pure role→permission check. Never trust a permission asserted by the client. */
+export function hasPermission(
+  role: keyof typeof ROLE_PERMISSIONS,
+  permission: Permission,
+): boolean {
+  return ROLE_PERMISSIONS[role].includes(permission);
+}

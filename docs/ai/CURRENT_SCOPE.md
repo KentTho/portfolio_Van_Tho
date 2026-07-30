@@ -1,7 +1,21 @@
 # CURRENT_SCOPE
 
 ## CURRENT_WAVE
-`WAVE_03_DATA_AUTH_STORAGE` — delivered locally on `feat/wave-03-data-auth-storage` (stacked on `feat/wave-02-foundation`). Next: `WAVE_04_PUBLIC_EXPERIENCE`.
+`WAVE_03R_INTEGRATION_AND_TARGET_PROOF` — consolidate Wave 02/02B/03 toward `main` behind a
+minimal CI gate; correct storage authority (server-mediated); audit DB content gaps; publish
+progress matrices; classify env + attempt dev target proof. **No Wave 04 (public UI) here.**
+Delivered on `feat/wave-03-data-auth-storage` (+ CI on `ci/wave-03r-baseline-gate`).
+
+## Wave 03R allowed paths (this phase)
+`src/modules/media/**`, `src/composition/media.ts`, `src/app/api/media/upload-url/route.ts`,
+`src/config/permissions.ts`, `src/infrastructure/supabase/storage-client.ts`,
+`supabase/migrations/storage-policies.sql`, `tests/unit/media-*.test.ts`,
+`tests/unit/authorize-media-upload.test.ts`, `tests/architecture/server-only-boundary.test.ts`,
+`.github/workflows/ci.yml` (CI branch only), `ROADMAP.md`, `docs/status/**`, `docs/ai/**`.
+
+## Prior wave reference (delivered)
+`WAVE_03_DATA_AUTH_STORAGE` on `feat/wave-03-data-auth-storage` (stacked on `feat/wave-02-foundation`).
+Next after main-integration: `WAVE_04_PUBLIC_EXPERIENCE`.
 
 ## Branch
 `feat/wave-03-data-auth-storage` (from `feat/wave-02-foundation` @ `a6d2a0d`, Owner-authorized stack). PR-only into `main`; AI does not merge; no direct main pushes.
