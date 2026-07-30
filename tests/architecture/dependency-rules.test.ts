@@ -92,6 +92,28 @@ function violationsFor(layer: Layer, rel: string, content: string): string[] {
     }
   }
 
+  if (layer === "infrastructure") {
+    for (const spec of specs) {
+      if (
+        spec.startsWith("@/components") ||
+        spec.startsWith("@/app") ||
+        spec.includes("/presentation")
+      ) {
+        problems.push(`${rel}: infrastructure imports presentation "${spec}"`);
+      }
+    }
+  }
+
+  if (layer === "presentation") {
+    for (const spec of specs) {
+      // Presentation must go through the application layer, never reach into a
+      // concrete infrastructure implementation directly.
+      if (spec.includes("/infrastructure") || spec.startsWith("@/infrastructure")) {
+        problems.push(`${rel}: presentation imports concrete infrastructure "${spec}"`);
+      }
+    }
+  }
+
   return problems;
 }
 
@@ -115,11 +137,29 @@ describe("architecture dependency rules", () => {
     expect(all, `Boundary violations:\n${all.join("\n")}`).toEqual([]);
   });
 
-  it("detects a forbidden reverse dependency (fixture)", () => {
+  it("detects a forbidden domain dependency (fixture)", () => {
     const fixture = `import React from "react";\nconst x = process.env.SECRET;\n`;
     const found = violationsFor("domain", "modules/demo/domain/bad.ts", fixture);
     expect(found.length).toBeGreaterThanOrEqual(2);
     expect(found.join("\n")).toContain("imports framework");
     expect(found.join("\n")).toContain("process.env");
+  });
+
+  it("detects application importing concrete infrastructure (fixture)", () => {
+    const fixture = `import { DrizzleRepo } from "@/modules/projects/infrastructure/repo";\n`;
+    const found = violationsFor("application", "modules/projects/application/uc.ts", fixture);
+    expect(found.join("\n")).toContain("concrete infrastructure");
+  });
+
+  it("detects infrastructure importing presentation (fixture)", () => {
+    const fixture = `import { Button } from "@/components/ui/button";\n`;
+    const found = violationsFor("infrastructure", "modules/projects/infrastructure/repo.ts", fixture);
+    expect(found.join("\n")).toContain("imports presentation");
+  });
+
+  it("detects presentation reaching into concrete infrastructure (fixture)", () => {
+    const fixture = `import { db } from "@/infrastructure/database/client";\n`;
+    const found = violationsFor("presentation", "app/admin/page.tsx", fixture);
+    expect(found.join("\n")).toContain("concrete infrastructure");
   });
 });
