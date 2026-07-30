@@ -7,10 +7,13 @@
 The application foundation, strict typing, runtime env-validation boundary, and architecture enforcement are proven locally (Wave 02: typecheck/lint/test/arch/build all green). The next value step is a secure persistent backend and the Owner-Admin identity boundary.
 
 ## PRECONDITIONS
-- Owner reviews the Wave 02 branch/PR.
-- Neon **development** project connection prepared securely (never pasted into chat or committed).
-- Supabase **development** project prepared securely (URL + keys as env, not in VCS).
-- Exact Wave 03 scope approved.
+- Owner reviews the Wave 02 / 02B branch/PR.
+- Neon + Supabase dev keys in `.env.local` — **verified PRESENT** via `pnpm check:env` (presence ≠ connectivity; validated for real at Wave 03).
+- Wave 03 branch is feature-first (`feat/wave-03-data-auth-storage`); numbered-folder layout rejected (ADR-0001).
+- No raw secrets pasted into chat.
+
+## GIT STRATEGY NOTE
+Per Wave 02B §S, Wave 03 ideally branches from an updated `main` after the Wave 02/02B PR merges. Since `gh` is absent and Owner wants forward progress, Owner may authorize **stacking** `feat/wave-03-data-auth-storage` on `feat/wave-02-foundation` (explicit Git-strategy change) — otherwise wait for merge.
 
 ## ALLOWED_ACTIONS
 - Neon schema + Drizzle ORM/Kit models and migrations (per `docs/architecture/data-model.md`).

@@ -36,6 +36,16 @@
 - **Trade-offs:** Avoids double-proxy/cache pitfalls and false "WAF protects us" claims.
 - **Evidence/owner:** Prompt contract + ADR-0005.
 
+## D-011 — Selective skill adoption (Wave 02B)
+- **Decision:** Treat the 3 Owner README sources as advisory. Adopt only tool-neutral rules that align with project authority: strict TS inference / `z.infer` (mattpocock MP-08 → CLAUDE §8), selective skill activation + plan-then-act (cline/kilo), reinforce memory/exact-path/self-healing (already present). Full matrix in `docs/skills/`.
+- **Rejected:** numbered folders (ADR-0001), Kilo `--auto` full-autonomy, README plugin/CLI auto-installs.
+- **License:** mattpocock UNKNOWN → sources kept local-reference-only (not committed); cline Apache-2.0, kilo MIT.
+- **Evidence/owner:** OWNER added sources 2026-07-30; `docs/skills/SKILL_ADOPTION_MATRIX.md`.
+
+## D-012 — Wave 03 stays feature-first (numbered-layout request rejected)
+- **Decision:** The secondary Wave 03 request used `src/1_domain`/`src/3_infrastructure`. This violates ADR-0001 + CLAUDE §6. Wave 03 will use `src/modules/<feature>/{domain,application,infrastructure,presentation}` + `src/infrastructure/*` cross-cutting adapters.
+- **Evidence/owner:** ADR-0001; `docs/skills/SKILL_CONFLICT_REGISTER.md` C-01.
+
 ## D-008 — Wave 02 stack versions chosen for compatibility, not "latest"
 - **Decision:** Use the version set produced by the official `create-next-app` generator (next 16.2.12, react 19.2.4, typescript 5.9.x, eslint 9.x) rather than the registry `latest` majors (TS 7, ESLint 10, React 19.2.8).
 - **Alternatives:** Hand-pick registry `latest` for every package.

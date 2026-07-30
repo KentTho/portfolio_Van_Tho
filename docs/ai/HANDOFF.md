@@ -20,5 +20,15 @@ Version discovery; isolated scaffold (Mode A); `pnpm install`; validation matrix
 - Owner review/merge of Wave 02 PR (no `gh` CLI → use compare URL).
 - Prepare Neon dev + Supabase dev before Wave 03.
 
+## Wave 02B (skill intake & reconciliation)
+- 3 README sources audited → `docs/skills/` (matrix, conflict register, wave map, manifest). Sources kept untracked (mattpocock license UNKNOWN).
+- CLAUDE.md: strengthened §8 TS rules + added §26 Selective Skill Policy.
+- Added `ROADMAP.md`; `scripts/check-env.mjs` + `pnpm check:env`; strengthened architecture test (4 fixtures, 4 layers).
+- Env verified secret-safe (`.env.local` gitignored/untracked); Wave 03 keys PRESENT.
+- Report anomalies (L1–L5) reconciled: mostly NOT_REPRODUCIBLE / report-typo; temp scaffold path was `D:\web-app\wave02-scaffold-tmp` (deleted).
+
+## Temp scaffold (exact)
+`D:\web-app\wave02-scaffold-tmp` — created by `create-next-app` (Mode A), inspected, deleted (verified outside repo, not a symlink). Not tracked.
+
 ## Next-phase capsule
-`WAVE_03_DATA_AUTH_STORAGE` on `feat/wave-03-data-auth-storage` (see `NEXT_PHASE.md`).
+`WAVE_03_DATA_AUTH_STORAGE` on `feat/wave-03-data-auth-storage` (feature-first). See `NEXT_PHASE.md` for Git-strategy note.

@@ -1,7 +1,10 @@
 # CURRENT_SCOPE
 
 ## CURRENT_WAVE
-`WAVE_02_FOUNDATION` — delivered locally; landing on `feat/wave-02-foundation` (PR for Owner review). Next: `WAVE_03_DATA_AUTH_STORAGE`.
+`WAVE_02B_SKILL_INTAKE_AND_BRANCH_RECONCILIATION` — on `feat/wave-02-foundation` (adds skill governance + ROADMAP + strengthened arch test + safe env check to the Wave 02 branch). Next: `WAVE_03_DATA_AUTH_STORAGE`.
+
+## Wave 02B allowed paths
+`CLAUDE.md`, `ROADMAP.md`, `docs/skills/**`, `docs/ai/**`, `tests/architecture/**`, `scripts/check-env.mjs`, `package.json` (script only). NOT modifying: `docs/architecture/**`, `docs/security/**`, `src/**` feature code, env files, README sources (kept untracked).
 
 ## Branch
 `feat/wave-02-foundation` (from `main` @ `8b487c7`). PR-only into `main`; no direct main pushes; AI does not merge.
