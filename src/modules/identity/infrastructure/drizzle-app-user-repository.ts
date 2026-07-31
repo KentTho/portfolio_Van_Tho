@@ -4,12 +4,12 @@ import type {
   AppUserRecord,
   AppUserRepositoryPort,
 } from "@/modules/identity/application/ports/app-user-repository-port";
-import { db } from "@/infrastructure/database/client";
+import { getDb } from "@/infrastructure/database/client";
 import { appUsers } from "@/infrastructure/database/schema";
 
 export class DrizzleAppUserRepository implements AppUserRepositoryPort {
   async findBySupabaseUserId(supabaseUserId: string): Promise<AppUserRecord | null> {
-    const rows = await db
+    const rows = await getDb()
       .select()
       .from(appUsers)
       .where(eq(appUsers.supabaseAuthUserId, supabaseUserId))

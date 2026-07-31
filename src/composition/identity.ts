@@ -1,6 +1,6 @@
 import "server-only";
 import { isOk } from "@/shared/domain/result";
-import { adminAllowedEmails } from "@/config/env.server";
+import { getAdminAllowedEmails } from "@/config/env.server";
 import type { AdminUser } from "@/modules/identity/domain/entities/admin-user";
 import { RequireAdmin } from "@/modules/identity/application/use-cases/require-admin";
 import { SupabaseAuthAdapter } from "@/modules/identity/infrastructure/supabase-auth-adapter";
@@ -14,7 +14,7 @@ export async function getCurrentAdmin(): Promise<AdminUser | null> {
   const requireAdmin = new RequireAdmin({
     auth: new SupabaseAuthAdapter(),
     appUsers: new DrizzleAppUserRepository(),
-    allowedEmails: adminAllowedEmails,
+    allowedEmails: getAdminAllowedEmails(),
   });
   const result = await requireAdmin.execute();
   return isOk(result) ? result.value : null;
