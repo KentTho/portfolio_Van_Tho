@@ -40,7 +40,7 @@
 | 03 Data/Auth/Storage | Neon+Drizzle schema/migrations, Supabase SSR Auth (GitHub OAuth) + admin authz, storage policies, repos, audit, middleware | ✅ `DATA_AUTH_LOCAL_PASS` (target proof pending) | schema+migration generated offline; auth policy unit-proven |
 | 03R Integration & target proof | Consolidate 02/02B/03→main behind minimal CI; storage authority correction (server-mediated); DB content-gap matrix; progress matrices | ✅ merged to `main` | 35/35 tests; server-mediated storage |
 | 03S Main-integration & dev-target completion | Create+merge PR #1/#2/#3 in order; CI green on `main`; build-secret fix; Neon **dev** migration + DB smoke; **storage buckets + signed-upload smoke** | ✅ **`PRE_FE_FOUNDATION_TARGET_VERIFIED_EXCEPT_PREVIEW`** (auth sign-in interactive-pending) | CI `30601997949`; 8 tables + ledger; buckets live |
-| 04 Public experience | pages, case study, blog, i18n, SEO, a11y, responsive | 🔓 **unblocked** (branch from `main`); not started this phase | — |
+| 04 Public visual experience | i18n (vi/en) shell, Home (hero + tech matrix), projects/articles/about/resume/contact, SEO, motion, cosmic design system | 🔄 **Phase 1 in review** on `feat/wave-04-public-portfolio` | typed content BE + ports; SSG both locales; tests 46/46; build green; no admin surface |
 | 05 Admin CMS | dashboard, CRUD, draft/publish, media, revisions, inbox, audit UI | 🔒 planned | — |
 | 06 Integrations | contact, Turnstile, email, video, analytics, error tracking | 🔒 planned | email keys pending |
 | 07 CI/CD | GitHub Actions, env contracts, Neon preview branching, runbooks | 🔒 planned | — |
