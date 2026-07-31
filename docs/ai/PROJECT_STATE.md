@@ -63,6 +63,38 @@ Feature-first modular monolith, Clean Architecture layers. Neon = single primary
 - **Integration status:** `MAIN_INTEGRATION_STATUS = PENDING_PR_MERGE`; `TARGET_PROOF_STATUS = PENDING_OPERATOR`. Merges/target-proof require Owner (no `gh`).
 - Known warning: Next 16 deprecates `middleware` file convention → `proxy` (non-blocking; deferred).
 
+## Wave 03S main-integration & development-target completion (merged to `main`)
+
+- **Main integration DONE:** `gh` was write-authenticated (account `KentTho`, scopes `repo`+`workflow`).
+  Created + merged PRs in order (merge commits): **#1** `ci/wave-03r-baseline-gate` → CI green 5s;
+  **#2** `feat/wave-02-foundation` → CI green 41s; **#3** `feat/wave-03-data-auth-storage` → CI green
+  49s (after build fix). `main` @ **`cf613ec`**; Actions run `30601997949` green on `main`. No branch
+  protection existed; merges were conflict-free (three-way merge preserved `ci.yml`).
+- **Build self-heal (commit `833ed64`, in PR #3):** `next build` failed in CI because route modules were
+  imported during page-data collection and eagerly validated `serverEnv` / built `neon(DATABASE_URL)` at
+  module scope → build required real secrets. Fixed with lazy memoized env (`serverEnv` proxy,
+  `getAdminAllowedEmails()`), lazy `getDb()`, and `export const dynamic = "force-dynamic"` on the admin
+  layout. Reproduced secret-free build locally (`DATABASE_URL= pnpm build`) before pushing. No `any`,
+  no `ts-ignore`, no test/strictness weakening.
+- **Merged-`main` validation GREEN:** install (frozen) · check:env (18 keys) · db:generate (no drift) ·
+  lint · typecheck · **test 35/35** · arch 10/10 · secret-free build.
+- **Neon DEVELOPMENT verified (evidence-based, not variable-name-based):** empty greenfield schema
+  (0 tables) + Neon host `…ap-southeast-1.aws.neon.tech` + Owner authorization. Normalized a malformed
+  `psql '...'`-wrapped `DATABASE_URL`/`_UNPOOLED` in `.env.local` (no values printed; `.bak` deleted).
+  Applied additive-only migration (`db:migrate`) → ledger = 1, **8 kernel tables** + 18 indexes;
+  read/write + unique-constraint (`media_bucket_path_idx`) smoke pass; DB left clean.
+- **Supabase Storage verified (development):** created `portfolio-public` (public) + `portfolio-private`
+  (private) via service key; signed upload issued → uploaded → confirmed; private short-lived signed
+  read (60s); self-cleaned. Server-mediated model holds; service key server-only.
+- **Auth sign-in PENDING (interactive):** Supabase project has **0 users** → owner `app_users` row not
+  seeded (no UID fabricated). Requires the Owner to complete GitHub OAuth sign-in through the app once.
+- **Vercel Preview PENDING:** CLI authenticated (`kenttho`); not deployed (needs env propagation + OAuth
+  redirect config). **Production deliberately not touched.**
+- **Security note:** a Neon credential appeared in a driver error before normalization → Owner should
+  **rotate the Neon password**. No secret entered VCS/CI/committed files.
+- **Verdict:** `PRE_FE_FOUNDATION_TARGET_VERIFIED_EXCEPT_PREVIEW` + `AUTH_SIGN_IN_PENDING_INTERACTIVE`.
+  Wave 04 is unblocked (branch from `main`) but **not started** this phase (foundation-first).
+
 ## Current capability levels
 
 - Application foundation / Design system / Architecture enforcement: **L3_OFFLINE_PROVEN**.

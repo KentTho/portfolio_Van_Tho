@@ -3,40 +3,44 @@
 > Living master status. Updated at the end of every Wave. For contribution rules see
 > [`CLAUDE.md`](CLAUDE.md); for machine state see [`docs/ai/`](docs/ai/).
 >
-> **Last updated:** Wave 03R integration & target-proof phase (on branch
-> `feat/wave-03-data-auth-storage`). This phase consolidates Wave 02/02B/03 toward
-> `main` behind a minimal CI gate; it does **not** implement Wave 04.
+> **Last updated:** Wave 03S main-integration & development-target-completion phase.
+> Wave 02/02B/03/03R are now **merged into `main`** behind a green minimal CI gate; the
+> Neon **development** database, Supabase **storage** buckets, and the signed-upload path
+> are **live-verified**. This phase does **not** implement Wave 04.
 
 ## 1. Snapshot (branch/integration state — machine-precise)
 
 | Field | Value |
 |---|---|
 | Repository | `github.com/KentTho/portfolio_Van_Tho` (public) |
-| `PRODUCTION_BRANCH` | `main` @ `8b487c7` — **governance-only** (Wave 01); no application source yet |
-| `ACTIVE_DEVELOPMENT_BRANCH` | `feat/wave-03-data-auth-storage` (Wave 03 + 03R hardening) |
-| `PARENT_BRANCH` | `feat/wave-02-foundation` @ `a6d2a0d` (Wave 02 + 02B) |
-| `REMOTE_FEATURE_HEAD` | `origin/feat/wave-03-data-auth-storage` (updated this phase) |
-| `MAIN_INTEGRATION_STATUS` | **PENDING_PR_MERGE** — CI gate + Wave 02→main + Wave 03→main are PR-prepared, not merged (no `gh` locally; Owner clicks merge) |
-| `TARGET_PROOF_STATUS` | **PENDING_OPERATOR** — keys present ≠ connectivity; no live Neon migration / OAuth / bucket proof run |
-| `CI_STATUS` | branch `ci/wave-03r-baseline-gate` prepared (`.github/workflows/ci.yml`); **L0 until merged & green on `main`** |
+| `PRODUCTION_BRANCH` | `main` @ `cf613ec` — **application-integrated** (Wave 01+02+02B+03+03R + CI + build fix) |
+| `ACTIVE_DEVELOPMENT_BRANCH` | `main` (feature branches merged; next work branches from verified `main`) |
+| `MAIN_INTEGRATION_STATUS` | **INTEGRATED** — PR #1 (CI), #2 (Wave 02), #3 (Wave 03) merged in order (merge commits) |
+| `MAIN_SHA` | `cf613ec3ea8e11573a556c5ccbf0ca374b378bf2` |
+| `MERGED_PRS` | #1 `ci/wave-03r-baseline-gate`, #2 `feat/wave-02-foundation`, #3 `feat/wave-03-data-auth-storage` |
+| `CI_STATUS` | **GREEN on `main`** — Actions run `30601997949` (`quality` job) success @ `cf613ec` |
+| `TARGET_PROOF_STATUS` | **DEV_VERIFIED (DB+Storage); AUTH_PENDING_INTERACTIVE** — Neon dev migrated + smoke-verified; buckets created + signed-upload smoke-verified; live GitHub OAuth sign-in + owner seed pending (0 Supabase users) |
+| `PREVIEW_STATUS` | **PENDING_OPERATOR** — Vercel CLI authenticated (`kenttho`); preview deploy needs env propagation + OAuth redirect config |
 | Stack | Next.js 16 · React 19 · TypeScript 5 (strict) · Tailwind v4 · pnpm · Neon · Supabase Auth/Storage · Vercel · Cloudflare DNS+Turnstile |
 | Architecture | Feature-first modular monolith + Clean Architecture |
 | Deploy authority | Vercel Git Integration · CI authority: GitHub Actions (minimal gate pulled forward from Wave 07) |
 
-> **Reconciliation note (Wave 03R):** Wave 03 is a **remote feature branch updated**, not
-> "main-landed". `main` stays governance-only until the PRs merge. History is not rewritten.
+> **Honesty note:** "Development-verified" is the ceiling this phase — **not** production. Per the
+> progress scale, 100% requires production proven with monitoring + rollback (Wave 07+), which the
+> Owner has explicitly **deferred**. No production deploy / DNS / prod-DB mutation was performed.
 
 ## 2. Wave status
 
 | Wave | Scope | Status | Evidence |
 |---|---|---|---|
 | 00 Audit | Read-only forensic | ✅ Done | greenfield verified |
-| 01 Architecture & Governance | CLAUDE.md, ADRs, threat model, data model, docs | ✅ Landed `main 8b487c7` | 38 files |
+| 01 Architecture & Governance | CLAUDE.md, ADRs, threat model, data model, docs | ✅ Landed `main` (now `cf613ec`) | 38 files |
 | 02 Foundation | Next.js app, strict TS, tokens, env validation, arch enforcement, skeletons | ✅ `FOUNDATION_LOCAL_PASS` `711e13f` | typecheck/lint/test/build green |
 | 02B Skill intake & reconciliation | 3 README audit, selective adoption, env verify, arch-test strengthen, ROADMAP | ✅ `a6d2a0d` | see `docs/skills/` |
 | 03 Data/Auth/Storage | Neon+Drizzle schema/migrations, Supabase SSR Auth (GitHub OAuth) + admin authz, storage policies, repos, audit, middleware | ✅ `DATA_AUTH_LOCAL_PASS` (target proof pending) | schema+migration generated offline; auth policy unit-proven |
-| 03R Integration & target proof | Consolidate 02/02B/03→main behind minimal CI; storage authority correction (server-mediated); DB content-gap matrix; progress matrices; dev target proof | 🔄 **CURRENT** — local hardening done; merges/target proof = operator | 35/35 tests; storage server-mediated + unit-proven |
-| 04 Public experience | pages, case study, blog, i18n, SEO, a11y, responsive | 🔒 gated on 03R main-integration | — |
+| 03R Integration & target proof | Consolidate 02/02B/03→main behind minimal CI; storage authority correction (server-mediated); DB content-gap matrix; progress matrices | ✅ merged to `main` | 35/35 tests; server-mediated storage |
+| 03S Main-integration & dev-target completion | Create+merge PR #1/#2/#3 in order; CI green on `main`; build-secret fix; Neon **dev** migration + DB smoke; **storage buckets + signed-upload smoke** | ✅ **`PRE_FE_FOUNDATION_TARGET_VERIFIED_EXCEPT_PREVIEW`** (auth sign-in interactive-pending) | CI `30601997949`; 8 tables + ledger; buckets live |
+| 04 Public experience | pages, case study, blog, i18n, SEO, a11y, responsive | 🔓 **unblocked** (branch from `main`); not started this phase | — |
 | 05 Admin CMS | dashboard, CRUD, draft/publish, media, revisions, inbox, audit UI | 🔒 planned | — |
 | 06 Integrations | contact, Turnstile, email, video, analytics, error tracking | 🔒 planned | email keys pending |
 | 07 CI/CD | GitHub Actions, env contracts, Neon preview branching, runbooks | 🔒 planned | — |
@@ -48,12 +52,14 @@
 
 | Capability | Level |
 |---|---|
-| Application foundation · Design system · Architecture enforcement | **L3** (offline proven) |
+| Application foundation · Design system · Architecture enforcement | **L3** (offline proven, on `main`) |
 | Admin authorization policy | **L3** (unit-proven, pure) |
-| Media upload authorization (server-mediated) | **L3** (pure policy + use-case unit-proven; live signing = target-proof pending) |
-| Database · Auth · Storage (integration) | **L1–L2** source present + migration generated; live connectivity = **target proof pending** |
-| Public content · Admin content operations | **L1** (skeleton/shell + protected route) |
-| CI · Preview · Production | **L0** (CI branch prepared, not yet merged/green on `main`) |
+| Media upload authorization (server-mediated) | **L3** (unit-proven) + **live storage L4** (buckets + signed-upload smoke on dev Supabase) |
+| Database (Neon **development**) | **L4** — migration applied, ledger + 8 tables + indexes verified, read/write + unique-constraint smoke pass |
+| Storage (Supabase **development**) | **L4** — `portfolio-public`/`portfolio-private` created; signed upload + private signed read smoke pass |
+| Auth (Supabase GitHub OAuth) | **L2** — SSR code + policy proven; **live sign-in pending** (0 Supabase users → owner seed + admin authz smoke blocked on interactive OAuth) |
+| CI | **L4** — green on `main` (GitHub Actions) |
+| Preview · Production | **L0–L1** — Vercel authenticated; preview not deployed; production deliberately deferred |
 
 ## 4. Owner-confirmed decisions
 
@@ -62,7 +68,7 @@ Next.js modular monolith · Neon single primary DB · Supabase Auth (GitHub OAut
 ## 5. Environment status (names only, no values)
 
 - `.env.local`: present, **gitignored, untracked** (safe). Verify anytime with `pnpm check:env`.
-- Wave 03 keys (Neon `DATABASE_URL`/`_UNPOOLED`, Supabase URL/publishable/secret): **PRESENT** — presence ≠ connectivity.
+- Wave 03 keys (Neon `DATABASE_URL`/`_UNPOOLED`, Supabase URL/publishable/secret): **PRESENT + connectivity-verified** for Neon dev DB and Supabase Storage this phase (`DATABASE_URL_UNPOOLED` was normalized from a `psql '...'` paste). Supabase Auth sign-in not yet exercised.
 - Turnstile keys: PRESENT. Email (`RESEND_API_KEY`/`CONTACT_TO_EMAIL`) + Sentry: partial/`PENDING_OPERATOR` → needed at Wave 06 (email) / when observability enabled.
 
 ## 6. Wave 03 — delivered (this phase)
@@ -92,17 +98,35 @@ Foundation-first: **no Public UI in this phase**. Delivered locally on `feat/wav
 - **Progress matrices**: `docs/status/FEATURE_PROGRESS_MATRIX.md`, `docs/status/STACK_PROGRESS.md`.
 - Validation: typecheck ✅ · lint ✅ · **test 35/35** ✅ · build ✅.
 
-### Merge order for Owner (no `gh` locally → click merge in GitHub UI)
-1. `ci/wave-03r-baseline-gate` → `main` (establish gate first).
-2. `feat/wave-02-foundation` → `main` (Wave 02 + 02B).
-3. `feat/wave-03-data-auth-storage` → `main` (Wave 03 + 03R), after (2) merges.
+## 8. Wave 03S — main integration & dev-target completion (this phase)
 
-## 8. Next step (Wave 04, gated) — Public experience
-Only after 02/02B/03 are on `main`, CI is green, and storage authority is resolved: public pages
+- **Merged to `main` in order (merge commits, `gh` write-authenticated):** PR #1 `ci` (CI green 5s),
+  PR #2 Wave 02 (CI green 41s), PR #3 Wave 03 (CI green 49s after fix). `main` @ `cf613ec`, CI run
+  `30601997949` green. Local validation on merged `main`: lint/typecheck/**test 35/35**/arch 10/10/build.
+- **Self-heal (build fix, PR #3):** `next build` collected page data by importing route modules, and
+  eager `serverEnv`/`neon()` init made the build require real secrets → CI build failed. Fixed by lazy,
+  memoized env validation (`serverEnv` proxy, `getAdminAllowedEmails()`), lazy `getDb()`, and
+  `dynamic = "force-dynamic"` on the admin layout. Reproduced the secret-free build locally before push.
+  No strictness weakened. (Commit `833ed64`.)
+- **Neon development target — VERIFIED:** classified by DB state (empty greenfield, 0 tables) + Neon host,
+  not by variable name. Normalized a malformed `psql '...'`-wrapped connection string in `.env.local`
+  (no values printed). Applied additive-only migration → ledger = 1, **8 kernel tables** + 18 indexes;
+  read/write + unique-constraint smoke pass; DB left clean.
+- **Supabase storage — VERIFIED (dev):** created `portfolio-public` (public) + `portfolio-private`
+  (private); signed upload issued → uploaded → confirmed; private short-lived signed read; self-cleaned.
+- **Auth sign-in — PENDING (interactive):** Supabase project has **0 users**; the owner `app_users`
+  row cannot be seeded from a real UID until the Owner completes the GitHub OAuth sign-in through the app.
+  No UID was fabricated.
+- **Security:** one credential appeared in a local driver error before normalization → **rotate the Neon
+  password** as a precaution. No secret entered VCS/CI.
+
+## 9. Next step (Wave 04, unblocked) — Public experience
+`main` is integrated + CI-green + dev-target-verified, so Wave 04 is unblocked: public pages
 (`/[locale]`, about, projects + case study, articles, resume, contact UI), i18n (vi/en), SEO
-metadata/sitemap/robots, accessibility, responsive. Read published data via repositories/ports.
-Verdict target: `PUBLIC_EXPERIENCE_LOCAL_PASS`. Branch `feat/wave-04-public-portfolio` **from verified `main`**.
+metadata/sitemap/robots, accessibility, responsive. Read published data via repositories/ports (typed
+mocks until content exists). Verdict target: `PUBLIC_EXPERIENCE_LOCAL_PASS`. Branch
+`feat/wave-04-public-portfolio` **from verified `main`**. Not started in this phase (foundation-first).
 
-## 9. Standing guardrails
+## 10. Standing guardrails
 
 Exact-path staging · no force/rewrite · no auto-merge · no prod/DNS mutation · no secret in VCS/logs · preview ≠ prod secrets · capability levels advance one step · no fabricated content/metrics · verify latest **stable** versions at install time.
