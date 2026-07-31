@@ -47,5 +47,26 @@ Version discovery; isolated scaffold (Mode A); `pnpm install`; validation matrix
 - **Validation:** typecheck ✅ · lint ✅ · test 35/35 ✅ · build ✅ (route `/api/media/upload-url` ƒ). Known warning: Next 16 deprecates `middleware` → `proxy` (non-blocking; defer).
 - **PENDING_OPERATOR:** merge order CI→main, Wave02→main, Wave03→main (no `gh`); dev target proof (Neon migrate / Supabase OAuth / buckets / owner seed).
 
+## Wave 03S (main integration & dev-target completion — landed on `main` @ `cf613ec`)
+- **Merged in order (merge commits; `gh` write):** PR #1 `ci` (green 5s) → PR #2 Wave 02 (green 41s) →
+  PR #3 Wave 03 (green 49s after fix). CI green on `main` (Actions `30601997949`). No branch protection;
+  conflict-free; three-way merge preserved `ci.yml` (two-way diff false-positive checked).
+- **Build self-heal (commit `833ed64`):** lazy env (`serverEnv` proxy, `getAdminAllowedEmails()`), lazy
+  `getDb()`, admin layout `force-dynamic` → `next build` needs no secrets. Proven locally with
+  `DATABASE_URL= pnpm build`; then CI green. Files: `env.server.ts`, `database/client.ts`,
+  `audit-writer.ts`, `drizzle-app-user-repository.ts`, `composition/identity.ts`, `admin/layout.tsx`.
+- **Neon dev VERIFIED:** classified DEVELOPMENT by empty schema (0 tables) + Neon host + Owner auth;
+  normalized malformed `psql '...'` DB URL in `.env.local` (no values printed); `db:migrate` applied →
+  ledger 1 + 8 tables + 18 indexes; write/read/unique smoke pass; DB clean.
+- **Supabase Storage dev VERIFIED:** buckets `portfolio-public`/`portfolio-private` created; signed
+  upload + private signed read smoke pass; self-cleaned.
+- **Auth PENDING (interactive):** 0 Supabase users → owner row not seeded (no UID invented).
+- **Preview PENDING:** Vercel CLI authed (`kenttho`); not deployed. Prod not touched.
+- **Rotate the Neon password** (appeared in a pre-normalization driver error; never committed).
+- Throwaway `scripts/_dev-*.mjs` + `scripts/_normalize-env.mjs` + `.env.local.bak` created and **deleted**.
+- **Verdict:** `PRE_FE_FOUNDATION_TARGET_VERIFIED_EXCEPT_PREVIEW` + `AUTH_SIGN_IN_PENDING_INTERACTIVE`.
+
 ## Next-phase capsule
-`WAVE_04_PUBLIC_EXPERIENCE` on `feat/wave-04-public-portfolio` **from verified main** (only after 02/03 merged, CI green). See `NEXT_PHASE.md`.
+`WAVE_04_PUBLIC_EXPERIENCE` on `feat/wave-04-public-portfolio` **from verified `main` @ `cf613ec`**
+(unblocked: 02/03 merged, CI green, dev DB+storage verified). Not started this phase. Before live admin:
+Owner completes GitHub OAuth sign-in once → re-run owner-seed → admin authz smoke. See `NEXT_PHASE.md`.
