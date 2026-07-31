@@ -30,5 +30,22 @@ Version discovery; isolated scaffold (Mode A); `pnpm install`; validation matrix
 ## Temp scaffold (exact)
 `D:\web-app\wave02-scaffold-tmp` — created by `create-next-app` (Mode A), inspected, deleted (verified outside repo, not a symlink). Not tracked.
 
+## Wave 03 (data/auth/storage — branch `feat/wave-03-data-auth-storage`, stacked on Wave 02)
+- Deps: drizzle-orm, @neondatabase/serverless, @supabase/ssr, @supabase/supabase-js, lucide-react, server-only, drizzle-kit.
+- Neon Drizzle schema (8 tables) + neon-http client (`server-only`) + migration `0000_boring_skullbuster.sql` generated offline (NOT applied).
+- Supabase SSR clients + service storage client; identity module (feature-first) with pure `evaluateAdminAccess`, `RequireAdmin`, adapters; composition root `src/composition/identity.ts`; `middleware.ts` gate; `/admin-login`, `/auth/callback`, `/auth/error`; admin layout enforces authorization.
+- `env.server.ts` (server-only secrets) split from public `env.ts`; `permissions.ts`; audit writer; `supabase/migrations/storage-policies.sql`.
+- Validation green: typecheck/lint/test(17)/arch(6)/build; `pnpm db:generate` ✅. Self-heal: 1 (arch fixture message after rule refinement).
+- **Target proof PENDING (Owner):** `pnpm db:migrate` (Neon), Supabase GitHub OAuth end-to-end, storage bucket creation, seed owner `app_users` row.
+
+## Wave 03R (integration & target proof — branch `feat/wave-03-data-auth-storage` + `ci/wave-03r-baseline-gate`)
+- **Baseline preflight PASS:** main=8b487c7, wave-02=a6d2a0d, wave-03=e48a95f; 03 based on 02; no in-progress git op/lock/stash; only 3 untracked Owner READMEs (kept local).
+- **Storage authority correction (D-015):** server-mediated model. New `src/modules/media/**` (pure `evaluateUploadRequest` policy → `AuthorizeMediaUpload` use-case requiring admin + `media.write` → server-only `SupabaseStorageUploader` → `src/composition/media.ts` → `POST /api/media/upload-url`). `storage-policies.sql` rewritten (removed undefined `is_owner_admin()`; browser roles zero-write; Neon = sole role authority). `permissions.ts` gained pure `hasPermission`. `storage-client.ts` now single-sources bucket names from the media domain.
+- **Security tests added:** `media-upload-policy` (9), `authorize-media-upload` (5), `server-only-boundary` (4) → suite now **35/35**.
+- **Minimal CI (D-016):** `.github/workflows/ci.yml` on `ci/wave-03r-baseline-gate` (from main). Tolerates governance-only main. Advanced CI stays Wave 07.
+- **Docs:** ROADMAP reconciled (branch/integration fields, D-017); `docs/status/{FEATURE_PROGRESS_MATRIX,STACK_PROGRESS,DB_CONTENT_GAP_MATRIX}.md`.
+- **Validation:** typecheck ✅ · lint ✅ · test 35/35 ✅ · build ✅ (route `/api/media/upload-url` ƒ). Known warning: Next 16 deprecates `middleware` → `proxy` (non-blocking; defer).
+- **PENDING_OPERATOR:** merge order CI→main, Wave02→main, Wave03→main (no `gh`); dev target proof (Neon migrate / Supabase OAuth / buckets / owner seed).
+
 ## Next-phase capsule
-`WAVE_03_DATA_AUTH_STORAGE` on `feat/wave-03-data-auth-storage` (feature-first). See `NEXT_PHASE.md` for Git-strategy note.
+`WAVE_04_PUBLIC_EXPERIENCE` on `feat/wave-04-public-portfolio` **from verified main** (only after 02/03 merged, CI green). See `NEXT_PHASE.md`.

@@ -1,8 +1,14 @@
 import Link from "next/link";
 import { SITE } from "@/config/site";
 
-/** Admin visual shell. No authentication in Wave 02 (see Wave 03). */
-export function AdminShell({ children }: { children: React.ReactNode }) {
+/** Admin visual shell. Authorization is enforced in the admin layout (Wave 03). */
+export function AdminShell({
+  children,
+  adminEmail,
+}: {
+  children: React.ReactNode;
+  adminEmail?: string;
+}) {
   return (
     <div className="flex min-h-full flex-col">
       <header className="border-b border-border bg-elevated">
@@ -14,6 +20,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             <span className="rounded-full border border-accent-3/40 bg-accent-3/10 px-2 py-0.5 text-xs text-accent-3">
               Admin
             </span>
+            {adminEmail ? (
+              <span className="text-xs text-fg-subtle">{adminEmail}</span>
+            ) : null}
           </div>
           <Link
             href="/"
