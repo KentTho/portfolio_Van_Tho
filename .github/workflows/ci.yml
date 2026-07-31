@@ -1,0 +1,105 @@
+name: CI
+
+# Minimal quality gate (Wave 03R — pulled forward from Wave 07).
+# Runs on PRs into main and on pushes to main. Advanced CI (preview DB branching,
+# migration workflow, deploy/security/rollback) remains Wave 07.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# One in-flight run per ref; newer pushes cancel older PR runs.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The governance-only baseline (main @ Wave 01) has no package.json yet.
+      # Detect the app so gates run once application source is merged — this is a
+      # real applicability guard, not a skipped/continue-on-error required check.
+      - name: Detect application
+        id: detect
+        shell: bash
+        run: |
+          if [ -f package.json ]; then
+            echo "app=true" >> "$GITHUB_OUTPUT"
+            echo "Application detected — full gate will run."
+          else
+            echo "app=false" >> "$GITHUB_OUTPUT"
+            echo "No package.json on this ref (governance-only baseline) — nothing to build."
+          fi
+
+      - name: Verify env files are not tracked
+        shell: bash
+        run: |
+          tracked=""
+          for f in .env .env.local .env.development .env.production; do
+            if git ls-files --error-unmatch "$f" >/dev/null 2>&1; then
+              tracked="$tracked $f"
+            fi
+          done
+          if [ -n "$tracked" ]; then
+            echo "::error::Environment file(s) are tracked:$tracked"
+            exit 1
+          fi
+          echo "OK: no tracked environment files."
+
+      - name: Candidate secret scan
+        shell: bash
+        run: |
+          # Fail on obvious secret material in tracked files (excluding the
+          # placeholder .env.example and the lockfile). Extend in Wave 07/08.
+          if git grep -nIE \
+              'BEGIN (RSA|OPENSSH|EC|DSA|PRIVATE) KEY|sbp_[A-Za-z0-9]{20,}|SUPABASE_SECRET_KEY[[:space:]]*=[[:space:]]*[^[:space:]]' \
+              -- . ':(exclude).env.example' ':(exclude)pnpm-lock.yaml' > /tmp/secret_hits 2>/dev/null; then
+            echo "::error::Potential secret material found in tracked files:"
+            cat /tmp/secret_hits
+            exit 1
+          fi
+          echo "OK: no obvious secret material in tracked files."
+
+      - name: Setup pnpm
+        if: steps.detect.outputs.app == 'true'
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node
+        if: steps.detect.outputs.app == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install (frozen lockfile)
+        if: steps.detect.outputs.app == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        if: steps.detect.outputs.app == 'true'
+        run: pnpm lint
+
+      - name: Typecheck
+        if: steps.detect.outputs.app == 'true'
+        run: pnpm typecheck
+
+      - name: Unit + integration tests
+        if: steps.detect.outputs.app == 'true'
+        run: pnpm test
+
+      - name: Architecture boundary tests
+        if: steps.detect.outputs.app == 'true'
+        run: pnpm test:architecture
+
+      - name: Production build
+        if: steps.detect.outputs.app == 'true'
+        run: pnpm build
