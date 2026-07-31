@@ -1,0 +1,43 @@
+/*
+ * Design tokens — dark navy engineering editorial (Wave 01 design authority).
+ * Raw semantic values only. Mapped to Tailwind utilities in globals.css (@theme).
+ * Do not hardcode these colors in components; use the semantic utilities.
+ */
+:root {
+  /* Backgrounds */
+  --canvas: #070b14; /* deep navy */
+  --surface: #0d1524;
+  --elevated: #131f34;
+  --overlay: rgba(3, 6, 12, 0.72);
+
+  /* Text */
+  --fg: #e8eef7; /* primary */
+  --fg-muted: #a9b7cc; /* secondary */
+  --fg-subtle: #6b7a90; /* muted */
+
+  /* Borders */
+  --border: #1e2b42;
+
+  /* Accents */
+  --accent: #22d3ee; /* cyan primary */
+  --accent-2: #2dd4bf; /* teal secondary */
+  --accent-3: #a78bfa; /* controlled purple */
+
+  /* Semantic status */
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --info: #38bdf8;
+
+  /* Focus */
+  --ring: #22d3ee;
+
+  /* Shape */
+  --radius: 0.625rem;
+
+  /* Typography stacks (system-first for a deterministic offline build) */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", "Source Code Pro",
+    Menlo, Consolas, monospace;
+}

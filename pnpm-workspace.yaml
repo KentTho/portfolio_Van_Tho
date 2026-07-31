@@ -1,0 +1,6 @@
+# pnpm 10 blocks lifecycle build scripts by default. These native packages are
+# pulled transitively by Next.js; their build scripts are intentionally ignored
+# (we do not need their optional native artifacts for the Wave 02 foundation).
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver

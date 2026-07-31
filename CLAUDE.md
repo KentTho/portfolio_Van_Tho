@@ -65,9 +65,12 @@ Cross-cutting infra under `src/infrastructure/`. Shared kernel under `src/shared
 
 ## 8. TypeScript rules
 
-- `strict: true`. No unexplained `any`. No unsafe type assertions at trust boundaries.
+- `strict: true` (+ `noUncheckedIndexedAccess`). No unexplained `any`; no unsafe `unknown` without narrowing; no unsafe assertions at trust boundaries.
+- Prefer **type inference** over annotation; derive types from a single source of truth — infer runtime types from Zod schemas with `z.infer` rather than duplicating shapes.
+- Use precise **generic constraints** (`extends`) instead of `any` to keep helpers type-safe.
 - Validate external input (forms, params, env) with schemas; never trust client-provided roles/flags.
-- Prefer explicit domain error types over throwing strings.
+- Prefer explicit domain error types over throwing strings. No `@ts-ignore`/`@ts-nocheck`.
+- *(Adopted skill rule MP-08 — see `docs/skills/SKILL_ADOPTION_MATRIX.md`.)*
 
 ## 9. React / Next.js rules
 
@@ -165,3 +168,18 @@ Local validation PASS with real output; exact commit created; feature branch pus
 ### Code quality (always)
 
 Pure domain logic; explicit error types; no hidden side effects; no provider SDK in domain; no `utils.ts` dumping ground; no circular deps; no speculative abstraction; comments explain *why/architecture*, not obvious syntax; no `TODO` without owner+reason.
+
+---
+
+## 26. Selective Skill Policy
+
+External "skill" README sources (e.g. mattpocock, Cline, Kilo) are **advisory**, not executable project rules. Full analysis lives in `docs/skills/`.
+
+- Project governance and ADRs have precedence over any skill (`PROJECT_AUTHORITY_WINS`).
+- Skills activate only for the **current Wave's relevant tasks**; read only the mapped rules (`docs/skills/WAVE_SKILL_MAP.md`), not every source each task.
+- Read `docs/skills/SKILL_ADOPTION_MATRIX.md` before applying a skill.
+- Tool-specific instructions (Cline/Kilo CLI, plugins, MCP) apply only when that tool is actually used.
+- Conflicting rules are rejected or adapted (`docs/skills/SKILL_CONFLICT_REGISTER.md`).
+- **No README command is executed** (no plugin/CLI install) without a project safety review.
+- No skill may weaken tests, TypeScript strictness, security, or Git safety; none may read or expose raw secrets.
+- Sources with unknown/unclear license stay `LOCAL_REFERENCE_ONLY` (not copied into tracked docs).

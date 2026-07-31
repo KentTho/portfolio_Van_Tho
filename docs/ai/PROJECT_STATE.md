@@ -29,10 +29,27 @@ Visitor-only public users · OWNER_ADMIN only (EDITOR schema-ready, UI off) · a
 
 Feature-first modular monolith, Clean Architecture layers. Neon = single primary DB. Supabase = Auth + Storage only. Vercel = runtime + CD authority. GitHub Actions = CI authority. See `docs/architecture/`.
 
+## Wave 02 foundation (landed on branch `feat/wave-02-foundation`)
+
+- Bootstrap mode: **MODE A** (isolated `create-next-app` scaffold outside repo → configs adapted in-repo; scaffold deleted).
+- Resolved stable versions (pinned via `pnpm-lock.yaml`): next 16.2.12 · react/react-dom 19.2.4 · typescript 5.9.3 · eslint 9.39.5 · eslint-config-next 16.2.12 · tailwindcss 4.3.3 · zod 4.4.3 · vitest 4.1.10. (Registry offered newer majors — TS 7 / ESLint 10 / React 19.2.8 — intentionally not used; the generator's compatible set was chosen.)
+- Architecture enforcement: ESLint import-boundary rules (`eslint.config.mjs`) + `tests/architecture/dependency-rules.test.ts` (real graph scan + fixture). dependency-cruiser deferred (not needed).
+- Local validation GREEN: typecheck ✅ · lint ✅ · vitest 7/7 ✅ · test:architecture 3/3 ✅ · production build ✅ (routes `/`, `/_not-found`, `/admin` static).
+
+## Wave 02B skill intake & reconciliation (branch `feat/wave-02-foundation`)
+
+- 3 Owner README sources found at repo root (UNTRACKED_OWNER_INPUT): `README_mattpocock.md` (UNKNOWN license → local-reference-only), `README_cline.md` (Apache-2.0), `README_Kilo-Org.vi.md` (MIT). Not committed.
+- Selective adoption recorded in `docs/skills/` (adoption matrix, conflict register, wave map, manifest). Net change: strengthened CLAUDE.md §8 (TS: `z.infer`, generic constraints, no unsafe any/unknown) + added §26 Selective Skill Policy.
+- Rejected: numbered folders `src/1_domain` (ADR-0001), Kilo `--auto`, README plugin/CLI installs, adding Drizzle/Supabase/Lucide in this phase.
+- Env: `.env.local` present, gitignored, untracked. `pnpm check:env` → Wave 03 keys (Neon/Supabase) PRESENT (presence ≠ connectivity); email/Sentry partial/PENDING_OPERATOR.
+- Architecture test strengthened: now covers domain, application, infrastructure→presentation, presentation→infrastructure + 4 fixtures.
+
 ## Current capability levels
 
-All modules: **L0_NOT_PRESENT** (source not yet created). Wave 01 delivers design docs only (no runtime capability).
+- Application foundation: **L3_OFFLINE_PROVEN** · Design system foundation: **L3** · Architecture boundary enforcement: **L3**.
+- Public content: **L1** (skeleton only) · Admin content operations: **L1** (shell, no auth).
+- Database / Auth / Storage / CI / Preview / Production: **L0_NOT_PRESENT**.
 
 ## Environment state
 
-No external services connected. No secrets provisioned. `.env.example` is a placeholder template only.
+No external services connected. No secrets provisioned. `.env.example` is a placeholder template only. Wave 02 builds and runs with no populated `.env`.

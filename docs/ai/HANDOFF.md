@@ -1,27 +1,34 @@
 # HANDOFF
 
-## Completed (Wave 01)
-- Governance: `CLAUDE.md`.
-- Live state: `docs/ai/{PROJECT_STATE,DECISION_LOG,CURRENT_SCOPE,NEXT_PHASE,HANDOFF}.md`.
-- Architecture: `docs/architecture/` views + ADR 0001–0006.
-- Security: `docs/security/` threat model, trust boundaries, data classification, auth & storage reviews, checklist.
-- Bootstrap files: `README.md`, `.gitignore`, `.gitattributes`, `.editorconfig`, `.node-version`, `.env.example`.
+## Completed
+- **Wave 01** (landed `main` @ `8b487c7`): governance + architecture + security docs.
+- **Wave 02** (branch `feat/wave-02-foundation`): Next.js 16 App Router foundation, strict TS, Tailwind v4 design tokens, shadcn base config, Zod env validation, feature-first Clean Architecture kernel, ESLint + Vitest architecture enforcement, public/admin layout skeletons, test harness, production build.
 
-## Evidence
-- `git ls-remote` → REMOTE_EMPTY (exit 0, no refs).
-- Toolchain versions captured in `PROJECT_STATE.md`.
+## Evidence (Wave 02)
+- Versions pinned in `pnpm-lock.yaml`; resolved next 16.2.12 / react 19.2.4 / ts 5.9.3 / eslint 9.39.5.
+- `pnpm typecheck` ✅ · `pnpm lint` ✅ · `pnpm test` 7/7 ✅ · `pnpm test:architecture` 3/3 ✅ · `pnpm build` ✅.
+- Self-healing: 1 incident (Next 16 removed `eslint` config key) → fixed `next.config.ts`.
 
-## Commands (Wave 01)
-- Read-only audit (Wave 00): git preflight, inventory, version discovery.
-- Git bootstrap + feature branch + push (see final Wave report).
+## Commands
+Version discovery; isolated scaffold (Mode A); `pnpm install`; validation matrix; exact-path stage; secret scan; commit; push feature branch.
 
 ## Failures / not run
-- No lint/typecheck/test/build — no source exists yet (deferred to Wave 02).
-- CI not present yet (Wave 07).
+- CI (GitHub Actions) — Wave 07. Preview/production/provider proofs — deferred (no services connected).
+- exactOptionalPropertyTypes not enabled (practicality) — `noUncheckedIndexedAccess` is on.
 
 ## Remaining
-- Owner review/merge of Wave 01 PR.
-- Confirm remaining safe-defaults (video provider, CMS scope, license, domain) — currently assumed.
+- Owner review/merge of Wave 02 PR (no `gh` CLI → use compare URL).
+- Prepare Neon dev + Supabase dev before Wave 03.
+
+## Wave 02B (skill intake & reconciliation)
+- 3 README sources audited → `docs/skills/` (matrix, conflict register, wave map, manifest). Sources kept untracked (mattpocock license UNKNOWN).
+- CLAUDE.md: strengthened §8 TS rules + added §26 Selective Skill Policy.
+- Added `ROADMAP.md`; `scripts/check-env.mjs` + `pnpm check:env`; strengthened architecture test (4 fixtures, 4 layers).
+- Env verified secret-safe (`.env.local` gitignored/untracked); Wave 03 keys PRESENT.
+- Report anomalies (L1–L5) reconciled: mostly NOT_REPRODUCIBLE / report-typo; temp scaffold path was `D:\web-app\wave02-scaffold-tmp` (deleted).
+
+## Temp scaffold (exact)
+`D:\web-app\wave02-scaffold-tmp` — created by `create-next-app` (Mode A), inspected, deleted (verified outside repo, not a symlink). Not tracked.
 
 ## Next-phase capsule
-Proceed to `WAVE_02_FOUNDATION` (see `NEXT_PHASE.md`) on branch `feat/wave-02-foundation`.
+`WAVE_03_DATA_AUTH_STORAGE` on `feat/wave-03-data-auth-storage` (feature-first). See `NEXT_PHASE.md` for Git-strategy note.
