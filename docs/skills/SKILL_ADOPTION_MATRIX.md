@@ -3,6 +3,25 @@
 Legend — DECISION: ADOPT · ADOPT_WITH_MODIFICATION (AWM) · DEFER · REJECT · NOT_APPLICABLE (NA) · DUPLICATE_EXISTING_RULE (DUP).
 Provenance tags: `[S]` source-derived · `[P]` project adaptation · `[M]` model inference.
 
+## From `andrej-karpathy-skills` (MIT) — global engineering discipline
+
+| RULE_ID | Summary | Category | Decision | Target Wave / File |
+|---|---|---|---|---|
+| KA-01 `[S][P]` | Think Before Coding — no silent assumptions; surface tradeoffs; ask when confused | PLANNING | ADOPT (integrated) | all · CLAUDE.md §27 |
+| KA-02 `[S]` | Simplicity First — minimum code for the real root cause; nothing speculative | ARCHITECTURE | ADOPT (integrated; reinforces §2/§25) | all · CLAUDE.md §27 |
+| KA-03 `[S]` | Surgical Changes — touch only what the request requires; clean only own orphans | GIT/EDIT | ADOPT (integrated; reinforces §18/§25) | all · CLAUDE.md §27 |
+| KA-04 `[S]` | Goal-Driven Execution — success criteria first; reproduce→test→loop→evidence | TESTING | ADOPT (integrated; reinforces §21/§24) | all · CLAUDE.md §27 |
+| KA-05 `[S]` | Install as Claude Code plugin (`/plugin install`) | TOOL_USE | REJECT — manual integration only; no installer run | — |
+| KA-06 `[P]` | Owner session rule: ask clarifying questions + options each session | PROCESS | ADOPT (Owner-instituted) | all · CLAUDE.md §27 |
+
+## Design-phase skills (activate only in Public/Admin UI redesign, after Foundation Gate)
+
+| RULE_ID | Summary | Category | Decision | Target |
+|---|---|---|---|---|
+| FD-01 `[S]` | Anthropic frontend-design: audience→single-job→design plan→critique-before/after | DESIGN | ADOPT (RUNTIME_AVAILABLE; redesign only) | Wave 04B/05 UI |
+| TA-01 `[S]` | Taste redesign-existing-projects critique checklist (hierarchy/type/spacing/anti-generic) | DESIGN_REVIEW | AWM — checklist only; no installer | Wave 04B/05 UI |
+| RB-01 `[S]` | React Bits selected components (≤2), refactored to project conventions | UI_COMPONENT | AWM — post Design Plan; NOT_A_SKILL; license-checked | Wave 04B/05 UI |
+
 ## From `mattpocock` (engineering skills)
 
 | RULE_ID | Summary | Category | Decision | Target Wave / File |
