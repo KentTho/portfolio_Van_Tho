@@ -15,6 +15,13 @@
       "when": 1785569519805,
       "tag": "0001_damp_warstar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785601499071,
+      "tag": "0002_giant_mastermind",
+      "breakpoints": true
     }
   ]
 }

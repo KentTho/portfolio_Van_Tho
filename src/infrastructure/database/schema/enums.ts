@@ -17,3 +17,25 @@ export const technologyCategory = pgEnum("technology_category", [
   "ai",
   "tooling",
 ]);
+
+// Wave 05 CMS — Group 2 (projects).
+export const projectSectionKind = pgEnum("project_section_kind", [
+  "overview",
+  "problem",
+  "context",
+  "role",
+  "architecture",
+  "decisions",
+  "tradeoffs",
+  "results",
+  "limitations",
+  "next_step",
+]);
+export const projectLinkType = pgEnum("project_link_type", [
+  "github",
+  "demo",
+  "video",
+  "docs",
+  "case_study",
+  "other",
+]);

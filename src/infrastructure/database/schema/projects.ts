@@ -1,5 +1,6 @@
 import { boolean, index, integer, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { projectStatus, projectVisibility } from "./enums";
+import { mediaAssets } from "./media-assets";
 
 export const projects = pgTable(
   "projects",
@@ -15,7 +16,7 @@ export const projects = pgTable(
     githubUrl: text("github_url"),
     liveUrl: text("live_url"),
     videoUrl: text("video_url"),
-    coverMediaId: uuid("cover_media_id"),
+    coverMediaId: uuid("cover_media_id").references(() => mediaAssets.id, { onDelete: "set null" }),
     publishedAt: timestamp("published_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
