@@ -6,3 +6,14 @@ export const projectStatus = pgEnum("project_status", ["draft", "review", "publi
 export const projectVisibility = pgEnum("project_visibility", ["public", "unlisted", "private"]);
 export const mediaVisibility = pgEnum("media_visibility", ["public", "private"]);
 export const contactStatus = pgEnum("contact_status", ["new", "read", "archived"]);
+
+// Wave 05 CMS — Group 1 (shared content foundations).
+export const technologyCategory = pgEnum("technology_category", [
+  "language",
+  "backend",
+  "frontend",
+  "data",
+  "cloud",
+  "ai",
+  "tooling",
+]);

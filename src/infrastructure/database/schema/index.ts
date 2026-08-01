@@ -7,3 +7,5 @@ export * from "./skills";
 export * from "./contact-messages";
 export * from "./audit-logs";
 export * from "./site-settings";
+export * from "./technologies";
+export * from "./tags";
