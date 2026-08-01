@@ -3,10 +3,11 @@
 > Living master status. Updated at the end of every Wave. For contribution rules see
 > [`CLAUDE.md`](CLAUDE.md); for machine state see [`docs/ai/`](docs/ai/).
 >
-> **Last updated:** Wave 03S main-integration & development-target-completion phase.
-> Wave 02/02B/03/03R are now **merged into `main`** behind a green minimal CI gate; the
-> Neon **development** database, Supabase **storage** buckets, and the signed-upload path
-> are **live-verified**. This phase does **not** implement Wave 04.
+> **Last updated:** Wave 05 CMS foundation — Group 1 applied to Neon Development.
+> Wave 02/02B/03/03R merged into `main`. Wave 04 public UI is on `feat/wave-04-public-portfolio`
+> (PR #5 OPEN, CI green, Vercel Preview ready, **not merged** to avoid production deploy). Wave 05 CMS
+> foundation runs on `feat/wave-05-cms-foundation` off `main`; **Group 0 audit + Group 1 shared taxonomy
+> (technologies, tags) applied + verified on Neon Development**. No production deploy/migration/DNS.
 
 ## 1. Snapshot (branch/integration state — machine-precise)
 
@@ -40,8 +41,8 @@
 | 03 Data/Auth/Storage | Neon+Drizzle schema/migrations, Supabase SSR Auth (GitHub OAuth) + admin authz, storage policies, repos, audit, middleware | ✅ `DATA_AUTH_LOCAL_PASS` (target proof pending) | schema+migration generated offline; auth policy unit-proven |
 | 03R Integration & target proof | Consolidate 02/02B/03→main behind minimal CI; storage authority correction (server-mediated); DB content-gap matrix; progress matrices | ✅ merged to `main` | 35/35 tests; server-mediated storage |
 | 03S Main-integration & dev-target completion | Create+merge PR #1/#2/#3 in order; CI green on `main`; build-secret fix; Neon **dev** migration + DB smoke; **storage buckets + signed-upload smoke** | ✅ **`PRE_FE_FOUNDATION_TARGET_VERIFIED_EXCEPT_PREVIEW`** (auth sign-in interactive-pending) | CI `30601997949`; 8 tables + ledger; buckets live |
-| 04 Public experience | pages, case study, blog, i18n, SEO, a11y, responsive | 🔓 **unblocked** (branch from `main`); not started this phase | — |
-| 05 Admin CMS | dashboard, CRUD, draft/publish, media, revisions, inbox, audit UI | 🔒 planned | — |
+| 04 Public experience | pages, case study, blog, i18n, SEO, a11y, responsive | ✅ Phase 1 on `feat/wave-04-public-portfolio` (PR #5 OPEN, CI green, Preview ready, **not merged**); visual redesign deferred until foundation gate | commit `94f547e` |
+| 05 CMS foundation (DB/BE) | shared taxonomy → projects → articles → career → revisions; write-side; Neon public repo; admin functional demo | 🔧 **in progress** — Group 0 audit + **Group 1 `CMS_GROUP_1_SHARED_TAXONOMY_DEV_VERIFIED`** (Neon Dev, ledger=2); Groups 2–5 next | `a9151b3`,`1f7938f` + migration `0001` applied |
 | 06 Integrations | contact, Turnstile, email, video, analytics, error tracking | 🔒 planned | email keys pending |
 | 07 CI/CD | GitHub Actions, env contracts, Neon preview branching, runbooks | 🔒 planned | — |
 | 08 Hardening | unit/integration/e2e/a11y/security, prod build, preview smoke, scans | 🔒 planned | — |

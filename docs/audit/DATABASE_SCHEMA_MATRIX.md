@@ -158,7 +158,7 @@ Each group = one focused migration + vertical slice (schema → generate → SQL
 
 | Group | Tables (migration) | Suggested commit | Gate verdict |
 |---|---|---|---|
-| G1 Shared | `technologies`, `tags` (+ enums used) | `feat(cms): add shared content taxonomy` | `CMS_GROUP_SHARED_DEV_VERIFIED` |
+| G1 Shared | `technologies`, `tags` (+ enums used) | `feat(cms): add shared content taxonomy` | ✅ **`CMS_GROUP_1_SHARED_TAXONOMY_DEV_VERIFIED`** — migration `0001_damp_warstar.sql` applied to Neon Dev (ledger=2); tables/enum/indexes/unique/enum-constraint + insert/read/update/dup-reject/cleanup smoke PASS |
 | G2 Projects | project_translations/sections/section_translations/technologies/media/links/metrics + enums; add FK `projects.cover_media_id`→media_assets | `feat(cms): add project content model` + `feat(cms): add project write workflows` | `CMS_GROUP_PROJECTS_DEV_VERIFIED` |
 | G3 Articles | `articles`, `article_translations`, `article_tags` | `feat(cms): add article content model` | `CMS_GROUP_ARTICLES_DEV_VERIFIED` |
 | G4 Career | `experiences`, `experience_translations`, `education`, `certifications`; add `profiles.row_version` | `feat(cms): add profile career content` | `CMS_GROUP_CAREER_DEV_VERIFIED` |
