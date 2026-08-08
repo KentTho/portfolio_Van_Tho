@@ -7,6 +7,10 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      // The `server-only` guard throws when imported outside an RSC graph; under Vitest we
+      // stub it so server modules (DB client, repositories) can be integration-tested.
+      // This does not weaken the real guard applied by the Next.js production build.
+      "server-only": fileURLToPath(new URL("./tests/setup/server-only-stub.ts", import.meta.url)),
     },
   },
   test: {
