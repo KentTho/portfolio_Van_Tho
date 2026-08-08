@@ -12,8 +12,11 @@ export interface TechnologyRepositoryPort {
   /** All non-deleted technologies — admin read. */
   listAll(): Promise<readonly Technology[]>;
   findBySlug(slug: string): Promise<Technology | null>;
+  /** Returns null when the id does not exist (or is already soft-deleted). */
+  findById(id: string): Promise<Technology | null>;
   create(input: TechnologyCreateInput): Promise<Technology>;
   /** Returns null when the id does not exist (or is already soft-deleted). */
   update(id: string, patch: TechnologyUpdateInput): Promise<Technology | null>;
+  setVisibility(id: string, isVisible: boolean): Promise<Technology | null>;
   softDelete(id: string): Promise<boolean>;
 }
