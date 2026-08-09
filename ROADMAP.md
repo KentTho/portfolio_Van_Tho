@@ -3,12 +3,15 @@
 > Living master status. Updated at the end of every Wave. For contribution rules see
 > [`CLAUDE.md`](CLAUDE.md); for machine state see [`docs/ai/`](docs/ai/).
 >
-> **Last updated:** Wave 05 — Infra Dev/Preview substrate closed + full DB contract (G1–G5) on Neon Development.
-> Wave 02/02B/03/03R merged into `main`. Wave 04 public UI is on `feat/wave-04-public-portfolio`
-> (PR #5 OPEN, **not merged**). Wave 05 CMS foundation on `feat/wave-05-cms-foundation` off `main`
-> (HEAD `bfe1660`): Groups 1/1B/2a/2b + DB G3 Articles / G4 Career / G5 Revisions applied + verified
-> on Neon Development (**migration ledger = 6, 25 tables**). MODE A infra substrate verified with
-> external gaps (Supabase/Vercel/Cloudflare PENDING). No production deploy/migration/DNS.
+> **Cập nhật lần cuối:** Wave 05 — **Backend Application Foundation ĐÃ XÁC MINH trên Neon Development**
+> (`BACKEND_APPLICATION_FOUNDATION_DEV_VERIFIED`). Nhánh `feat/wave-05-cms-foundation` (HEAD `1d7a9f1`):
+> hoàn tất tầng application backend cho tags / technologies / projects / articles / career / profile /
+> skills / site-settings / revisions + Public Neon Read Model hợp nhất. Verified bằng offline matrix
+> (159 test + 10 architecture + build) và 6 live smoke trên Neon Dev (12 test, fixtures dọn sạch).
+> Migration ledger = 6, 25 bảng (KHÔNG migration mới lượt này). Wave 02/02B/03/03R đã merge vào `main`.
+> Wave 04 public UI ở `feat/wave-04-public-portfolio` (PR #5 MỞ, **chưa merge**). Giai đoạn kế tiếp:
+> **ADMIN_FUNCTIONAL_CMS_COMPLETION**. Không deploy/migration/DNS production; redesign giao diện vẫn KHOÁ.
+> Chi tiết kiểm toán: [`docs/audit/WAVE05_BACKEND_APPLICATION_AUDIT.md`](docs/audit/WAVE05_BACKEND_APPLICATION_AUDIT.md).
 
 ## 1. Snapshot (branch/integration state — machine-precise)
 
@@ -16,7 +19,7 @@
 |---|---|
 | Repository | `github.com/KentTho/portfolio_Van_Tho` (public) |
 | `PRODUCTION_BRANCH` | `main` @ `cf613ec` — **application-integrated** (Wave 01+02+02B+03+03R + CI + build fix) |
-| `ACTIVE_DEVELOPMENT_BRANCH` | `main` (feature branches merged; next work branches from verified `main`) |
+| `ACTIVE_DEVELOPMENT_BRANCH` | `feat/wave-05-cms-foundation` @ `1d7a9f1` (nhánh off `main`; backend application đã verified; local == remote) |
 | `MAIN_INTEGRATION_STATUS` | **INTEGRATED** — PR #1 (CI), #2 (Wave 02), #3 (Wave 03) merged in order (merge commits) |
 | `MAIN_SHA` | `cf613ec3ea8e11573a556c5ccbf0ca374b378bf2` |
 | `MERGED_PRS` | #1 `ci/wave-03r-baseline-gate`, #2 `feat/wave-02-foundation`, #3 `feat/wave-03-data-auth-storage` |
@@ -43,7 +46,7 @@
 | 03R Integration & target proof | Consolidate 02/02B/03→main behind minimal CI; storage authority correction (server-mediated); DB content-gap matrix; progress matrices | ✅ merged to `main` | 35/35 tests; server-mediated storage |
 | 03S Main-integration & dev-target completion | Create+merge PR #1/#2/#3 in order; CI green on `main`; build-secret fix; Neon **dev** migration + DB smoke; **storage buckets + signed-upload smoke** | ✅ **`PRE_FE_FOUNDATION_TARGET_VERIFIED_EXCEPT_PREVIEW`** (auth sign-in interactive-pending) | CI `30601997949`; 8 tables + ledger; buckets live |
 | 04 Public experience | pages, case study, blog, i18n, SEO, a11y, responsive | ✅ Phase 1 on `feat/wave-04-public-portfolio` (PR #5 OPEN, CI green, Preview ready, **not merged**); visual redesign deferred until foundation gate | commit `94f547e` |
-| 05 CMS foundation (DB/BE) | shared taxonomy → projects → articles → career → revisions; write-side; Neon public repo; admin functional demo | 🔧 **in progress** — **DB contract complete** `WAVE05_DATABASE_CONTRACT_DEV_VERIFIED` + `INFRA_DEV_PREVIEW_SUBSTRATE_VERIFIED_WITH_EXTERNAL_GAPS`. Done: G1/G1B/G2a/G2b backend + DB G3/G4/G5 (Neon Dev, ledger=6, 25 tables). Next: backend/admin for articles/career/revisions, then Foundation Gate | `bfe1660` + migrations `0001`–`0005` applied |
+| 05 CMS foundation (DB/BE) | shared taxonomy → projects → articles → career → revisions; write-side; Neon public repo; admin functional demo | 🔧 **đang tiến hành** — **Backend Application Foundation ĐÃ VERIFIED** (`BACKEND_APPLICATION_FOUNDATION_DEV_VERIFIED`). Xong: G1/G1B/G2a/G2b + **G3 articles + G4 career/profile/skills/settings + G5 revisions backend** + Public Neon Read Model, tất cả verified trên Neon Dev (ledger=6, 25 bảng, 6 live smoke). Kế tiếp: **Admin Functional CMS** (+ live auth, Preview — giai đoạn sau). Contact backend HOÃN (thuộc Wave bảo mật). | `1d7a9f1` (`10fc20f`/`78a1006`/`0657732`/`cf165c0`/`1d7a9f1`) |
 | 06 Integrations | contact, Turnstile, email, video, analytics, error tracking | 🔒 planned | email keys pending |
 | 07 CI/CD | GitHub Actions, env contracts, Neon preview branching, runbooks | 🔒 planned | — |
 | 08 Hardening | unit/integration/e2e/a11y/security, prod build, preview smoke, scans | 🔒 planned | — |
@@ -58,6 +61,7 @@
 | Admin authorization policy | **L3** (unit-proven, pure) |
 | Media upload authorization (server-mediated) | **L3** (unit-proven) + **live storage L4** (buckets + signed-upload smoke on dev Supabase) |
 | Database (Neon **development**) | **L4** — full Wave-05 contract: ledger=6, **25 tables** + indexes, FK cascade/restrict/setnull, locale checks, optimistic concurrency + atomic batched-tx + published-only reads all live-verified; fixtures clean |
+| Backend content application (Neon **development**) | **L4** — tags/technologies/projects/articles/career/profile/skills/site-settings/revisions + Public Read Model; deny-by-default authz, Zod biên, atomic batch-tx, row_version, audit, published/visible-only; 6 live smoke xanh trên Neon Dev |
 | Storage (Supabase **development**) | **L4** — `portfolio-public`/`portfolio-private` created; signed upload + private signed read smoke pass |
 | Auth (Supabase GitHub OAuth) | **L2** — SSR code + policy proven; **live sign-in pending** (0 Supabase users → owner seed + admin authz smoke blocked on interactive OAuth) |
 | CI | **L4** — green on `main` (GitHub Actions) |
