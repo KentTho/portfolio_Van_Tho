@@ -18,3 +18,4 @@ export * from "./project-links";
 export * from "./project-metrics";
 export * from "./articles";
 export * from "./career";
+export * from "./revisions";

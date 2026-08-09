@@ -36,6 +36,13 @@
       "when": 1786252130702,
       "tag": "0004_steep_gravity",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786252279709,
+      "tag": "0005_yellow_ravenous",
+      "breakpoints": true
     }
   ]
 }
