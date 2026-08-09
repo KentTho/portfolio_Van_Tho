@@ -16,3 +16,4 @@ export * from "./project-technologies";
 export * from "./project-media";
 export * from "./project-links";
 export * from "./project-metrics";
+export * from "./articles";

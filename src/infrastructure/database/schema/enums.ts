@@ -39,3 +39,6 @@ export const projectLinkType = pgEnum("project_link_type", [
   "case_study",
   "other",
 ]);
+
+// Wave 05 CMS — Group 3 (articles).
+export const articleStatus = pgEnum("article_status", ["draft", "published", "archived"]);
