@@ -1,6 +1,7 @@
 # HANDOFF
 
 ## Completed
+- **Wave 05** (branch `feat/wave-05-cms-foundation` @ `bfe1660`): MODE A infra Dev/Preview substrate closure (`INFRA_DEV_PREVIEW_SUBSTRATE_VERIFIED_WITH_EXTERNAL_GAPS`) + full DB contract G1–G5 on Neon Development (`WAVE05_DATABASE_CONTRACT_DEV_VERIFIED`, ledger=6, 25 tables). Backend: technologies (G1B) + projects write-side/public read (G2b). Commits `45bf54f`→`bfe1660`. Validation: check:env 18/18 · typecheck · lint · test 87/1-skip · arch 10 · build all green; live Neon Dev smokes pass, fixtures clean.
 - **Wave 01** (landed `main` @ `8b487c7`): governance + architecture + security docs.
 - **Wave 02** (branch `feat/wave-02-foundation`): Next.js 16 App Router foundation, strict TS, Tailwind v4 design tokens, shadcn base config, Zod env validation, feature-first Clean Architecture kernel, ESLint + Vitest architecture enforcement, public/admin layout skeletons, test harness, production build.
 

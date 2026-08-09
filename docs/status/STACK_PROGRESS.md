@@ -1,4 +1,4 @@
-# Stack progress (Wave 03S)
+# Stack progress (Wave 05 — infra substrate + DB contract closure)
 
 > Scale: `0` absent · `25` source/skeleton · `50` local feature proven · `75` development/preview
 > verified · `100` production proven (monitoring + rollback). Documentation is **not** live
@@ -13,8 +13,8 @@
 
 | Layer | % | Evidence | Unverified gaps | Next unlock |
 |---|---|---|---|---|
-| **INFRASTRUCTURE** | **55** | All of the below **merged to `main` @ `cf613ec`**; **CI green on `main`** (Actions `30601997949`); env split + `server-only`; secret-free production build proven | no Vercel Preview deployed; no observability; no prod | Deploy Vercel Preview; wire Sentry (Wave 06/07) |
-| **DATABASE** | **60** | Neon **development** migration **applied**; ledger = 1; **8 kernel tables** + 18 indexes/constraints verified; read/write + unique-constraint smoke pass; DB left clean | CMS content tables deferred (gap matrix); no preview-branch-per-PR yet; no prod DB | Wave 05 content tables; Wave 07 Neon preview branching |
+| **INFRASTRUCTURE** | **70** | `INFRA_DEV_PREVIEW_SUBSTRATE_VERIFIED_WITH_EXTERNAL_GAPS` (Wave 05 MODE A): Git/CI contract, Neon Dev pooled+direct, migration system, env/secret/server-only all verified; secret-free build | Vercel Preview deploy `PENDING_OPERATOR`; Supabase live sign-in / Cloudflare `PENDING_INTERACTIVE`; no prod | Vercel Preview deploy; Sentry (Wave 06/07) |
+| **DATABASE** | **75** | `WAVE05_DATABASE_CONTRACT_DEV_VERIFIED`: full Wave-05 contract on Neon **development** — ledger = 6, **25 tables** (G1–G5), FK cascade/restrict/setnull, locale checks, atomic batched-tx + optimistic concurrency + published-only reads live-verified; fixtures clean | no preview-branch-per-PR yet; no prod DB | Backend/admin for articles/career/revisions; Wave 07 Neon preview branching |
 | **BACKEND** | **60** | Pure domain; admin authz + `RequireAdmin` (unit-proven); **server-mediated media upload** (unit-proven) + **live signed-upload smoke** against dev Supabase; audit writer writes to live dev DB; lazy env/db (build needs no secrets) | live admin session/authz not exercised end-to-end (0 Supabase users); contact/email path (Wave 06) | Interactive OAuth sign-in → owner seed → admin authz smoke |
 | **FRONTEND** | **10** | App shell, admin login page, auth error page, admin protected layout (now `force-dynamic`); design tokens | no public pages, i18n, case study, SEO (all Wave 04) | Wave 04 (unblocked; not started this phase) |
 | **OVERALL** | **~40** | weighted; foundation merged + dev-target-verified; no production, no preview, no live auth session | production, preview, live OAuth session, live data-driven UI | Preview deploy + interactive OAuth; then Wave 04 |

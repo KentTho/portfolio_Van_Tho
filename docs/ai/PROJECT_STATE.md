@@ -29,6 +29,17 @@ Visitor-only public users · OWNER_ADMIN only (EDITOR schema-ready, UI off) · a
 
 Feature-first modular monolith, Clean Architecture layers. Neon = single primary DB. Supabase = Auth + Storage only. Vercel = runtime + CD authority. GitHub Actions = CI authority. See `docs/architecture/`.
 
+## Current machine state (Wave 05 — verified)
+
+- **Active branch:** `feat/wave-05-cms-foundation` @ `bfe1660` (= origin, in sync). Production locked (PR #5 unmerged; no prod deploy/migration/DNS).
+- **Migration ledger:** 6 (`0000`–`0005`), applied on Neon **Development** = 6 (no drift). **25 public tables**.
+- **DB contract:** `WAVE05_DATABASE_CONTRACT_DEV_VERIFIED` — G1 taxonomy, G2a projects model, G3 articles, G4 career, G5 revisions. See `docs/audit/WAVE05_DATABASE_CONTRACT.md`.
+- **Infra substrate:** `INFRA_DEV_PREVIEW_SUBSTRATE_VERIFIED_WITH_EXTERNAL_GAPS`. See `docs/audit/INFRA_DEV_PREVIEW_SUBSTRATE.md`.
+- **Backend done:** identity, media, technologies (G1B full), projects (G2b write-side + neutral public read). `CMS_G1B_TECHNOLOGY_APPLICATION_DEV_VERIFIED`, `CMS_GROUP_2_PROJECTS_DEV_VERIFIED`.
+- **Transaction strategy:** neon-http `db.batch` → `client.transaction` (atomic); no interactive tx, no Pool.
+- **External PENDING:** Supabase live OAuth sign-in `PENDING_INTERACTIVE`; Vercel Preview deploy `PENDING_OPERATOR`; Cloudflare `PENDING_INTERACTIVE`. None block DB work.
+- **Next phase:** `WAVE05_BACKEND_ADMIN_FUNCTIONAL_COMPLETION` (articles/career/revisions backend + admin functional). Frontend redesign `BLOCKED_UNTIL_BACKEND_ADMIN_FOUNDATION_PASS`.
+
 ## Wave 02 foundation (landed on branch `feat/wave-02-foundation`)
 
 - Bootstrap mode: **MODE A** (isolated `create-next-app` scaffold outside repo → configs adapted in-repo; scaffold deleted).

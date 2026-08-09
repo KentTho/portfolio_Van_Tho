@@ -3,11 +3,12 @@
 > Living master status. Updated at the end of every Wave. For contribution rules see
 > [`CLAUDE.md`](CLAUDE.md); for machine state see [`docs/ai/`](docs/ai/).
 >
-> **Last updated:** Wave 05 CMS foundation — Group 1 applied to Neon Development.
+> **Last updated:** Wave 05 — Infra Dev/Preview substrate closed + full DB contract (G1–G5) on Neon Development.
 > Wave 02/02B/03/03R merged into `main`. Wave 04 public UI is on `feat/wave-04-public-portfolio`
-> (PR #5 OPEN, CI green, Vercel Preview ready, **not merged** to avoid production deploy). Wave 05 CMS
-> foundation runs on `feat/wave-05-cms-foundation` off `main`; **Group 0 audit + Group 1 shared taxonomy
-> (technologies, tags) applied + verified on Neon Development**. No production deploy/migration/DNS.
+> (PR #5 OPEN, **not merged**). Wave 05 CMS foundation on `feat/wave-05-cms-foundation` off `main`
+> (HEAD `bfe1660`): Groups 1/1B/2a/2b + DB G3 Articles / G4 Career / G5 Revisions applied + verified
+> on Neon Development (**migration ledger = 6, 25 tables**). MODE A infra substrate verified with
+> external gaps (Supabase/Vercel/Cloudflare PENDING). No production deploy/migration/DNS.
 
 ## 1. Snapshot (branch/integration state — machine-precise)
 
@@ -42,7 +43,7 @@
 | 03R Integration & target proof | Consolidate 02/02B/03→main behind minimal CI; storage authority correction (server-mediated); DB content-gap matrix; progress matrices | ✅ merged to `main` | 35/35 tests; server-mediated storage |
 | 03S Main-integration & dev-target completion | Create+merge PR #1/#2/#3 in order; CI green on `main`; build-secret fix; Neon **dev** migration + DB smoke; **storage buckets + signed-upload smoke** | ✅ **`PRE_FE_FOUNDATION_TARGET_VERIFIED_EXCEPT_PREVIEW`** (auth sign-in interactive-pending) | CI `30601997949`; 8 tables + ledger; buckets live |
 | 04 Public experience | pages, case study, blog, i18n, SEO, a11y, responsive | ✅ Phase 1 on `feat/wave-04-public-portfolio` (PR #5 OPEN, CI green, Preview ready, **not merged**); visual redesign deferred until foundation gate | commit `94f547e` |
-| 05 CMS foundation (DB/BE) | shared taxonomy → projects → articles → career → revisions; write-side; Neon public repo; admin functional demo | 🔧 **in progress** — Group 0 audit + **Group 1 `CMS_GROUP_1_SHARED_TAXONOMY_DEV_VERIFIED`** (Neon Dev, ledger=2); Groups 2–5 next | `a9151b3`,`1f7938f` + migration `0001` applied |
+| 05 CMS foundation (DB/BE) | shared taxonomy → projects → articles → career → revisions; write-side; Neon public repo; admin functional demo | 🔧 **in progress** — **DB contract complete** `WAVE05_DATABASE_CONTRACT_DEV_VERIFIED` + `INFRA_DEV_PREVIEW_SUBSTRATE_VERIFIED_WITH_EXTERNAL_GAPS`. Done: G1/G1B/G2a/G2b backend + DB G3/G4/G5 (Neon Dev, ledger=6, 25 tables). Next: backend/admin for articles/career/revisions, then Foundation Gate | `bfe1660` + migrations `0001`–`0005` applied |
 | 06 Integrations | contact, Turnstile, email, video, analytics, error tracking | 🔒 planned | email keys pending |
 | 07 CI/CD | GitHub Actions, env contracts, Neon preview branching, runbooks | 🔒 planned | — |
 | 08 Hardening | unit/integration/e2e/a11y/security, prod build, preview smoke, scans | 🔒 planned | — |
@@ -56,7 +57,7 @@
 | Application foundation · Design system · Architecture enforcement | **L3** (offline proven, on `main`) |
 | Admin authorization policy | **L3** (unit-proven, pure) |
 | Media upload authorization (server-mediated) | **L3** (unit-proven) + **live storage L4** (buckets + signed-upload smoke on dev Supabase) |
-| Database (Neon **development**) | **L4** — migration applied, ledger + 8 tables + indexes verified, read/write + unique-constraint smoke pass |
+| Database (Neon **development**) | **L4** — full Wave-05 contract: ledger=6, **25 tables** + indexes, FK cascade/restrict/setnull, locale checks, optimistic concurrency + atomic batched-tx + published-only reads all live-verified; fixtures clean |
 | Storage (Supabase **development**) | **L4** — `portfolio-public`/`portfolio-private` created; signed upload + private signed read smoke pass |
 | Auth (Supabase GitHub OAuth) | **L2** — SSR code + policy proven; **live sign-in pending** (0 Supabase users → owner seed + admin authz smoke blocked on interactive OAuth) |
 | CI | **L4** — green on `main` (GitHub Actions) |
