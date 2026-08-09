@@ -31,7 +31,9 @@ Feature-first modular monolith, Clean Architecture layers. Neon = single primary
 
 ## Current machine state (Wave 05 — verified)
 
-- **Active branch:** `feat/wave-05-cms-foundation` @ `1d7a9f1` (= origin, in sync). Production locked (PR #5 unmerged; no prod deploy/migration/DNS).
+- **Active branch:** `feat/wave-05-cms-foundation` @ `f0fd362` (= origin, in sync). Production locked (PR #5 unmerged; no prod deploy/migration/DNS).
+- **Admin CMS:** ✅ control plane đầy đủ (offline-verified: typecheck/lint/168 test/build 37 routes) — profile/projects/articles/career/skills/technologies/tags/settings/audit/revisions; media+messages = status pages. UI→Server Action→use-case→repo (không chạm Drizzle). Sơ đồ: `docs/architecture/SYSTEM_MAP.md`.
+- **Auth:** `bootstrapOwnerAdmin` (first-login provisioning, allow-list gated) wired vào `/auth/callback`. **OWNER_ADMIN_DEV_AUTH = PENDING_OPERATOR** — host Supabase không reachable từ môi trường build; `app_users` = 0 (tự seed khi Owner đăng nhập OAuth thật). SUPABASE_SECRET_KEY + ADMIN_ALLOWED_EMAILS PRESENT.
 - **Migration ledger:** 6 (`0000`–`0005`), applied on Neon **Development** = 6 (no drift). **25 public tables**. Không migration mới lượt backend này.
 - **DB contract:** `WAVE05_DATABASE_CONTRACT_DEV_VERIFIED` — G1 taxonomy, G2a projects model, G3 articles, G4 career, G5 revisions. See `docs/audit/WAVE05_DATABASE_CONTRACT.md`.
 - **Backend application:** ✅ `BACKEND_APPLICATION_FOUNDATION_DEV_VERIFIED` — tags, technologies (G1B), projects (G2b), articles (G3), career + profile + skills + site-settings (G4), revisions (G5), + Public Neon Read Model hợp nhất. Deny-by-default authz, Zod biên, atomic `db.batch`, row_version, audit, published/visible-only. See `docs/audit/WAVE05_BACKEND_APPLICATION_AUDIT.md`.

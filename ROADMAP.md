@@ -3,15 +3,17 @@
 > Living master status. Updated at the end of every Wave. For contribution rules see
 > [`CLAUDE.md`](CLAUDE.md); for machine state see [`docs/ai/`](docs/ai/).
 >
-> **Cập nhật lần cuối:** Wave 05 — **Backend Application Foundation ĐÃ XÁC MINH trên Neon Development**
-> (`BACKEND_APPLICATION_FOUNDATION_DEV_VERIFIED`). Nhánh `feat/wave-05-cms-foundation` (HEAD `1d7a9f1`):
-> hoàn tất tầng application backend cho tags / technologies / projects / articles / career / profile /
-> skills / site-settings / revisions + Public Neon Read Model hợp nhất. Verified bằng offline matrix
-> (159 test + 10 architecture + build) và 6 live smoke trên Neon Dev (12 test, fixtures dọn sạch).
-> Migration ledger = 6, 25 bảng (KHÔNG migration mới lượt này). Wave 02/02B/03/03R đã merge vào `main`.
-> Wave 04 public UI ở `feat/wave-04-public-portfolio` (PR #5 MỞ, **chưa merge**). Giai đoạn kế tiếp:
-> **ADMIN_FUNCTIONAL_CMS_COMPLETION**. Không deploy/migration/DNS production; redesign giao diện vẫn KHOÁ.
-> Chi tiết kiểm toán: [`docs/audit/WAVE05_BACKEND_APPLICATION_AUDIT.md`](docs/audit/WAVE05_BACKEND_APPLICATION_AUDIT.md).
+> **Cập nhật lần cuối:** Wave 05 — **Admin Functional CMS hoàn tất trên Development** (build/typecheck/lint
+> xanh) + **Backend Application Foundation ĐÃ XÁC MINH trên Neon Dev**. Nhánh `feat/wave-05-cms-foundation`
+> (HEAD `f0fd362`): tầng application backend (tags/technologies/projects/articles/career/profile/skills/
+> site-settings/revisions + Public Read Model) + **Admin control plane** đầy đủ (dashboard, profile,
+> projects, articles, experience, education, certifications, skills, technologies, tags, settings, audit,
+> revisions; media/messages = trang trạng thái trung thực) qua Server Action → use-case → repo (UI không
+> chạm Drizzle). **First-login owner provisioning** (allow-list gated) đã wire vào `/auth/callback`.
+> Verified: typecheck · lint · **168 test** · 10 architecture · build (37 routes) · 6 live smoke Neon Dev.
+> Ledger = 6, 25 bảng (KHÔNG migration mới). **Auth session trực tiếp = PENDING_OPERATOR** (host Supabase
+> không reachable từ môi trường này). **Preview = PENDING_OPERATOR**. Giai đoạn kế: `FRONTEND_REDESIGN`
+> (vẫn KHOÁ đến khi operator xác nhận auth+preview). Sơ đồ toàn dự án: [`docs/architecture/SYSTEM_MAP.md`](docs/architecture/SYSTEM_MAP.md).
 
 ## 1. Snapshot (branch/integration state — machine-precise)
 
@@ -19,12 +21,12 @@
 |---|---|
 | Repository | `github.com/KentTho/portfolio_Van_Tho` (public) |
 | `PRODUCTION_BRANCH` | `main` @ `cf613ec` — **application-integrated** (Wave 01+02+02B+03+03R + CI + build fix) |
-| `ACTIVE_DEVELOPMENT_BRANCH` | `feat/wave-05-cms-foundation` @ `1d7a9f1` (nhánh off `main`; backend application đã verified; local == remote) |
+| `ACTIVE_DEVELOPMENT_BRANCH` | `feat/wave-05-cms-foundation` @ `f0fd362` (backend application + Admin CMS đã verified offline; local == remote) |
 | `MAIN_INTEGRATION_STATUS` | **INTEGRATED** — PR #1 (CI), #2 (Wave 02), #3 (Wave 03) merged in order (merge commits) |
 | `MAIN_SHA` | `cf613ec3ea8e11573a556c5ccbf0ca374b378bf2` |
 | `MERGED_PRS` | #1 `ci/wave-03r-baseline-gate`, #2 `feat/wave-02-foundation`, #3 `feat/wave-03-data-auth-storage` |
 | `CI_STATUS` | **GREEN on `main`** — Actions run `30601997949` (`quality` job) success @ `cf613ec` |
-| `TARGET_PROOF_STATUS` | **DEV_VERIFIED (DB+Storage); AUTH_PENDING_INTERACTIVE** — Neon dev migrated + smoke-verified; buckets created + signed-upload smoke-verified; live GitHub OAuth sign-in + owner seed pending (0 Supabase users) |
+| `TARGET_PROOF_STATUS` | **DEV_VERIFIED (DB+Storage+Backend+Admin offline); AUTH_PENDING_OPERATOR** — Neon dev + buckets smoke-verified; backend application + Admin CMS verified (typecheck/lint/168 test/build); **owner provisioning code wired** (`bootstrapOwnerAdmin` on `/auth/callback`) nhưng live sign-in chưa chạy được (host Supabase không reachable từ môi trường build → `OWNER_ADMIN_DEV_AUTH = PENDING_OPERATOR`; `app_users` = 0) |
 | `PREVIEW_STATUS` | **PENDING_OPERATOR** — Vercel CLI authenticated (`kenttho`); preview deploy needs env propagation + OAuth redirect config |
 | Stack | Next.js 16 · React 19 · TypeScript 5 (strict) · Tailwind v4 · pnpm · Neon · Supabase Auth/Storage · Vercel · Cloudflare DNS+Turnstile |
 | Architecture | Feature-first modular monolith + Clean Architecture |
