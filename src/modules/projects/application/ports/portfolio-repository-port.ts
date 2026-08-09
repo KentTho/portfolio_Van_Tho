@@ -48,7 +48,22 @@ export interface PublicProjectDetail extends PublicProjectSummary {
   readonly technologies: readonly PublicProjectTechnology[];
 }
 
+export interface PublicArticleSummary {
+  readonly slug: string;
+  readonly title: string;
+  readonly summary: string | null;
+  readonly featured: boolean;
+  readonly publishedAt: Date | null;
+  readonly tags: readonly string[];
+}
+
+export interface PublicArticleDetail extends PublicArticleSummary {
+  readonly bodyMd: string;
+}
+
 export interface PortfolioRepositoryPort {
   listPublishedProjects(locale: Locale): Promise<readonly PublicProjectSummary[]>;
   getPublishedProject(slug: string, locale: Locale): Promise<PublicProjectDetail | null>;
+  listPublishedArticles(locale: Locale): Promise<readonly PublicArticleSummary[]>;
+  getPublishedArticle(slug: string, locale: Locale): Promise<PublicArticleDetail | null>;
 }

@@ -3,12 +3,17 @@ import { and, asc, desc, eq, inArray, isNull } from "drizzle-orm";
 import { DEFAULT_LOCALE, type Locale } from "@/shared/domain/locale";
 import type {
   PortfolioRepositoryPort,
+  PublicArticleDetail,
+  PublicArticleSummary,
   PublicProjectDetail,
   PublicProjectSection,
   PublicProjectSummary,
 } from "@/modules/projects/application/ports/portfolio-repository-port";
 import { getDb } from "@/infrastructure/database/client";
 import {
+  articleTags,
+  articleTranslations,
+  articles,
   projectLinks,
   projectMetrics,
   projectSections,
@@ -16,6 +21,7 @@ import {
   projectTechnologies,
   projectTranslations,
   projects,
+  tags,
   technologies,
 } from "@/infrastructure/database/schema";
 
@@ -155,6 +161,72 @@ export class DrizzlePortfolioRepository implements PortfolioRepositoryPort {
       })),
       sections,
       technologies: techRows.map((t) => ({ slug: t.slug, name: t.name })),
+    };
+  }
+
+  async listPublishedArticles(locale: Locale): Promise<readonly PublicArticleSummary[]> {
+    const db = getDb();
+    const rows = await db
+      .select()
+      .from(articles)
+      .where(and(eq(articles.status, "published"), isNull(articles.deletedAt)))
+      .orderBy(desc(articles.featured), asc(articles.featuredOrder), desc(articles.publishedAt));
+    if (rows.length === 0) return [];
+
+    const ids = rows.map((r) => r.id);
+    const [translations, tagRows] = await Promise.all([
+      db.select().from(articleTranslations).where(inArray(articleTranslations.articleId, ids)),
+      db
+        .select({ articleId: articleTags.articleId, name: tags.name, sortOrder: articleTags.sortOrder })
+        .from(articleTags)
+        .innerJoin(tags, eq(articleTags.tagId, tags.id))
+        .where(and(inArray(articleTags.articleId, ids), isNull(tags.deletedAt)))
+        .orderBy(asc(articleTags.sortOrder)),
+    ]);
+
+    return rows.map((r) => {
+      const tr = pickByLocale(translations.filter((t) => t.articleId === r.id), locale);
+      return {
+        slug: r.slug,
+        title: tr?.title ?? r.slug,
+        summary: tr?.summary ?? null,
+        featured: r.featured,
+        publishedAt: r.publishedAt,
+        tags: tagRows.filter((t) => t.articleId === r.id).map((t) => t.name),
+      };
+    });
+  }
+
+  async getPublishedArticle(slug: string, locale: Locale): Promise<PublicArticleDetail | null> {
+    const db = getDb();
+    const found = await db
+      .select()
+      .from(articles)
+      .where(and(eq(articles.slug, slug), eq(articles.status, "published"), isNull(articles.deletedAt)))
+      .limit(1);
+    const article = found[0];
+    if (!article) return null;
+    const id = article.id;
+
+    const [translations, tagRows] = await Promise.all([
+      db.select().from(articleTranslations).where(eq(articleTranslations.articleId, id)),
+      db
+        .select({ name: tags.name, sortOrder: articleTags.sortOrder })
+        .from(articleTags)
+        .innerJoin(tags, eq(articleTags.tagId, tags.id))
+        .where(and(eq(articleTags.articleId, id), isNull(tags.deletedAt)))
+        .orderBy(asc(articleTags.sortOrder)),
+    ]);
+
+    const tr = pickByLocale(translations, locale);
+    return {
+      slug: article.slug,
+      title: tr?.title ?? article.slug,
+      summary: tr?.summary ?? null,
+      featured: article.featured,
+      publishedAt: article.publishedAt,
+      tags: tagRows.map((t) => t.name),
+      bodyMd: tr?.bodyMd ?? "",
     };
   }
 }
