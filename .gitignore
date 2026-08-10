@@ -51,3 +51,7 @@ tmp/
 /blob-report/
 /playwright/.cache/
 tests/.auth/
+
+# Understand-Anything generated knowledge graph + cache (local tool artifact)
+.ua/
+.understand-anything/

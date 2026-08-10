@@ -164,6 +164,10 @@ Publish/update nội dung → append `content_revisions` (đa hình, `version=ma
 | Trạng thái/tiến độ dự án | `docs/ai/REPORTS_INDEX.md` |
 
 ---
-*Phương pháp Understand-Anything áp dụng natively. Muốn bản knowledge-graph tương tác (`.ua/`), Owner
-tự chạy `/plugin marketplace add Egonex-AI/Understand-Anything` rồi `/understand` — tài liệu này là
-bản tương đương đọc-được, an toàn với governance.*
+*Phương pháp Understand-Anything áp dụng natively (bản đọc-được, an toàn governance).*
+
+> **✅ Bản graph tương tác đã được sinh (local):** plugin `understand-anything@2.9.4` đã cài + chạy
+> `/understand` trên nhánh này → **`.ua/knowledge-graph.json`** (567 node · 591 edge · 10 layer ·
+> 13 tour step; 273 file code phân tích, phạm vi `src/` — loại `tests/`,`docs/`). `.ua/` được **gitignore**
+> (artifact cục bộ, tái sinh được). Xem tương tác: chạy **`/understand-anything:understand-dashboard`**;
+> hỏi đáp code: `/understand-anything:understand-chat`. Tài liệu `.md` này là bản tóm tắt bền vững trong repo.
