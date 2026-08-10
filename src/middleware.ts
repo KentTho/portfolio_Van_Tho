@@ -1,25 +1,41 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/infrastructure/supabase/middleware-client";
+import { DEFAULT_LOCALE, LOCALES } from "@/shared/i18n";
 
 /**
- * Refreshes the Supabase session on every matched request and gates /admin.
- * Authentication (session present) is checked here; authorization (allow-list +
- * role) is enforced again server-side in the admin layout (defense in depth).
+ * Two responsibilities:
+ *  - Admin/auth routes: refresh the Supabase session and gate /admin (authorization
+ *    is enforced again in the admin layout — defense in depth).
+ *  - Public routes: ensure a locale prefix (default `vi`), redirecting when absent.
  */
 export async function middleware(request: NextRequest) {
-  const { response, user } = await updateSession(request);
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/admin") && !user) {
+  const isAdminApp = pathname === "/admin" || pathname.startsWith("/admin/");
+  const isAuthFlow = pathname === "/admin-login" || pathname.startsWith("/auth");
+
+  if (isAdminApp || isAuthFlow) {
+    const { response, user } = await updateSession(request);
+    if (isAdminApp && !user) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin-login";
+      url.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(url);
+    }
+    return response;
+  }
+
+  const hasLocale = LOCALES.some((l) => pathname === `/${l}` || pathname.startsWith(`/${l}/`));
+  if (!hasLocale) {
     const url = request.nextUrl.clone();
-    url.pathname = "/admin-login";
-    url.searchParams.set("redirect", pathname);
+    url.pathname = `/${DEFAULT_LOCALE}${pathname === "/" ? "" : pathname}`;
     return NextResponse.redirect(url);
   }
 
-  return response;
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/auth/:path*"],
+  // All routes except Next internals, API handlers and files with an extension.
+  matcher: ["/((?!_next|api|.*\\..*).*)"],
 };
