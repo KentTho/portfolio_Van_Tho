@@ -3,6 +3,10 @@ import { LOCALES } from "@/shared/i18n";
 import { SITE } from "@/config/site";
 import { getPortfolioRepository } from "@/composition/public-portfolio";
 
+// Reads live project/article slugs from Neon, so the sitemap is generated on demand
+// (keeps `next build` secret-free). Revalidated hourly at runtime.
+export const dynamic = "force-dynamic";
+
 const STATIC_PATHS = ["", "/projects", "/articles", "/about", "/resume", "/contact"] as const;
 
 /** Localized sitemap. Sample content is excluded (it also carries noindex metadata). */

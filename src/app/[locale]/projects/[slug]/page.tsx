@@ -3,16 +3,17 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Code2, ExternalLink } from "lucide-react";
-import { isLocale, LOCALES, pick, type Locale } from "@/shared/i18n";
+import { isLocale, pick, type Locale } from "@/shared/i18n";
 import { getDictionary } from "@/i18n/dictionary";
 import { getPortfolioRepository } from "@/composition/public-portfolio";
 import { buildLocaleMetadata } from "@/lib/seo";
 import { SampleBadge } from "@/components/public/sample-badge";
 import { TechnologyLogo } from "@/components/technology/technology-logo";
 
+// Slugs render on demand from the live Neon read model (see [locale]/layout `dynamic`);
+// no build-time DB access, so no params are pre-generated here.
 export async function generateStaticParams() {
-  const projects = await getPortfolioRepository().listProjects();
-  return LOCALES.flatMap((locale) => projects.map((p) => ({ locale, slug: p.slug })));
+  return [] as { locale: string; slug: string }[];
 }
 
 export async function generateMetadata({

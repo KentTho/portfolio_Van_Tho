@@ -6,6 +6,11 @@ import { CosmicBackground } from "@/components/public/cosmic-background";
 import { PublicHeader, type NavItem } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
 
+// Public data now comes from the live Neon read model, so the [locale] subtree renders
+// on demand (revalidated per request) rather than at build. This keeps the build secret-free
+// (no DB access during `next build`); can move to ISR once a build-time Neon branch exists (Wave 07).
+export const dynamic = "force-dynamic";
+
 export function generateStaticParams() {
   return LOCALES.map((locale) => ({ locale }));
 }
