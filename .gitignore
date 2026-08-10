@@ -44,3 +44,10 @@ tmp/
 
 # Claude Code local (user-owned) settings — keep out of VCS
 .claude/settings.local.json
+
+# Playwright — reports + LOCAL-ONLY authenticated storageState (never commit)
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+tests/.auth/
