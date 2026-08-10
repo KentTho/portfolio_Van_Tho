@@ -3,17 +3,19 @@
 > Living master status. Updated at the end of every Wave. For contribution rules see
 > [`CLAUDE.md`](CLAUDE.md); for machine state see [`docs/ai/`](docs/ai/).
 >
-> **Cập nhật lần cuối:** Wave 05 — **Admin Functional CMS hoàn tất trên Development** (build/typecheck/lint
-> xanh) + **Backend Application Foundation ĐÃ XÁC MINH trên Neon Dev**. Nhánh `feat/wave-05-cms-foundation`
-> (HEAD `f0fd362`): tầng application backend (tags/technologies/projects/articles/career/profile/skills/
-> site-settings/revisions + Public Read Model) + **Admin control plane** đầy đủ (dashboard, profile,
-> projects, articles, experience, education, certifications, skills, technologies, tags, settings, audit,
-> revisions; media/messages = trang trạng thái trung thực) qua Server Action → use-case → repo (UI không
-> chạm Drizzle). **First-login owner provisioning** (allow-list gated) đã wire vào `/auth/callback`.
-> Verified: typecheck · lint · **168 test** · 10 architecture · build (37 routes) · 6 live smoke Neon Dev.
-> Ledger = 6, 25 bảng (KHÔNG migration mới). **Auth session trực tiếp = PENDING_OPERATOR** (host Supabase
-> không reachable từ môi trường này). **Preview = PENDING_OPERATOR**. Giai đoạn kế: `FRONTEND_REDESIGN`
-> (vẫn KHOÁ đến khi operator xác nhận auth+preview). Sơ đồ toàn dự án: [`docs/architecture/SYSTEM_MAP.md`](docs/architecture/SYSTEM_MAP.md).
+> **Cập nhật lần cuối:** Wave 05 — **Final Foundation Gate (Development-verified)**. Nhánh
+> **`integration/pre-fe-foundation`** (HEAD **`a086c84`**, local == remote): hợp nhất Wave-04 public + Wave-05
+> foundation; **public đọc trực tiếp live Neon** (`NeonPortfolioRepository`, single runtime authority, không
+> fixture fallback); Admin control plane đầy đủ (Server Action → use-case → repo, UI không chạm Drizzle).
+> **Auth: `OWNER_ADMIN_DEV_AUTH_VERIFIED`** (Owner đã OAuth; 1 `app_users`=owner_admin/active). Verified:
+> check:env 18/18 · typecheck · lint · **184 test +6 skip** · 10 architecture · **secret-free build** · 6 live
+> smoke Neon Dev · **public browser E2E 9/9**. Ledger = 6, 25 bảng (KHÔNG migration mới). **Còn 2 việc thao
+> tác Owner:** `AUTHENTICATED_BROWSER_E2E = PENDING_OPERATOR` + `PREVIEW = PENDING_OPERATOR`. `FRONTEND_REDESIGN
+> = BLOCKED_PENDING_FINAL_OPERATOR_PROOF`.
+>
+> **📍 Báo cáo & tài liệu nằm ở đâu (đọc mục này trước):** xem **[`docs/ai/REPORTS_INDEX.md`](docs/ai/REPORTS_INDEX.md)**
+> — bản đồ mọi file báo cáo/tiến độ. Hiểu toàn hệ thống + luồng xử lý: **[`docs/architecture/PROJECT_UNDERSTANDING.md`](docs/architecture/PROJECT_UNDERSTANDING.md)**
+> (knowledge map) + **[`docs/architecture/SYSTEM_MAP.md`](docs/architecture/SYSTEM_MAP.md)** (ERD + infra/data/BE flows).
 
 ## 1. Snapshot (branch/integration state — machine-precise)
 
@@ -21,13 +23,17 @@
 |---|---|
 | Repository | `github.com/KentTho/portfolio_Van_Tho` (public) |
 | `PRODUCTION_BRANCH` | `main` @ `cf613ec` — **application-integrated** (Wave 01+02+02B+03+03R + CI + build fix) |
-| `ACTIVE_DEVELOPMENT_BRANCH` | `feat/wave-05-cms-foundation` @ `f0fd362` (backend application + Admin CMS đã verified offline; local == remote) |
-| `MAIN_INTEGRATION_STATUS` | **INTEGRATED** — PR #1 (CI), #2 (Wave 02), #3 (Wave 03) merged in order (merge commits) |
-| `MAIN_SHA` | `cf613ec3ea8e11573a556c5ccbf0ca374b378bf2` |
-| `MERGED_PRS` | #1 `ci/wave-03r-baseline-gate`, #2 `feat/wave-02-foundation`, #3 `feat/wave-03-data-auth-storage` |
-| `CI_STATUS` | **GREEN on `main`** — Actions run `30601997949` (`quality` job) success @ `cf613ec` |
-| `TARGET_PROOF_STATUS` | **DEV_VERIFIED (DB+Storage+Backend+Admin offline); AUTH_PENDING_OPERATOR** — Neon dev + buckets smoke-verified; backend application + Admin CMS verified (typecheck/lint/168 test/build); **owner provisioning code wired** (`bootstrapOwnerAdmin` on `/auth/callback`) nhưng live sign-in chưa chạy được (host Supabase không reachable từ môi trường build → `OWNER_ADMIN_DEV_AUTH = PENDING_OPERATOR`; `app_users` = 0) |
-| `PREVIEW_STATUS` | **PENDING_OPERATOR** — Vercel CLI authenticated (`kenttho`); preview deploy needs env propagation + OAuth redirect config |
+| `ACTIVE_DEVELOPMENT_BRANCH` | **`integration/pre-fe-foundation`** @ **`a086c84`** (Wave-04 public + Wave-05 foundation integrated; public wired live Neon; local == remote) |
+| `CURRENT_HEAD` | `a086c8497b7fb02a0592ae3580328dd8879eff3b` |
+| `MAIN_INTEGRATION_STATUS` | **INTEGRATED** — PR #1 (CI), #2 (Wave 02), #3 (Wave 03) merged in order. `main` @ `cf613ec` (integration branch NOT yet merged to main — pre-redesign) |
+| `CI_STATUS` | **GREEN on `main`** — Actions run `30601997949` @ `cf613ec` |
+| `AUTH_STATUS` | ✅ **`OWNER_ADMIN_DEV_AUTH_VERIFIED`** — Owner completed GitHub OAuth; `bootstrapOwnerAdmin` provisioned **1 `app_users` = owner_admin / active** (Supabase UID linked, masked read-only proof on Neon) |
+| `ADMIN_STATUS` | ✅ functional control plane (15 areas) — Server Action → use-case → repo (UI never touches Drizzle; arch 10/10) |
+| `PUBLIC_NEON_STATUS` | ✅ **LIVE** — `NeonPortfolioRepository` = single runtime authority; no fixture runtime fallback; on-demand render keeps build secret-free |
+| `PUBLIC_BROWSER_E2E_STATUS` | ✅ **VERIFIED_9_OF_9** (headless chromium, live Neon: no admin/draft/archive leak; anon `/admin`→login; locale redirect) |
+| `AUTHENTICATED_BROWSER_E2E_STATUS` | ⏳ **PENDING_OPERATOR** — specs ready; needs local storageState via `pnpm e2e:auth-setup` (headed OAuth once) |
+| `PREVIEW_STATUS` | ⏳ **PENDING_OPERATOR** — Vercel CLI authed (`kenttho`); needs deploy of `integration/pre-fe-foundation` + Supabase OAuth redirect for the Preview URL |
+| `FRONTEND_REDESIGN_STATUS` | 🔒 **BLOCKED_PENDING_FINAL_OPERATOR_PROOF** (unlocks when authed E2E + Preview pass) |
 | Stack | Next.js 16 · React 19 · TypeScript 5 (strict) · Tailwind v4 · pnpm · Neon · Supabase Auth/Storage · Vercel · Cloudflare DNS+Turnstile |
 | Architecture | Feature-first modular monolith + Clean Architecture |
 | Deploy authority | Vercel Git Integration · CI authority: GitHub Actions (minimal gate pulled forward from Wave 07) |
@@ -49,11 +55,15 @@
 | 03S Main-integration & dev-target completion | Create+merge PR #1/#2/#3 in order; CI green on `main`; build-secret fix; Neon **dev** migration + DB smoke; **storage buckets + signed-upload smoke** | ✅ **`PRE_FE_FOUNDATION_TARGET_VERIFIED_EXCEPT_PREVIEW`** (auth sign-in interactive-pending) | CI `30601997949`; 8 tables + ledger; buckets live |
 | 04 Public experience | i18n (vi/en) shell, Home (hero + tech matrix), projects/articles/about/resume/contact, SEO, motion, cosmic design system | ✅ Phase 1 (`94f547e`) — **integrated + wired to live Neon** (`NeonPortfolioRepository`, single runtime authority); **public E2E 9/9**. Phase 2 visual redesign deferred until foundation gate closed | live-wired; on-demand render; secret-free build |
 | 05 CMS foundation (DB/BE + Admin) | shared taxonomy → projects → articles → career → revisions; write-side; Neon public read model; **Admin Functional CMS**; live owner auth | ✅ **Foundation + Admin control plane verified** — `BACKEND_APPLICATION_FOUNDATION_DEV_VERIFIED` + Admin CMS (15 areas) + **live `owner_admin` auth verified** on Neon Dev (ledger=6, 25 tables, 6 live smoke). Contact backend HOÃN (Wave 06). | `e7f8e02` → integrated |
-| 06 Integrations | contact, Turnstile, email, video, analytics, error tracking | 🔒 planned | email keys pending |
-| 07 CI/CD | GitHub Actions, env contracts, Neon preview branching, runbooks | 🔒 planned | — |
-| 08 Hardening | unit/integration/e2e/a11y/security, prod build, preview smoke, scans | 🔒 planned | — |
-| 09 Land & remote | consolidation | 🔒 planned | per-wave PR model |
-| 10 Deployment readiness | human runbook, preview/migration/rollback proof | 🔒 planned | — |
+| **06A Non-visual integration foundation** | contact **write boundary** + Turnstile **server** verify + rate limiting + email provider adapter + error-tracking foundation | 🔓 **NEXT (PRE_REDESIGN_SAFE)** | pure backend/boundary; no UI redesign needed |
+| 06B Visual/product integration | contact **form UX**, video embeds, analytics surface | 🔒 POST_REDESIGN_REQUIRED | depends on redesigned public UI |
+| **07A Dev/Preview delivery closure** | env contract doc, Vercel **Preview** pipeline, Neon **preview-branch-per-PR**, migration-check workflow, runbook | 🔓 **PRE_REDESIGN_SAFE** (partly operator) | CI already pulled forward (03R/03S) |
+| 07 CI/CD (base) | GitHub Actions quality gate | ✅ **ALREADY_PULLED_FORWARD** (green on `main`) | Actions `30601997949` |
+| **08A Pre-UI security/backend hardening** | authz/security tests, secret-scan, dependency audit, server hardening, integration/e2e depth | 🔓 **PRE_REDESIGN_SAFE** | backend-facing; independent of visuals |
+| 08B Visual/a11y/perf hardening | a11y, Lighthouse/perf, cross-browser, visual regression | 🔒 POST_REDESIGN_REQUIRED | must follow redesign |
+| **04 Phase 2 — Public visual redesign** | cosmic/motion/3D redesign of the live-data public UI | 🔒 BLOCKED_PENDING_FINAL_OPERATOR_PROOF | after authed E2E + Preview |
+| 09 Land & remote | consolidate integration → `main` via PR | 🔒 PRODUCTION_ADJACENT (later) | needs RC + green gates |
+| 10 Deployment readiness | prod runbook, preview/migration/rollback proof, monitoring | 🔒 PRODUCTION_ONLY (last) | Owner-deferred; needs release candidate |
 
 ## 3. Capability levels (L0–L7)
 
