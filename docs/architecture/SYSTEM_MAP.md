@@ -2,10 +2,18 @@
 
 > Sơ đồ toàn dự án: **Cơ sở hạ tầng · Cơ sở dữ liệu (ERD) · Backend (luồng xử lý)**.
 > Vẽ **natively** bằng Mermaid (Owner chọn không cài plugin ngoài; nguồn tham khảo
-> `Understand-Anything` giữ ở dạng local reference — CLAUDE.md §26). Cập nhật: Wave 05,
-> HEAD `f0fd362`. Neon **Development**, ledger = 6, 25 bảng.
+> `Understand-Anything` giữ ở dạng local reference — CLAUDE.md §26). Cập nhật: Wave 05 Final
+> Foundation Gate, nhánh `integration/pre-fe-foundation` (từ `e7f8e02`). Neon **Development**,
+> ledger = 6, 25 bảng.
 
 Xem trực tiếp trên GitHub (render Mermaid) hoặc bất kỳ trình xem Markdown hỗ trợ Mermaid.
+
+> **LEGEND — phân biệt mục tiêu vs thực tế:**
+> `[TARGET]` = kiến trúc mục tiêu (chưa chạy thật). `[LIVE]` = đã kiểm chứng runtime thật.
+> **Đã LIVE:** Neon Dev (25 bảng, ledger=6) · Public Neon read model (6 live smoke) ·
+> **GitHub OAuth → `owner_admin` mapping trong `app_users` (1 owner, active, verified)**.
+> **Còn TARGET (chưa verify runtime):** Cloudflare DNS/Turnstile · Vercel Preview/Production ·
+> wiring trang công khai vào Neon read model (đang chờ quyết định chiến lược dữ liệu).
 
 ---
 
@@ -224,8 +232,11 @@ sequenceDiagram
   Note over CB,AU: Chỉ email trong ADMIN_ALLOWED_EMAILS mới được cấp quyền. Fail-closed.
 ```
 
-Trạng thái hiện tại: host Supabase **không truy cập được** từ môi trường build này → xác minh
-đăng nhập trực tiếp = `PENDING_OPERATOR` (code đã sẵn sàng, tự hoàn tất khi Supabase reachable).
+Trạng thái hiện tại `[LIVE]`: Owner đã hoàn tất GitHub OAuth; `bootstrapOwnerAdmin` đã cấp
+**1 hàng `app_users` = `owner_admin` / `active`**, có liên kết Supabase UID, `last_login` hiện
+diện, `credentials_revoked_at` = null. Kiểm chứng read-only (đã che định danh) trực tiếp trên
+Neon → `OWNER_ADMIN_DEV_AUTH_VERIFIED`. Chuỗi negative (chưa đăng nhập / user lạ / inactive /
+role không hỗ trợ → DENY) đã chứng minh bằng unit test.
 
 ---
 

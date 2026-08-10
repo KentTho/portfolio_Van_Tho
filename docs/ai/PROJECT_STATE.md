@@ -29,11 +29,13 @@ Visitor-only public users · OWNER_ADMIN only (EDITOR schema-ready, UI off) · a
 
 Feature-first modular monolith, Clean Architecture layers. Neon = single primary DB. Supabase = Auth + Storage only. Vercel = runtime + CD authority. GitHub Actions = CI authority. See `docs/architecture/`.
 
-## Current machine state (Wave 05 — verified)
+## Current machine state (Wave 05 Final Foundation Gate — verified)
 
-- **Active branch:** `feat/wave-05-cms-foundation` @ `f0fd362` (= origin, in sync). Production locked (PR #5 unmerged; no prod deploy/migration/DNS).
-- **Admin CMS:** ✅ control plane đầy đủ (offline-verified: typecheck/lint/168 test/build 37 routes) — profile/projects/articles/career/skills/technologies/tags/settings/audit/revisions; media+messages = status pages. UI→Server Action→use-case→repo (không chạm Drizzle). Sơ đồ: `docs/architecture/SYSTEM_MAP.md`.
-- **Auth:** `bootstrapOwnerAdmin` (first-login provisioning, allow-list gated) wired vào `/auth/callback`. **OWNER_ADMIN_DEV_AUTH = PENDING_OPERATOR** — host Supabase không reachable từ môi trường build; `app_users` = 0 (tự seed khi Owner đăng nhập OAuth thật). SUPABASE_SECRET_KEY + ADMIN_ALLOWED_EMAILS PRESENT.
+- **Active branch:** `integration/pre-fe-foundation` @ `cde8b49` (tạo từ verified Wave-05 HEAD `e7f8e02`; merge Wave-04 public `94f547e`). `feat/wave-05-cms-foundation` @ `e7f8e02` = origin, in sync. Production locked; no prod deploy/migration/DNS.
+- **Integration:** ✅ Wave-04 public presentation (i18n vi/en SSG, Home/projects/articles/about/resume/contact, SEO, motion, cosmic) hợp nhất với foundation Wave-05. Presentation không chồng lấn; chỉ 2 doc conflict (đã reconcile). Middleware auto-combine: auth gate `/admin` (W05) + locale routing (W04). Validation trên nhánh integration: **179 test + 6 skip, 10 arch, build xanh** (37+ routes gồm `[locale]/*` SSG).
+- **Admin CMS:** ✅ control plane đầy đủ — profile/projects/articles/career/skills/technologies/tags/settings/audit/revisions; media+messages = status pages. UI→Server Action→use-case→repo (không chạm Drizzle). Sơ đồ: `docs/architecture/SYSTEM_MAP.md`.
+- **Auth:** ✅ **`OWNER_ADMIN_DEV_AUTH_VERIFIED`** — Owner đã hoàn tất GitHub OAuth; `bootstrapOwnerAdmin` cấp **1 hàng `app_users` = `owner_admin`/`active`**, có Supabase UID + last_login, không revoked (kiểm chứng read-only đã che định danh trên Neon). Negative chain (unauth/unknown/inactive/role → DENY) unit-proven.
+- **Open decision:** wiring trang công khai từ fixtures tĩnh (Wave-04) sang **live Neon read model** — đang chờ Owner chọn chiến lược dữ liệu (Neon Dev hiện ~0 nội dung published; types Wave-04 song ngữ + case-study chưa map 1:1 với read model). Xem `NEXT_PHASE.md`.
 - **Migration ledger:** 6 (`0000`–`0005`), applied on Neon **Development** = 6 (no drift). **25 public tables**. Không migration mới lượt backend này.
 - **DB contract:** `WAVE05_DATABASE_CONTRACT_DEV_VERIFIED` — G1 taxonomy, G2a projects model, G3 articles, G4 career, G5 revisions. See `docs/audit/WAVE05_DATABASE_CONTRACT.md`.
 - **Backend application:** ✅ `BACKEND_APPLICATION_FOUNDATION_DEV_VERIFIED` — tags, technologies (G1B), projects (G2b), articles (G3), career + profile + skills + site-settings (G4), revisions (G5), + Public Neon Read Model hợp nhất. Deny-by-default authz, Zod biên, atomic `db.batch`, row_version, audit, published/visible-only. See `docs/audit/WAVE05_BACKEND_APPLICATION_AUDIT.md`.
