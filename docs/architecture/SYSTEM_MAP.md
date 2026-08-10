@@ -11,9 +11,11 @@ Xem trực tiếp trên GitHub (render Mermaid) hoặc bất kỳ trình xem Mar
 > **LEGEND — phân biệt mục tiêu vs thực tế:**
 > `[TARGET]` = kiến trúc mục tiêu (chưa chạy thật). `[LIVE]` = đã kiểm chứng runtime thật.
 > **Đã LIVE:** Neon Dev (25 bảng, ledger=6) · Public Neon read model (6 live smoke) ·
-> **GitHub OAuth → `owner_admin` mapping trong `app_users` (1 owner, active, verified)**.
+> **GitHub OAuth → `owner_admin` mapping trong `app_users` (1 owner, active, verified)** ·
+> **Trang công khai đọc trực tiếp live Neon** (`NeonPortfolioRepository`, single runtime authority,
+> không fixture fallback) · **Public browser E2E 9/9** (no admin/draft/archive leak).
 > **Còn TARGET (chưa verify runtime):** Cloudflare DNS/Turnstile · Vercel Preview/Production ·
-> wiring trang công khai vào Neon read model (đang chờ quyết định chiến lược dữ liệu).
+> authenticated admin E2E (cần storageState OAuth headed — PENDING_OPERATOR).
 
 ---
 
