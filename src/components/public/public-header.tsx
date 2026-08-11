@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
@@ -22,7 +22,13 @@ interface PublicHeaderProps {
   readonly closeLabel: string;
 }
 
-/** Sticky public navigation. Recruiter-facing only — no admin or login links. */
+/**
+ * COSMIC ENGINEERING EDITORIAL — Public Header
+ *
+ * Single-line desktop nav. Max height 72px. Sticky with backdrop-blur that
+ * activates after 40px scroll (avoids top-of-page blur competing with hero).
+ * Active link: left-margin accent indicator (not a background fill).
+ */
 export function PublicHeader({
   locale,
   brand,
@@ -33,40 +39,70 @@ export function PublicHeader({
 }: PublicHeaderProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const reduced = useReducedMotion();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const isActive = (href: string) =>
     pathname === href || (href !== `/${locale}` && pathname.startsWith(href));
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/70 bg-canvas/80 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "border-b border-border/50 bg-canvas/90 backdrop-blur-md"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex h-[68px] w-full max-w-6xl items-center justify-between px-6">
+        {/* Brand wordmark */}
         <Link
           href={`/${locale}`}
-          className="rounded-sm font-display text-lg italic text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="font-display text-base font-bold tracking-tight text-fg transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
         >
           {brand}
+          <span className="ml-[3px] text-accent" aria-hidden>
+            .
+          </span>
         </Link>
 
-        <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActive(item.href) ? "page" : undefined}
-              className={
-                isActive(item.href)
-                  ? "rounded-full bg-elevated px-3 py-1.5 text-sm text-fg"
-                  : "rounded-full px-3 py-1.5 text-sm text-fg-muted transition-colors hover:bg-elevated/60 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              }
-            >
-              {item.label}
-            </Link>
-          ))}
-          <span className="mx-1 h-5 w-px bg-border" aria-hidden />
+        {/* Desktop nav */}
+        <nav aria-label="Primary" className="hidden items-center gap-0.5 md:flex">
+          {items.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`relative rounded-md px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  active
+                    ? "text-fg"
+                    : "text-fg-muted hover:text-fg focus-visible:text-fg"
+                }`}
+              >
+                {active && (
+                  <motion.span
+                    layoutId="nav-indicator"
+                    className="absolute inset-0 rounded-md bg-elevated"
+                    transition={{ type: "spring", stiffness: 400, damping: 35 }}
+                    aria-hidden
+                  />
+                )}
+                <span className="relative">{item.label}</span>
+              </Link>
+            );
+          })}
+          <span className="mx-2 h-4 w-px bg-border" aria-hidden />
           <LanguageSwitcher locale={locale} label={switchLanguageLabel} />
         </nav>
 
+        {/* Mobile controls */}
         <div className="flex items-center gap-2 md:hidden">
           <LanguageSwitcher locale={locale} label={switchLanguageLabel} />
           <button
@@ -74,31 +110,36 @@ export function PublicHeader({
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-label={open ? closeLabel : openLabel}
-            className="grid h-9 w-9 place-items-center rounded-md border border-border text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="grid h-8 w-8 place-items-center rounded-md border border-border text-fg-muted transition-colors hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            {open ? <X size={18} aria-hidden /> : <Menu size={18} aria-hidden />}
+            {open ? <X size={16} aria-hidden /> : <Menu size={16} aria-hidden />}
           </button>
         </div>
       </div>
 
+      {/* Mobile drawer */}
       <AnimatePresence>
-        {open ? (
+        {open && (
           <motion.nav
             aria-label="Mobile"
-            className="border-t border-border bg-surface md:hidden"
+            className="border-t border-border bg-canvas md:hidden"
             initial={reduced ? false : { height: 0, opacity: 0 }}
             animate={reduced ? {} : { height: "auto", opacity: 1 }}
             exit={reduced ? {} : { height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
           >
-            <ul className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-6 py-4">
+            <ul className="mx-auto flex w-full max-w-6xl flex-col gap-0.5 px-6 py-4">
               {items.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
                     aria-current={isActive(item.href) ? "page" : undefined}
-                    className="block rounded-md px-3 py-2 text-fg-muted hover:bg-elevated hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className={`block rounded-md px-3 py-2.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                      isActive(item.href)
+                        ? "bg-elevated text-fg"
+                        : "text-fg-muted hover:bg-elevated/60 hover:text-fg"
+                    }`}
                   >
                     {item.label}
                   </Link>
@@ -106,7 +147,7 @@ export function PublicHeader({
               ))}
             </ul>
           </motion.nav>
-        ) : null}
+        )}
       </AnimatePresence>
     </header>
   );

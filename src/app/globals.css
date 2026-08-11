@@ -1,16 +1,19 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
-/* Expose design tokens as Tailwind theme values so utilities are generated:
-   bg-canvas, bg-surface, text-fg, text-fg-muted, border-border, bg-accent, ring-ring, ... */
+/* Expose design tokens as Tailwind theme values:
+   bg-canvas, bg-surface, bg-surface-hover, text-fg, text-fg-muted,
+   border-border, bg-accent, ring-ring, font-display, font-mono, ... */
 @theme inline {
   --color-canvas: var(--canvas);
   --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
   --color-elevated: var(--elevated);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-fg-subtle: var(--fg-subtle);
   --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
   --color-accent-3: var(--accent-3);
@@ -22,15 +25,78 @@
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);
   --font-mono: var(--font-mono);
+  --radius: var(--radius);
+  --radius-sm: var(--radius-sm);
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--canvas);
   color: var(--fg);
   font-family: var(--font-sans);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Respect user motion preferences globally. */
+/* Selection */
+::selection {
+  background-color: color-mix(in oklab, var(--accent) 20%, transparent);
+  color: var(--fg);
+}
+
+/* ─── Typography helpers ─────────────────────────────────────────────────── */
+.text-display {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: 800;
+  line-height: var(--lh-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.text-headline {
+  font-family: var(--font-display);
+  font-size: var(--text-headline);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem; /* 11px */
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+
+/* ─── Focus ring ─────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ─── Scrollbar (subtle) ─────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-subtle);
+}
+
+/* ─── Reduced motion — global gate ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

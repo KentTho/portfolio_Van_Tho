@@ -4,6 +4,12 @@ import type { Profile } from "@/modules/public-portfolio/domain/types";
 import { SectionHeading } from "@/components/public/section-heading";
 import { Reveal } from "@/components/public/reveal";
 
+/**
+ * COSMIC ENGINEERING EDITORIAL — Focus Section
+ *
+ * Editorial prose treatment: large text block + focus area pills.
+ * No card grid for summary — text IS the design.
+ */
 export function FocusSection({
   profile,
   locale,
@@ -14,23 +20,29 @@ export function FocusSection({
   readonly dict: Dictionary;
 }) {
   return (
-    <section aria-labelledby="focus-heading" className="mx-auto w-full max-w-6xl px-6 py-16">
-      <SectionHeading id="focus-heading" eyebrow="01" title={dict.sections.focus} />
-      <Reveal className="max-w-3xl text-lg leading-8 text-fg-muted">
+    <section aria-labelledby="focus-heading" className="mx-auto w-full max-w-6xl px-6 py-24">
+      <SectionHeading
+        id="focus-heading"
+        title={dict.sections.focus}
+        index="01"
+      />
+      <Reveal className="max-w-3xl text-xl leading-[1.65] text-fg-muted sm:text-2xl">
         {pick(profile.summary, locale)}
       </Reveal>
-      <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-        {profile.focusAreas.map((area, index) => (
-          <Reveal
-            as="li"
-            key={pick(area, "en")}
-            delay={index * 0.05}
-            className="rounded-xl border border-border bg-surface/40 px-4 py-3 text-fg"
-          >
-            {pick(area, locale)}
-          </Reveal>
-        ))}
-      </ul>
+      {profile.focusAreas.length > 0 && (
+        <ul className="mt-10 flex flex-wrap gap-2.5">
+          {profile.focusAreas.map((area, index) => (
+            <Reveal
+              as="li"
+              key={pick(area, "en")}
+              delay={index * 0.04}
+              className="rounded-full border border-border bg-surface/50 px-4 py-2 text-sm text-fg transition-colors hover:border-accent/30 hover:bg-surface-hover"
+            >
+              {pick(area, locale)}
+            </Reveal>
+          ))}
+        </ul>
+      )}
     </section>
   );
 }

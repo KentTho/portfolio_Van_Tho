@@ -34,7 +34,9 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
     <div className="mx-auto w-full max-w-6xl px-6 py-16">
       <PageHeader eyebrow="Projects" title={dict.nav.projects} subtitle={dict.home.featuredSubtitle} />
       {projects.length === 0 ? (
-        <p className="text-fg-muted">{dict.labels.empty}</p>
+        <div className="rounded-2xl border border-border border-dashed bg-surface/20 px-8 py-12 text-center">
+          <p className="text-sm text-fg-subtle">{dict.labels.empty}</p>
+        </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
           {projects.map((project) => (

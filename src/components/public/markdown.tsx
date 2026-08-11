@@ -11,19 +11,19 @@ export function Markdown({ source }: { readonly source: string }) {
         const line = block.trim();
         if (line.startsWith("### "))
           return (
-            <h3 key={index} className="font-display text-xl italic text-fg">
+            <h3 key={index} className="font-display text-xl font-bold tracking-tight text-fg">
               {line.slice(4)}
             </h3>
           );
         if (line.startsWith("## "))
           return (
-            <h2 key={index} className="font-display text-2xl italic text-fg">
+            <h2 key={index} className="font-display text-2xl font-bold tracking-tight text-fg">
               {line.slice(3)}
             </h2>
           );
         if (line.startsWith("# "))
           return (
-            <h1 key={index} className="font-display text-3xl italic text-fg">
+            <h1 key={index} className="font-display text-3xl font-bold tracking-tight text-fg">
               {line.slice(2)}
             </h1>
           );

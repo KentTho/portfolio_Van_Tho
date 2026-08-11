@@ -62,7 +62,7 @@ export default async function ArticleDetailPage({
         </time>
         {article.sample ? <SampleBadge label={dict.labels.sample} /> : null}
       </div>
-      <h1 className="mt-3 font-display text-4xl italic leading-tight text-fg">
+      <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-fg">
         {pick(article.title, locale)}
       </h1>
 

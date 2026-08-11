@@ -35,7 +35,9 @@ export default async function ArticlesPage({ params }: { params: Promise<{ local
     <div className="mx-auto w-full max-w-4xl px-6 py-16">
       <PageHeader eyebrow="Writing" title={dict.nav.articles} subtitle={dict.home.writingSubtitle} />
       {articles.length === 0 ? (
-        <p className="text-fg-muted">{dict.labels.empty}</p>
+        <div className="rounded-2xl border border-border border-dashed bg-surface/20 px-8 py-12 text-center">
+          <p className="text-sm text-fg-subtle">{dict.labels.empty}</p>
+        </div>
       ) : (
         <ul className="divide-y divide-border">
           {articles.map((article) => (
@@ -50,7 +52,7 @@ export default async function ArticlesPage({ params }: { params: Promise<{ local
                   </time>
                   {article.sample ? <SampleBadge label={dict.labels.sample} /> : null}
                 </div>
-                <h2 className="mt-2 font-display text-2xl italic text-fg transition-colors group-hover:text-accent">
+                <h2 className="mt-2 font-display text-2xl font-bold tracking-tight text-fg transition-colors group-hover:text-accent">
                   {pick(article.title, locale)}
                 </h2>
                 <p className="mt-2 text-fg-muted">{pick(article.summary, locale)}</p>

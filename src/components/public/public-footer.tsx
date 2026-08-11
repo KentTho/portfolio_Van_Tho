@@ -1,10 +1,12 @@
-import { Code2, Mail } from "lucide-react";
 import type { Dictionary } from "@/i18n/dictionary";
 import type { Profile } from "@/modules/public-portfolio/domain/types";
 
-const ICONS = { github: Code2, email: Mail } as const;
-
-/** Public footer: brand line + verified social links. No admin surface. */
+/**
+ * COSMIC ENGINEERING EDITORIAL — Public Footer
+ *
+ * Minimal: name + nav + socials + locale + year.
+ * Hairline top border. No giant footer blocks.
+ */
 export function PublicFooter({
   profile,
   dict,
@@ -13,29 +15,39 @@ export function PublicFooter({
   readonly dict: Dictionary;
 }) {
   const year = new Date().getFullYear();
+
   return (
-    <footer className="mt-24 border-t border-border bg-surface/40">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10 sm:flex-row sm:items-center sm:justify-between">
+    <footer className="mt-32 border-t border-border/50">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-10 sm:flex-row sm:items-end sm:justify-between">
+        {/* Left: identity */}
         <div>
-          <p className="font-display text-lg italic text-fg">{profile.name}</p>
-          <p className="mt-1 max-w-md text-sm text-fg-subtle">{dict.footer.madeWith}</p>
-          <p className="mt-1 text-xs text-fg-subtle">
-            © {year} {profile.name}. {dict.footer.rights}
+          <p className="font-display text-base font-bold tracking-tight text-fg">
+            {profile.name}
+            <span className="ml-[3px] text-accent" aria-hidden>
+              .
+            </span>
+          </p>
+          <p className="mt-1 text-xs text-fg-subtle">{dict.footer.madeWith}</p>
+          <p className="mt-0.5 text-xs text-fg-subtle">
+            © {year} {profile.name}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+
+        {/* Right: social links */}
+        <div className="flex items-center gap-2">
           {profile.socials.map((social) => {
-            const Icon = ICONS[social.kind as keyof typeof ICONS] ?? Mail;
             const external = social.kind !== "email";
             return (
               <a
                 key={social.kind}
                 href={social.href}
                 aria-label={social.label}
-                className="grid h-9 w-9 place-items-center rounded-md border border-border text-fg-muted transition-colors hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="label-mono rounded border border-border px-3 py-1.5 text-fg-subtle transition-colors hover:border-accent/40 hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                {...(external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
               >
-                <Icon size={16} aria-hidden />
+                {social.kind}
               </a>
             );
           })}

@@ -84,7 +84,7 @@ export default async function ProjectDetailPage({
         <span className="font-mono text-xs text-fg-subtle">{project.year ?? ""}</span>
         {project.sample ? <SampleBadge label={dict.labels.sample} /> : null}
       </div>
-      <h1 className="mt-3 font-display text-4xl italic leading-tight text-fg">{pick(project.title, l)}</h1>
+      <h1 className="mt-3 font-display text-4xl font-bold tracking-tight text-fg">{pick(project.title, l)}</h1>
       <p className="mt-4 text-lg text-fg-muted">{pick(project.summary, l)}</p>
 
       <ul className="mt-6 flex flex-wrap gap-2" aria-label={dict.labels.techStack}>

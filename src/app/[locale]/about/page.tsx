@@ -53,7 +53,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       </dl>
 
       <section aria-labelledby="experience-heading" className="mt-12">
-        <h2 id="experience-heading" className="font-display text-2xl italic text-fg">
+        <h2 id="experience-heading" className="font-display text-2xl font-bold tracking-tight text-fg">
           {dict.sections.experience}
         </h2>
         <ol className="mt-6 space-y-6 border-l border-border pl-6">

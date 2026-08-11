@@ -55,3 +55,11 @@ tests/.auth/
 # Understand-Anything generated knowledge graph + cache (local tool artifact)
 .ua/
 .understand-anything/
+
+.vercel
+.env*
+
+# Local AI skill tooling state (skill content + install lock) — not project config
+.agent/
+.agents/
+skills-lock.json

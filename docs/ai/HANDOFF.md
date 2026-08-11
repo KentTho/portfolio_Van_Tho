@@ -75,3 +75,37 @@ Version discovery; isolated scaffold (Mode A); `pnpm install`; validation matrix
 `WAVE_04_PUBLIC_EXPERIENCE` on `feat/wave-04-public-portfolio` **from verified `main` @ `cf613ec`**
 (unblocked: 02/03 merged, CI green, dev DB+storage verified). Not started this phase. Before live admin:
 Owner completes GitHub OAuth sign-in once → re-run owner-seed → admin authz smoke. See `NEXT_PHASE.md`.
+
+## Wave 04 Phase 2 — Public Visual Redesign (COSMIC ENGINEERING EDITORIAL)
+- **Branch:** `feat/wave-04-phase-2-public-visual-redesign` (from `integration/pre-fe-foundation` @ `14a04a6`)
+- **Status:** `REDESIGN_STATIC_VALIDATION_CHECKPOINT_PASS` — static gate GREEN (typecheck + lint + test 184 pass/6 skip + arch 10/10 + secret-free `next build`). **NOT** runtime-verified / release-ready: `pnpm dev` surfaced a real runtime defect *"Invalid server environment configuration: DATABASE_URL"* → must fix before any visual-scope expansion, browser QA, or e2e.
+- **Design Language:** COSMIC ENGINEERING EDITORIAL. Dials: DESIGN_VARIANCE=7, MOTION_INTENSITY=5, VISUAL_DENSITY=5.
+- **Governance Fixes Applied:**
+  - `motion` **restored to `^12.43.0`** (foundation authority; React Bits had silently downgraded to `^12.23.12`). `pnpm install` removed the stray direct `framer-motion 13.1.0` the React Bits CLI pulled in — `motion/react` is the sole animation authority, no `framer-motion` direct dep.
+  - `Instrument_Serif` (banned font) → replaced with `Syne` 700/800 as `--font-display`
+  - Added `JetBrains_Mono` as `--font-mono`
+  - Orphan raw drop `src/components/BlurText.tsx` (no `"use client"`, unused) **deleted**; sole authority = `src/components/ui/blur-text.tsx`
+  - Two strict-mode (`noUncheckedIndexedAccess`) fixes in `blur-text.tsx` found by `next build`: `buildKeyframes` carry-forward + IntersectionObserver `entry?.` guard (no `any`/`ts-ignore`)
+  - `.ua/` excluded from ESLint scan; `.agent/`/`.agents/`/`skills-lock.json` (local skill tooling) gitignored
+- **Design System Changes:** `tokens.css` (surface-hover, editorial motion vars, glow-soft/strong, typography anchors), `globals.css` (surface-hover in @theme, .text-display, .text-headline, .label-mono helpers, subtle scrollbar, refined selection color)
+- **Component Redesigns:**
+  - `hero-section.tsx`: asymmetric split (left content 60% / right tech cluster 40%), BlurText H1 word entrance, availability badge, tech cluster with glow, vertical rule desktop-only
+  - `public-header.tsx`: transparent→blur on scroll (40px threshold), layoutId spring nav indicator, 68px height, brand with cyan dot
+  - `public-footer.tsx`: minimal hairline footer, social links as mono-label pills
+  - `section-heading.tsx`: removed eyebrow pattern, optional counter glyph inline with headline
+  - `focus-section.tsx`: editorial large prose (text-xl/2xl), focus areas as pills not cards
+  - `featured-projects-section.tsx`: client component, hover lift+glow on cards, designed empty state
+  - `tech-matrix-section.tsx`: group label as mono, larger logos (44px), hairline divider above section
+  - `principles-section.tsx`: manifesto numbered list layout (not card grid)
+  - `contact-cta-section.tsx`: left-aligned horizontal banner (not centered card)
+  - `project-card.tsx`: bold sans title, ArrowUpRight indicator, surface-hover on hover
+  - `page-header.tsx`: font-bold tracking-tight (no italic)
+  - `markdown.tsx`: font-bold tracking-tight headings
+  - All inner pages: fixed font-display italic → font-bold tracking-tight
+  - Empty states: designed dashed-border cards (not bare text)
+- **DONE this session:** branch created (carried WIP off `integration`), lockfile reconciled, static validation matrix GREEN, checkpoint committed + pushed.
+- **BLOCKING NEXT (runtime):** resolve `pnpm dev` env-validation defect *"Invalid server environment configuration: DATABASE_URL"* → local runtime smoke (`/vi`, `/en`, inner pages) must PASS before continuing.
+- **THEN:** redesign consistency/polish → browser QA at `/vi`, `/en`, mobile 375px → `pnpm e2e:public`.
+- **Still gated (operator):** `pnpm e2e:auth-setup` (authenticated E2E) + Vercel Preview deploy.
+- **Next Waves:** Wave 06A (Contact write boundary + Turnstile), Wave 07A (Vercel Preview pipeline)
+

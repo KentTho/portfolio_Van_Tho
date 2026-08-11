@@ -14,7 +14,7 @@ export function PageHeader({
         <span className="h-px w-8 bg-border" aria-hidden />
         {eyebrow}
       </p>
-      <h1 className="mt-4 font-display text-4xl italic leading-tight text-fg sm:text-5xl">{title}</h1>
+      <h1 className="mt-4 font-display text-4xl font-bold tracking-tight text-fg sm:text-5xl">{title}</h1>
       {subtitle ? <p className="mt-3 max-w-2xl text-fg-muted">{subtitle}</p> : null}
     </header>
   );
