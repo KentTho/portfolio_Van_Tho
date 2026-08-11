@@ -141,6 +141,7 @@ Before any mutation, declare `CURRENT_WAVE`, intended add/modify/delete paths, p
 
 - `.env*` ignored except `.env.example` (placeholders only). No real secret in repo, logs, README, screenshots, or client bundle.
 - Redact credential-bearing remotes. Never log tokens/cookies/passwords/DB URLs/service keys/raw auth headers.
+- **`ENV_LOCAL_OWNER_MANAGED_STATE` (standing):** `.env.local` is Owner-managed state. AI MUST NOT overwrite, delete, recreate, or stage `.env.local`, MUST NOT run `vercel env pull` (or any sync) that targets/writes `.env.local`, and MUST NOT log its values. Vercel synchronization must instead use the `.vercel` cache where applicable, a disposable env path, or `vercel env` without writing the local file. AI may only read `.env.local` metadata/key-names for masked diagnostics — never values.
 
 ## 21. Output / evidence format
 
