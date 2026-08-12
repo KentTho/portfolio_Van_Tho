@@ -3,15 +3,16 @@
 > Living master status. Updated at the end of every Wave. For contribution rules see
 > [`CLAUDE.md`](CLAUDE.md); for machine state see [`docs/ai/`](docs/ai/).
 >
-> **Cập nhật lần cuối:** Wave 05 — **Final Foundation Gate (Development-verified)**. Nhánh
-> **`integration/pre-fe-foundation`** (HEAD **`a086c84`**, local == remote): hợp nhất Wave-04 public + Wave-05
-> foundation; **public đọc trực tiếp live Neon** (`NeonPortfolioRepository`, single runtime authority, không
-> fixture fallback); Admin control plane đầy đủ (Server Action → use-case → repo, UI không chạm Drizzle).
-> **Auth: `OWNER_ADMIN_DEV_AUTH_VERIFIED`** (Owner đã OAuth; 1 `app_users`=owner_admin/active). Verified:
-> check:env 18/18 · typecheck · lint · **184 test +6 skip** · 10 architecture · **secret-free build** · 6 live
-> smoke Neon Dev · **public browser E2E 9/9**. Ledger = 6, 25 bảng (KHÔNG migration mới). **Còn 2 việc thao
-> tác Owner:** `AUTHENTICATED_BROWSER_E2E = PENDING_OPERATOR` + `PREVIEW = PENDING_OPERATOR`. `FRONTEND_REDESIGN
-> = BLOCKED_PENDING_FINAL_OPERATOR_PROOF`.
+> **Cập nhật lần cuối:** Wave 04 Phase 2 — **Single Landing Architecture (Development-verified)**. Nhánh
+> **`feat/wave-04-phase-2-public-visual-redesign`** (HEAD **`a151bf1`**, local == remote, remote-safe): `/vi` `/en`
+> hợp nhất thành **một Landing Page/locale** (anchored sections `#home…#contact`, locale-aware scroll-spy nav);
+> `/about /projects /articles /resume /contact` → `/#anchor`; `/projects/[slug]` + `/articles/[slug]` giữ nguyên.
+> **public đọc trực tiếp live Neon** (`NeonPortfolioRepository`, single runtime authority, không fixture fallback);
+> Admin/BE/DB/Auth contract **không đổi**. Runtime Recovery (Prompt 10) đã PASS (`.env.local` restored + Neon Dev
+> credential rotated). Verified: check:env 18/0 · typecheck · lint · **184 test +6 skip** · 10 architecture ·
+> **secret-free build** · **public browser E2E 7/7** · dev smoke (9 anchors + redirects). Ledger = 6, 25 bảng
+> (KHÔNG migration). **Còn 2 việc thao tác Owner (release gate):** `AUTHENTICATED_BROWSER_E2E = PENDING_OPERATOR`
+> + `PREVIEW = PENDING_OPERATOR`. `FRONTEND_REDESIGN = IN_PROGRESS` (Prompt 12 = brand visual system).
 >
 > **📍 Báo cáo & tài liệu nằm ở đâu (đọc mục này trước):** xem **[`docs/ai/REPORTS_INDEX.md`](docs/ai/REPORTS_INDEX.md)**
 > — bản đồ mọi file báo cáo/tiến độ. Hiểu toàn hệ thống + luồng xử lý: **[`docs/architecture/PROJECT_UNDERSTANDING.md`](docs/architecture/PROJECT_UNDERSTANDING.md)**
@@ -23,17 +24,18 @@
 |---|---|
 | Repository | `github.com/KentTho/portfolio_Van_Tho` (public) |
 | `PRODUCTION_BRANCH` | `main` @ `cf613ec` — **application-integrated** (Wave 01+02+02B+03+03R + CI + build fix) |
-| `ACTIVE_DEVELOPMENT_BRANCH` | **`integration/pre-fe-foundation`** @ **`a086c84`** (Wave-04 public + Wave-05 foundation integrated; public wired live Neon; local == remote) |
-| `CURRENT_HEAD` | `a086c8497b7fb02a0592ae3580328dd8879eff3b` |
+| `ACTIVE_DEVELOPMENT_BRANCH` | **`feat/wave-04-phase-2-public-visual-redesign`** @ **`a151bf1`** (redesign checkpoint `473a683` → env governance `14083d1` → single-landing `a151bf1`; local == remote). Foundation `integration/pre-fe-foundation` @ `14a04a6` unchanged. |
+| `CURRENT_HEAD` | `a151bf1810ab9a67d44fd7bd20caa4787e2a3616` |
+| `PUBLIC_ARCHITECTURE` | ✅ **SINGLE_LANDING_ARCHITECTURE_DEV_VERIFIED** — `/vi` `/en` = one landing/locale (anchored sections `#home…#contact`, locale-aware scroll-spy nav); `/about /projects /articles /resume /contact` → `/#anchor`; `/projects/[slug]` + `/articles/[slug]` preserved; FULL_LIVE_NEON |
 | `MAIN_INTEGRATION_STATUS` | **INTEGRATED** — PR #1 (CI), #2 (Wave 02), #3 (Wave 03) merged in order. `main` @ `cf613ec` (integration branch NOT yet merged to main — pre-redesign) |
 | `CI_STATUS` | **GREEN on `main`** — Actions run `30601997949` @ `cf613ec` |
 | `AUTH_STATUS` | ✅ **`OWNER_ADMIN_DEV_AUTH_VERIFIED`** — Owner completed GitHub OAuth; `bootstrapOwnerAdmin` provisioned **1 `app_users` = owner_admin / active** (Supabase UID linked, masked read-only proof on Neon) |
 | `ADMIN_STATUS` | ✅ functional control plane (15 areas) — Server Action → use-case → repo (UI never touches Drizzle; arch 10/10) |
 | `PUBLIC_NEON_STATUS` | ✅ **LIVE** — `NeonPortfolioRepository` = single runtime authority; no fixture runtime fallback; on-demand render keeps build secret-free |
-| `PUBLIC_BROWSER_E2E_STATUS` | ✅ **VERIFIED_9_OF_9** (headless chromium, live Neon: no admin/draft/archive leak; anon `/admin`→login; locale redirect) |
+| `PUBLIC_BROWSER_E2E_STATUS` | ✅ **VERIFIED_7_OF_7** (headless chromium, live Neon: single-landing sections present, consolidated-route redirects reach anchors, no admin/draft/archive leak, anon `/admin`→login, locale redirect). Suite reshaped from 9/9 for single-landing. |
 | `AUTHENTICATED_BROWSER_E2E_STATUS` | ⏳ **PENDING_OPERATOR** — specs ready; needs local storageState via `pnpm e2e:auth-setup` (headed OAuth once) |
 | `PREVIEW_STATUS` | ⏳ **PENDING_OPERATOR** — Vercel CLI authed (`kenttho`); needs deploy of `integration/pre-fe-foundation` + Supabase OAuth redirect for the Preview URL |
-| `FRONTEND_REDESIGN_STATUS` | 🔒 **BLOCKED_PENDING_FINAL_OPERATOR_PROOF** (unlocks when authed E2E + Preview pass) |
+| `FRONTEND_REDESIGN_STATUS` | 🚧 **IN_PROGRESS** — Wave 04 Phase 2: cosmic redesign checkpoint (`473a683`) + single-landing consolidation (`a151bf1`) DEV-verified. **Next: Prompt 12** brand visual system (logo palette, `vantho.png` hero, all sections, motion, a11y). Release gates (authed E2E + Preview) remain `PENDING_OPERATOR` before main merge. |
 | Stack | Next.js 16 · React 19 · TypeScript 5 (strict) · Tailwind v4 · pnpm · Neon · Supabase Auth/Storage · Vercel · Cloudflare DNS+Turnstile |
 | Architecture | Feature-first modular monolith + Clean Architecture |
 | Deploy authority | Vercel Git Integration · CI authority: GitHub Actions (minimal gate pulled forward from Wave 07) |
