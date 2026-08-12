@@ -38,8 +38,10 @@ export function PublicHeader({
   closeLabel,
 }: PublicHeaderProps) {
   const pathname = usePathname();
+  const isLanding = pathname === `/${locale}`;
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeId, setActiveId] = useState("");
   const reduced = useReducedMotion();
 
   useEffect(() => {
@@ -48,8 +50,36 @@ export function PublicHeader({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isActive = (href: string) =>
-    pathname === href || (href !== `/${locale}` && pathname.startsWith(href));
+  // Scroll-spy: highlight the nav anchor for the section currently in view.
+  // Only active on the landing page; detail routes have no in-page sections.
+  useEffect(() => {
+    // Off-landing (e.g. a detail route) there are no in-page sections to observe.
+    // activeId keeps its last value but isActive() ignores it while !isLanding.
+    if (!isLanding) return;
+    const targets = items
+      .map((item) => item.href.split("#")[1])
+      .filter((id): id is string => Boolean(id))
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (targets.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible[0]) setActiveId(visible[0].target.id);
+      },
+      { rootMargin: "-40% 0px -55% 0px", threshold: [0, 0.5, 1] },
+    );
+    targets.forEach((t) => observer.observe(t));
+    return () => observer.disconnect();
+  }, [isLanding, items]);
+
+  const isActive = (href: string) => {
+    const hash = href.split("#")[1];
+    return isLanding && !!hash && hash === activeId;
+  };
 
   return (
     <header

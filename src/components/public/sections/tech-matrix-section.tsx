@@ -32,7 +32,6 @@ export function TechMatrixSection({
         id="tech-heading"
         title={dict.sections.techMatrix}
         subtitle={dict.home.techSubtitle}
-        index="02"
       />
 
       {groups.length === 0 ? (

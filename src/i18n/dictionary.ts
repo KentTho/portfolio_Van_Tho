@@ -4,7 +4,10 @@ import { vi } from "@/i18n/dictionaries/vi";
 
 /** UI chrome strings. Content text comes from the portfolio repository, not here. */
 export interface Dictionary {
-  nav: Record<"home" | "projects" | "articles" | "about" | "resume" | "contact", string>;
+  nav: Record<
+    "home" | "projects" | "articles" | "about" | "resume" | "contact" | "experience" | "skills",
+    string
+  >;
   actions: Record<
     | "viewProjects"
     | "downloadResume"
@@ -32,7 +35,10 @@ export interface Dictionary {
     | "techStack"
     | "role"
     | "year"
-    | "tableOfContents",
+    | "tableOfContents"
+    | "location"
+    | "education"
+    | "languages",
     string
   >;
   home: Record<"featuredSubtitle" | "techSubtitle" | "principlesSubtitle" | "writingSubtitle", string>;

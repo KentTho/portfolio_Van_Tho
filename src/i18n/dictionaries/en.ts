@@ -8,6 +8,8 @@ export const en: Dictionary = {
     about: "About",
     resume: "Résumé",
     contact: "Contact",
+    experience: "Experience",
+    skills: "Skills",
   },
   actions: {
     viewProjects: "View projects",
@@ -41,6 +43,9 @@ export const en: Dictionary = {
     role: "Role",
     year: "Year",
     tableOfContents: "On this page",
+    location: "Location",
+    education: "Education",
+    languages: "Languages",
   },
   home: {
     featuredSubtitle: "Selected engineering work, from problem to trade-offs.",

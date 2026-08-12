@@ -21,10 +21,14 @@ export function FeaturedProjectsSection({
   projects,
   locale,
   dict,
+  viewAllHref,
 }: {
   readonly projects: readonly ProjectSummary[];
   readonly locale: Locale;
   readonly dict: Dictionary;
+  /** When provided, render a "view all" link (used off-landing). On the single
+   * landing the section already lists every published project, so it is omitted. */
+  readonly viewAllHref?: string;
 }) {
   const reduced = useReducedMotion();
 
@@ -37,7 +41,6 @@ export function FeaturedProjectsSection({
         id="featured-heading"
         title={dict.sections.featured}
         subtitle={dict.home.featuredSubtitle}
-        index="03"
       />
 
       {projects.length === 0 ? (
@@ -63,15 +66,17 @@ export function FeaturedProjectsSection({
         </div>
       )}
 
-      <div className="mt-10">
-        <Link
-          href={`/${locale}/projects`}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-        >
-          {dict.actions.viewAll}
-          <ArrowUpRight size={15} aria-hidden />
-        </Link>
-      </div>
+      {viewAllHref && (
+        <div className="mt-10">
+          <Link
+            href={viewAllHref}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-accent transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+          >
+            {dict.actions.viewAll}
+            <ArrowUpRight size={15} aria-hidden />
+          </Link>
+        </div>
+      )}
     </section>
   );
 }

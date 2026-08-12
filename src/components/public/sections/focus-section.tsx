@@ -21,14 +21,7 @@ export function FocusSection({
 }) {
   return (
     <section aria-labelledby="focus-heading" className="mx-auto w-full max-w-6xl px-6 py-24">
-      <SectionHeading
-        id="focus-heading"
-        title={dict.sections.focus}
-        index="01"
-      />
-      <Reveal className="max-w-3xl text-xl leading-[1.65] text-fg-muted sm:text-2xl">
-        {pick(profile.summary, locale)}
-      </Reveal>
+      <SectionHeading id="focus-heading" title={dict.sections.focus} />
       {profile.focusAreas.length > 0 && (
         <ul className="mt-10 flex flex-wrap gap-2.5">
           {profile.focusAreas.map((area, index) => (

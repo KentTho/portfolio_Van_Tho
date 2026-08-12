@@ -1,55 +1,14 @@
-import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { isLocale } from "@/shared/i18n";
-import { getDictionary } from "@/i18n/dictionary";
-import { getPortfolioRepository } from "@/composition/public-portfolio";
-import { buildLocaleMetadata } from "@/lib/seo";
-import { PageHeader } from "@/components/public/page-header";
-import { ProjectCard } from "@/components/public/project-card";
 
-export async function generateMetadata({
+// Consolidated into the single landing page. The former project list now lives
+// at /[locale]#projects. Project detail routes (/[locale]/projects/[slug]) remain.
+export default async function ProjectsRedirect({
   params,
 }: {
   params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  if (!isLocale(locale)) return {};
-  const dict = getDictionary(locale);
-  return buildLocaleMetadata({
-    locale,
-    path: "/projects",
-    title: dict.meta.projectsTitle,
-    description: dict.home.featuredSubtitle,
-  });
-}
-
-export default async function ProjectsPage({ params }: { params: Promise<{ locale: string }> }) {
+}) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-
-  const dict = getDictionary(locale);
-  const projects = await getPortfolioRepository().listProjects();
-
-  return (
-    <div className="mx-auto w-full max-w-6xl px-6 py-16">
-      <PageHeader eyebrow="Projects" title={dict.nav.projects} subtitle={dict.home.featuredSubtitle} />
-      {projects.length === 0 ? (
-        <div className="rounded-2xl border border-border border-dashed bg-surface/20 px-8 py-12 text-center">
-          <p className="text-sm text-fg-subtle">{dict.labels.empty}</p>
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {projects.map((project) => (
-            <ProjectCard
-              key={project.slug}
-              project={project}
-              locale={locale}
-              href={`/${locale}/projects/${project.slug}`}
-              sampleLabel={dict.labels.sample}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  redirect(`/${locale}#projects`);
 }

@@ -28,13 +28,15 @@ export default async function LocaleLayout({
   const dict = getDictionary(locale);
   const profile = await getPortfolioRepository().getProfile();
 
+  // Single-landing anchor navigation (locale-aware). Anchors resolve on the
+  // landing page and, from a detail route, navigate back to the landing section.
   const nav: NavItem[] = [
-    { href: `/${locale}`, label: dict.nav.home },
-    { href: `/${locale}/projects`, label: dict.nav.projects },
-    { href: `/${locale}/articles`, label: dict.nav.articles },
-    { href: `/${locale}/about`, label: dict.nav.about },
-    { href: `/${locale}/resume`, label: dict.nav.resume },
-    { href: `/${locale}/contact`, label: dict.nav.contact },
+    { href: `/${locale}#about`, label: dict.nav.about },
+    { href: `/${locale}#projects`, label: dict.nav.projects },
+    { href: `/${locale}#experience`, label: dict.nav.experience },
+    { href: `/${locale}#skills`, label: dict.nav.skills },
+    { href: `/${locale}#articles`, label: dict.nav.articles },
+    { href: `/${locale}#contact`, label: dict.nav.contact },
   ];
 
   return (

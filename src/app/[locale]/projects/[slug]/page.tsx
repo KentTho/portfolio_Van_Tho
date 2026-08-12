@@ -73,7 +73,7 @@ export default async function ProjectDetailPage({
   return (
     <article className="mx-auto w-full max-w-3xl px-6 py-16">
       <Link
-        href={`/${locale}/projects`}
+        href={`/${locale}#projects`}
         className="inline-flex items-center gap-2 text-sm text-fg-subtle transition hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <ArrowLeft size={14} aria-hidden />

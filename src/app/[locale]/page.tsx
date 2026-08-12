@@ -7,10 +7,13 @@ import { buildLocaleMetadata } from "@/lib/seo";
 import { SITE } from "@/config/site";
 import { JsonLd } from "@/components/public/json-ld";
 import { HeroSection } from "@/components/public/sections/hero-section";
+import { AboutSection } from "@/components/public/sections/about-section";
 import { FocusSection } from "@/components/public/sections/focus-section";
 import { FeaturedProjectsSection } from "@/components/public/sections/featured-projects-section";
+import { ExperienceSection } from "@/components/public/sections/experience-section";
 import { TechMatrixSection } from "@/components/public/sections/tech-matrix-section";
 import { PrinciplesSection } from "@/components/public/sections/principles-section";
+import { ArticlesSection } from "@/components/public/sections/articles-section";
 import { ContactCtaSection } from "@/components/public/sections/contact-cta-section";
 
 /** Popular language/tech logos surfaced in the hero (Software Engineer focus). */
@@ -41,16 +44,26 @@ export async function generateMetadata({
   });
 }
 
-export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+/**
+ * SINGLE LANDING PAGE — the canonical public experience per locale.
+ *
+ * All public content is composed here as anchored sections (#home … #contact).
+ * The former /about, /projects, /articles, /resume, /contact routes redirect to
+ * these anchors; project/article detail routes are preserved. Data is read live
+ * from Neon via the PortfolioRepository port (FULL_LIVE_NEON, no fixture fallback).
+ */
+export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
   const dict = getDictionary(locale);
   const repo = getPortfolioRepository();
-  const [profile, groups, projects] = await Promise.all([
+  const [profile, groups, projects, articles, experience] = await Promise.all([
     repo.getProfile(),
     repo.getTechGroups(),
     repo.listProjects(),
+    repo.listArticles(),
+    repo.listExperience(),
   ]);
 
   const personLd = {
@@ -74,20 +87,50 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <>
       <JsonLd data={personLd} />
       <JsonLd data={websiteLd} />
-      <HeroSection
-        name={profile.name}
-        role={pick(profile.role, locale)}
-        headline={pick(profile.headline, locale)}
-        availability={dict.hero.availability}
-        techIds={HERO_TECH}
-        primary={{ label: dict.actions.viewProjects, href: `/${locale}/projects` }}
-        secondary={{ label: dict.actions.downloadResume, href: `/${locale}/resume` }}
-      />
-      <FocusSection profile={profile} locale={locale} dict={dict} />
-      <FeaturedProjectsSection projects={projects.slice(0, 2)} locale={locale} dict={dict} />
-      <TechMatrixSection groups={groups} locale={locale} dict={dict} />
-      <PrinciplesSection dict={dict} />
-      <ContactCtaSection locale={locale} dict={dict} />
+
+      <div id="home" className="scroll-mt-20">
+        <HeroSection
+          name={profile.name}
+          role={pick(profile.role, locale)}
+          headline={pick(profile.headline, locale)}
+          availability={dict.hero.availability}
+          techIds={HERO_TECH}
+          primary={{ label: dict.actions.viewProjects, href: `/${locale}#projects` }}
+          secondary={{ label: dict.actions.contactMe, href: `/${locale}#contact` }}
+        />
+      </div>
+
+      <div id="about" className="scroll-mt-20">
+        <AboutSection profile={profile} locale={locale} dict={dict} />
+      </div>
+
+      <div id="focus" className="scroll-mt-20">
+        <FocusSection profile={profile} locale={locale} dict={dict} />
+      </div>
+
+      <div id="projects" className="scroll-mt-20">
+        <FeaturedProjectsSection projects={projects} locale={locale} dict={dict} />
+      </div>
+
+      <div id="experience" className="scroll-mt-20">
+        <ExperienceSection experience={experience} profile={profile} locale={locale} dict={dict} />
+      </div>
+
+      <div id="skills" className="scroll-mt-20">
+        <TechMatrixSection groups={groups} locale={locale} dict={dict} />
+      </div>
+
+      <div id="principles" className="scroll-mt-20">
+        <PrinciplesSection dict={dict} />
+      </div>
+
+      <div id="articles" className="scroll-mt-20">
+        <ArticlesSection articles={articles} locale={locale} dict={dict} />
+      </div>
+
+      <div id="contact" className="scroll-mt-20">
+        <ContactCtaSection profile={profile} dict={dict} />
+      </div>
     </>
   );
 }

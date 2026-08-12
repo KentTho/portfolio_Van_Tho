@@ -7,7 +7,10 @@ import { getPortfolioRepository } from "@/composition/public-portfolio";
 // (keeps `next build` secret-free). Revalidated hourly at runtime.
 export const dynamic = "force-dynamic";
 
-const STATIC_PATHS = ["", "/projects", "/articles", "/about", "/resume", "/contact"] as const;
+// Single-landing architecture: the locale root is the only canonical static public
+// page. The former /projects /articles /about /resume /contact routes 307-redirect
+// to landing anchors, so they are not listed. Project/article detail routes remain.
+const STATIC_PATHS = [""] as const;
 
 /** Localized sitemap. Sample content is excluded (it also carries noindex metadata). */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

@@ -8,6 +8,8 @@ export const vi: Dictionary = {
     about: "Giới thiệu",
     resume: "Hồ sơ",
     contact: "Liên hệ",
+    experience: "Kinh nghiệm",
+    skills: "Kỹ năng",
   },
   actions: {
     viewProjects: "Xem dự án",
@@ -41,6 +43,9 @@ export const vi: Dictionary = {
     role: "Vai trò",
     year: "Năm",
     tableOfContents: "Mục lục",
+    location: "Địa điểm",
+    education: "Học vấn",
+    languages: "Ngôn ngữ",
   },
   home: {
     featuredSubtitle: "Các dự án kỹ thuật chọn lọc, từ vấn đề đến đánh đổi.",
