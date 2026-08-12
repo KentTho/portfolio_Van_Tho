@@ -25,8 +25,9 @@
 | Repository | `github.com/KentTho/portfolio_Van_Tho` (public) |
 | `PRODUCTION_BRANCH` | `main` @ `cf613ec` — **application-integrated** (Wave 01+02+02B+03+03R + CI + build fix) |
 | `ACTIVE_DEVELOPMENT_BRANCH` | **`feat/wave-04-phase-2-public-visual-redesign`** @ **`a151bf1`** (redesign checkpoint `473a683` → env governance `14083d1` → single-landing `a151bf1`; local == remote). Foundation `integration/pre-fe-foundation` @ `14a04a6` unchanged. |
-| `CURRENT_HEAD` | `a151bf1810ab9a67d44fd7bd20caa4787e2a3616` |
+| `CURRENT_HEAD` | `3486324` (brand visual system) + docs reconcile on top |
 | `PUBLIC_ARCHITECTURE` | ✅ **SINGLE_LANDING_ARCHITECTURE_DEV_VERIFIED** — `/vi` `/en` = one landing/locale (anchored sections `#home…#contact`, locale-aware scroll-spy nav); `/about /projects /articles /resume /contact` → `/#anchor`; `/projects/[slug]` + `/articles/[slug]` preserved; FULL_LIVE_NEON |
+| `PUBLIC_VISUAL_SYSTEM` | 🎨 **BRAND_SINGLE_LANDING_VISUAL_SYSTEM_DEV_VERIFIED (empty-state)** — logo-derived tokens (blue+gold on black), typography scale, portrait hero (`vantho.png`), motion/orbital, WCAG-AA. Data-driven sections show production empty states (Neon Dev unpopulated; Owner authors via Admin → populated QA later). Map: `docs/ui/PUBLIC_LANDING_DESIGN_MAP.md` |
 | `MAIN_INTEGRATION_STATUS` | **INTEGRATED** — PR #1 (CI), #2 (Wave 02), #3 (Wave 03) merged in order. `main` @ `cf613ec` (integration branch NOT yet merged to main — pre-redesign) |
 | `CI_STATUS` | **GREEN on `main`** — Actions run `30601997949` @ `cf613ec` |
 | `AUTH_STATUS` | ✅ **`OWNER_ADMIN_DEV_AUTH_VERIFIED`** — Owner completed GitHub OAuth; `bootstrapOwnerAdmin` provisioned **1 `app_users` = owner_admin / active** (Supabase UID linked, masked read-only proof on Neon) |
