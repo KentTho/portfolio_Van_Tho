@@ -3,7 +3,7 @@
 import { ArrowUpRight, Mail, Link as LinkGlyph } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import type { Dictionary } from "@/i18n/dictionary";
-import type { Profile } from "@/modules/public-portfolio/domain/types";
+import type { SocialLink } from "@/modules/public-portfolio/domain/types";
 
 /**
  * SINGLE LANDING — Contact
@@ -14,15 +14,16 @@ import type { Profile } from "@/modules/public-portfolio/domain/types";
  * (lucide-react v1 removed brand marks; the social's own label carries the platform.)
  */
 export function ContactCtaSection({
-  profile,
+  socials,
   dict,
 }: {
-  readonly profile: Profile;
+  /** Resolved contact links (Owner profile socials, or a verified fallback). */
+  readonly socials: readonly SocialLink[];
   readonly dict: Dictionary;
 }) {
   const reduced = useReducedMotion();
-  const email = profile.socials.find((s) => s.kind === "email");
-  const others = profile.socials.filter((s) => s.kind !== "email");
+  const email = socials.find((s) => s.kind === "email");
+  const others = socials.filter((s) => s.kind !== "email");
 
   return (
     <section
@@ -47,10 +48,7 @@ export function ContactCtaSection({
 
         <div className="relative flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <h2
-              id="contact-heading"
-              className="font-display text-3xl font-bold tracking-tight text-fg sm:text-4xl"
-            >
+            <h2 id="contact-heading" className="text-h2 text-fg">
               {dict.sections.contactCta}
             </h2>
             <p className="mt-3 max-w-lg text-base text-fg-muted">{dict.contact.subtitle}</p>

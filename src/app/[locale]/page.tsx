@@ -16,18 +16,6 @@ import { PrinciplesSection } from "@/components/public/sections/principles-secti
 import { ArticlesSection } from "@/components/public/sections/articles-section";
 import { ContactCtaSection } from "@/components/public/sections/contact-cta-section";
 
-/** Popular language/tech logos surfaced in the hero (Software Engineer focus). */
-const HERO_TECH = [
-  "python",
-  "typescript",
-  "javascript",
-  "react",
-  "nextjs",
-  "fastapi",
-  "postgresql",
-  "docker",
-] as const;
-
 export async function generateMetadata({
   params,
 }: {
@@ -66,6 +54,19 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
     repo.listExperience(),
   ]);
 
+  // Graceful empty-state fallbacks (Owner fills the real profile via Admin; these
+  // use established config/dict identity, never fabricated personal claims).
+  const heroName = profile.name.trim() || SITE.owner;
+  const heroRole = pick(profile.role, locale).trim() || dict.meta.homeTitle;
+  const heroHeadline = pick(profile.headline, locale).trim() || dict.meta.homeDescription;
+
+  // Contact always offers at least one verified way to reach out. Owner profile
+  // socials win; otherwise fall back to the real GitHub repository link (config).
+  const contactSocials =
+    profile.socials.length > 0
+      ? profile.socials
+      : [{ kind: "github" as const, label: "GitHub", href: SITE.repositoryUrl }];
+
   const personLd = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -90,11 +91,10 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
 
       <div id="home" className="scroll-mt-20">
         <HeroSection
-          name={profile.name}
-          role={pick(profile.role, locale)}
-          headline={pick(profile.headline, locale)}
+          name={heroName}
+          role={heroRole}
+          headline={heroHeadline}
           availability={dict.hero.availability}
-          techIds={HERO_TECH}
           primary={{ label: dict.actions.viewProjects, href: `/${locale}#projects` }}
           secondary={{ label: dict.actions.contactMe, href: `/${locale}#contact` }}
         />
@@ -129,7 +129,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       </div>
 
       <div id="contact" className="scroll-mt-20">
-        <ContactCtaSection profile={profile} dict={dict} />
+        <ContactCtaSection socials={contactSocials} dict={dict} />
       </div>
     </>
   );

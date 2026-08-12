@@ -63,3 +63,6 @@ tests/.auth/
 .agent/
 .agents/
 skills-lock.json
+
+# Local visual-QA screenshots (Prompt 12 QA loop)
+.qa-shots/

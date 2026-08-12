@@ -14,10 +14,7 @@ export function PrinciplesSection({ dict }: { readonly dict: Dictionary }) {
       {/* Hairline divider */}
       <div className="mb-12 h-px w-full bg-border/50" aria-hidden />
 
-      <h2
-        id="principles-heading"
-        className="font-display text-3xl font-bold tracking-tight text-fg sm:text-4xl"
-      >
+      <h2 id="principles-heading" className="text-h2 text-fg">
         {dict.sections.principles}
       </h2>
 

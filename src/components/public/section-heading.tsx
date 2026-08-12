@@ -30,15 +30,12 @@ export function SectionHeading({
             {index}
           </span>
         )}
-        <h2
-          id={id}
-          className="font-display text-3xl font-bold tracking-tight text-fg sm:text-4xl"
-        >
+        <h2 id={id} className="text-h2 text-fg">
           {title}
         </h2>
       </div>
       {subtitle && (
-        <p className="mt-3 max-w-2xl text-base leading-relaxed text-fg-muted">
+        <p className="mt-3 max-w-2xl text-body leading-relaxed text-fg-muted">
           {subtitle}
         </p>
       )}

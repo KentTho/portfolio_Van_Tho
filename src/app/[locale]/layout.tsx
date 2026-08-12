@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { isLocale, LOCALES } from "@/shared/i18n";
 import { getDictionary } from "@/i18n/dictionary";
 import { getPortfolioRepository } from "@/composition/public-portfolio";
+import { SITE } from "@/config/site";
 import { CosmicBackground } from "@/components/public/cosmic-background";
 import { PublicHeader, type NavItem } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
@@ -44,7 +45,7 @@ export default async function LocaleLayout({
       <CosmicBackground />
       <PublicHeader
         locale={locale}
-        brand={profile.name}
+        brand={profile.name.trim() || SITE.owner}
         items={nav}
         switchLanguageLabel={dict.actions.switchLanguage}
         openLabel={dict.actions.openMenu}
