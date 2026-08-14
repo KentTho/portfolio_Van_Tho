@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { ArrowRight, Mail } from "lucide-react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
-import BlurText from "@/components/ui/blur-text";
 import { PortraitFrame } from "@/components/public/visual/portrait-frame";
+import { KineticText } from "@/components/public/motion/kinetic-text";
+import { Magnetic, PointerTilt } from "@/components/public/motion/interactions";
 
 interface Cta {
   readonly label: string;
@@ -73,17 +74,7 @@ export function HeroSection({
         </motion.span>
 
         <div className="mt-6">
-          {reduced ? (
-            <h1 className="text-display text-fg">{name}</h1>
-          ) : (
-            <BlurText
-              text={name}
-              animateBy="letters"
-              delay={55}
-              stepDuration={0.28}
-              className="text-display text-fg"
-            />
-          )}
+          <KineticText text={name} as="h1" delay={0.15} className="text-display text-fg" />
         </div>
 
         <motion.p
@@ -102,22 +93,27 @@ export function HeroSection({
 
         <motion.div
           variants={reduced ? undefined : metaItem}
-          className="mt-9 flex flex-wrap gap-3"
+          className="mt-9 flex flex-wrap items-center gap-3"
         >
-          <Link
-            href={primary.href}
-            className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-canvas transition-all hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas active:scale-[0.97]"
-          >
-            {primary.label}
-            <ArrowRight size={15} aria-hidden />
-          </Link>
-          <Link
-            href={secondary.href}
-            className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface/50 px-6 py-3 text-sm font-medium text-fg transition-all hover:border-accent/50 hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas active:scale-[0.97]"
-          >
-            {secondary.label}
-            <Mail size={15} aria-hidden />
-          </Link>
+          <Magnetic>
+            <Link
+              href={primary.href}
+              className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-canvas transition-[filter,box-shadow] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+              style={{ boxShadow: "var(--glow-primary-soft)" }}
+            >
+              {primary.label}
+              <ArrowRight size={15} aria-hidden />
+            </Link>
+          </Magnetic>
+          <Magnetic>
+            <Link
+              href={secondary.href}
+              className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface/50 px-6 py-3 text-sm font-medium text-fg transition-colors hover:border-accent/50 hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+            >
+              {secondary.label}
+              <Mail size={15} aria-hidden />
+            </Link>
+          </Magnetic>
         </motion.div>
       </motion.div>
 
@@ -129,7 +125,9 @@ export function HeroSection({
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
       >
         {!reduced && <OrbitalAccent />}
-        <PortraitFrame alt={`Chân dung ${name}`} priority />
+        <PointerTilt max={6}>
+          <PortraitFrame alt={`Chân dung ${name}`} priority />
+        </PointerTilt>
       </motion.div>
     </section>
   );

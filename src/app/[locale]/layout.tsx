@@ -4,6 +4,8 @@ import { getDictionary } from "@/i18n/dictionary";
 import { getPortfolioRepository } from "@/composition/public-portfolio";
 import { SITE } from "@/config/site";
 import { CosmicBackground } from "@/components/public/cosmic-background";
+import { CursorHalo } from "@/components/public/motion/cursor-halo";
+import { IntroCurtain } from "@/components/public/motion/intro-curtain";
 import { PublicHeader, type NavItem } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
 
@@ -28,6 +30,7 @@ export default async function LocaleLayout({
 
   const dict = getDictionary(locale);
   const profile = await getPortfolioRepository().getProfile();
+  const brand = profile.name.trim() || SITE.owner;
 
   // Single-landing anchor navigation (locale-aware). Anchors resolve on the
   // landing page and, from a detail route, navigate back to the landing section.
@@ -43,9 +46,11 @@ export default async function LocaleLayout({
   return (
     <div lang={locale} className="flex min-h-full flex-col">
       <CosmicBackground />
+      <CursorHalo />
+      <IntroCurtain name={brand} />
       <PublicHeader
         locale={locale}
-        brand={profile.name.trim() || SITE.owner}
+        brand={brand}
         items={nav}
         switchLanguageLabel={dict.actions.switchLanguage}
         openLabel={dict.actions.openMenu}
