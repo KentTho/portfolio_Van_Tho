@@ -42,6 +42,45 @@ describe("NeonPortfolioRepository (mapper)", () => {
     expect(await repo.getArticle("anything")).toBeNull();
   });
 
+  it("groups public skills by category into tech groups (slug as tech id)", async () => {
+    const repo = new NeonPortfolioRepository(
+      fakeReadModel({
+        listPublicSkills: async () => [
+          { id: "1", slug: "python", name: "Python", category: "Backend", proficiencyLabel: null, evidenceText: null, displayOrder: 0, isVisible: true },
+          { id: "2", slug: "fastapi", name: "FastAPI", category: "Backend", proficiencyLabel: null, evidenceText: null, displayOrder: 1, isVisible: true },
+          { id: "3", slug: "react", name: "React", category: "Frontend", proficiencyLabel: null, evidenceText: null, displayOrder: 0, isVisible: true },
+        ] as never,
+      }),
+    );
+    const groups = await repo.getTechGroups();
+    expect(groups.map((g) => g.id).sort()).toEqual(["Backend", "Frontend"]);
+    const backend = groups.find((g) => g.id === "Backend");
+    expect(backend?.techIds).toEqual(["python", "fastapi"]);
+    expect(pick(backend!.title, "vi")).toBe("Backend");
+  });
+
+  it("folds visible education into the profile education line", async () => {
+    const repo = new NeonPortfolioRepository(
+      fakeReadModel({
+        listPublicEducation: async () => [
+          {
+            institution: "Nguyen Tat Thanh University",
+            degree: null,
+            fieldOfStudy: "Software Engineering",
+            startDate: "2022-10-01",
+            endDate: null,
+            isCurrent: true,
+            url: null,
+          },
+        ],
+      }),
+    );
+    const profile = await repo.getProfile();
+    expect(pick(profile.education, "vi")).toBe(
+      "Nguyen Tat Thanh University — Software Engineering (2022 — nay)",
+    );
+  });
+
   it("zips vi/en project summaries and marks live rows non-sample", async () => {
     const repo = new NeonPortfolioRepository(
       fakeReadModel({

@@ -41,15 +41,33 @@ const lines = (viBody: string, enBody: string): readonly Localized<string>[] => 
 type Sections = ReadonlyArray<{ readonly kind: string; readonly bodyMd: string }>;
 const section = (s: Sections, kind: string) => s.find((x) => x.kind === kind)?.bodyMd ?? "";
 
+/** "2022 — nay" / "2022 — 2025" / "" from ISO-ish date strings. */
+const eduYears = (start: string | null, end: string | null, isCurrent: boolean): string => {
+  const y = (d: string | null) => (d ? d.slice(0, 4) : "");
+  const s = y(start);
+  if (!s) return "";
+  const e = isCurrent ? "nay" : y(end);
+  return e ? `${s} — ${e}` : s;
+};
+
 export class NeonPortfolioRepository implements PortfolioRepository {
   // Injectable for unit tests; defaults to the live Neon read model in production wiring.
   constructor(private readonly rm: PublicReadModel = getPublicReadModel()) {}
 
   async getProfile(): Promise<Profile> {
-    const p = await this.rm.getProfile();
+    const [p, edu] = await Promise.all([this.rm.getProfile(), this.rm.listPublicEducation()]);
     const socials: Profile["socials"] = p.publicEmail
       ? [{ kind: "email", label: p.publicEmail, href: `mailto:${p.publicEmail}` }]
       : [];
+    // Education has no translation table; fold the visible rows into a single flat line the
+    // Career section renders (mirrored across locales). Empty when the Owner has authored none.
+    const educationLine = edu
+      .map((e) => {
+        const field = e.fieldOfStudy ? `${e.institution} — ${e.fieldOfStudy}` : e.institution;
+        const years = eduYears(e.startDate, e.endDate, e.isCurrent);
+        return years ? `${field} (${years})` : field;
+      })
+      .join("; ");
     // The profile row is flat (no per-locale translation table); mirror it across locales.
     return {
       name: p.fullName,
@@ -57,7 +75,7 @@ export class NeonPortfolioRepository implements PortfolioRepository {
       headline: loc("", ""),
       summary: loc("", ""),
       location: loc(p.location, p.location),
-      education: loc("", ""),
+      education: loc(educationLine, educationLine),
       focusAreas: [],
       languages: [],
       socials,
@@ -65,8 +83,23 @@ export class NeonPortfolioRepository implements PortfolioRepository {
   }
 
   async getTechGroups(): Promise<readonly TechGroup[]> {
-    // No Neon source for curated capability groups yet — returned empty rather than invented.
-    return [];
+    // Capability groups are derived from the live public skills catalog, grouped by category.
+    // Skill `slug` is used as the tech id (the technology logo tile falls back to a short-code
+    // for slugs outside the catalog). Empty until the Owner authors skills via Admin.
+    const skills = await this.rm.listPublicSkills();
+    const byCategory = new Map<string, string[]>();
+    for (const s of skills) {
+      const key = s.category?.trim() || "general";
+      const list = byCategory.get(key) ?? [];
+      list.push(s.slug);
+      byCategory.set(key, list);
+    }
+    return Array.from(byCategory.entries()).map(([category, techIds]) => ({
+      id: category,
+      title: loc(category, category),
+      caption: loc("", ""),
+      techIds,
+    }));
   }
 
   async listProjects(): Promise<readonly ProjectSummary[]> {
