@@ -18,6 +18,13 @@
 > — bản đồ mọi file báo cáo/tiến độ. Hiểu toàn hệ thống + luồng xử lý: **[`docs/architecture/PROJECT_UNDERSTANDING.md`](docs/architecture/PROJECT_UNDERSTANDING.md)**
 > (knowledge map) + **[`docs/architecture/SYSTEM_MAP.md`](docs/architecture/SYSTEM_MAP.md)** (ERD + infra/data/BE flows).
 
+> **Future architecture item (Owner-mandated, deferred — NOT in Prompt 12R):**
+> `PROFILE_AND_PUBLIC_IDENTITY_DOMAIN_EXPANSION` — add CMS-managed profile summary/headline,
+> social-links, and (if needed) awards via a dedicated migration wave (ports/use-cases/repos/Admin
+> CRUD/public read model/tests/arch). Proven domain gaps: `SUMMARY_DOMAIN_GAP`, `SOCIAL_LINKS_DOMAIN_GAP`,
+> `AWARDS_DOMAIN_GAP` (see HANDOFF). RC uses temporary SITE/config fallback; before Production decide
+> CMS-authority vs SITE/config-authority. No migration now (invariant 25 tables / ledger=6).
+
 ## 1. Snapshot (branch/integration state — machine-precise)
 
 | Field | Value |
