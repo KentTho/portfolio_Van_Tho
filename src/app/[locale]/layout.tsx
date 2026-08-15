@@ -37,9 +37,8 @@ export default async function LocaleLayout({
   const nav: NavItem[] = [
     { href: `/${locale}#about`, label: dict.nav.about },
     { href: `/${locale}#projects`, label: dict.nav.projects },
-    { href: `/${locale}#experience`, label: dict.nav.experience },
+    { href: `/${locale}#career`, label: dict.nav.experience },
     { href: `/${locale}#skills`, label: dict.nav.skills },
-    { href: `/${locale}#articles`, label: dict.nav.articles },
     { href: `/${locale}#contact`, label: dict.nav.contact },
   ];
 

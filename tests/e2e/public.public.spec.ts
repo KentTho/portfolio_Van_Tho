@@ -1,20 +1,20 @@
 import { expect, test } from "@playwright/test";
 
 /**
- * E2E-01 — anonymous public journeys for the SINGLE LANDING architecture.
- * Proves each locale root renders every landing section, exposes NO admin
- * surface, shows no draft/archived leak, and that the consolidated routes
- * (/projects /articles /about /resume /contact) redirect to landing anchors.
- * Robust to an empty Neon dev DB (sections render truthful empty states).
+ * E2E-01 — anonymous public journeys for the CV-driven single landing (6-block IA).
+ * Proves each locale root renders every landing section, exposes NO admin surface,
+ * shows no draft/archived leak, and that the consolidated routes redirect to landing
+ * anchors. Robust to an empty Neon dev DB (sections render truthful empty states).
  */
-const SECTION_IDS = ["home", "about", "projects", "experience", "skills", "articles", "contact"] as const;
+const SECTION_IDS = ["home", "about", "projects", "career", "skills", "contact"] as const;
 
+// route -> landing anchor it consolidates to.
 const CONSOLIDATED: ReadonlyArray<readonly [string, string]> = [
   ["projects", "projects"],
-  ["articles", "articles"],
   ["about", "about"],
-  ["resume", "experience"],
+  ["resume", "career"],
   ["contact", "contact"],
+  ["articles", "home"], // articles removed from IA — list route returns to landing
 ];
 
 for (const locale of ["vi", "en"] as const) {

@@ -10,5 +10,7 @@ export default async function ArticlesRedirect({
 }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  redirect(`/${locale}#articles`);
+  // Articles were removed from the single-landing IA (Prompt 12R). The article
+  // domain + detail routes remain; the list route now returns to the landing.
+  redirect(`/${locale}`);
 }

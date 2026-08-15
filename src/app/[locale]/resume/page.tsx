@@ -11,5 +11,5 @@ export default async function ResumeRedirect({
 }) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
-  redirect(`/${locale}#experience`);
+  redirect(`/${locale}#career`);
 }
