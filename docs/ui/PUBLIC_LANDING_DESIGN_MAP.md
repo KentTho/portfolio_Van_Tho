@@ -75,8 +75,9 @@
 3. Thêm motion → theo grammar §4, luôn gate reduced-motion.
 4. QA: `node scripts/qa-screenshot.mjs <url> <out.png> [w] [h] [selector]` (output `.qa-shots/`, gitignored).
 
-## 7. Trạng thái QA (Prompt 12)
-- **Hero**: QA desktop 1440 + mobile 390 — PASS (portrait + brand + typography).
-- **Principles**: PASS (nội dung `dict`).
-- **Contact**: PASS (GitHub fallback link).
-- **Các section data-driven (Projects/Experience/Skills/Articles/About/Focus)**: hiện **empty state** vì Neon Dev chưa có nội dung (Owner nhập qua Admin sau). Empty states đã QA on-brand. **Populated-state QA sẽ chạy lại sau khi Owner nhập dữ liệu thật.**
+## 7. Trạng thái QA (cập nhật V1 — post-merge 2026-08-16)
+- **V1 đã MERGE vào `main` + deploy Vercel Production** (`https://portfolio-van-tho.vercel.app`). Runtime smoke: `/vi`·`/en` 200, cả 6 anchor live, admin deny, no phone.
+- **Hero**: QA desktop 1440 + mobile 390 — PASS (portrait + brand + typography), hiển thị tên/role thật (Hà Văn Thọ).
+- **Contact**: PASS (GitHub fallback link; email primary khi có).
+- **Populated-state QA (dữ liệu thật đã nhập qua Admin)**: PASS — **#about** (Giới thiệu) role/location · **#projects** Expense Tracker card (summary thật) · **#career** Education row (NTTU, 2022—nay; Experience đúng là vắng vì `PENDING_OWNER_EXPERIENCE_DETAILS`) · **#skills** 6 nhóm năng lực populate từ Neon. *(Cosmetic V2: vài skill tile hiện slug khi slug nằm ngoài technology-catalog.)*
+- **Note lịch sử:** Focus/Principles/Articles đã gỡ khỏi landing (6-block IA); article domain + `/articles/[slug]` vẫn giữ.
