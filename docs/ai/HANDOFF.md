@@ -1,6 +1,14 @@
 # HANDOFF
 
-## CURRENT CHECKPOINT
+## CURRENT CHECKPOINT — ✅ V1_MAIN_MERGED_AND_POST_MERGE_VERIFIED (2026-08-16)
+- **Verdict:** **`V1_MAIN_MERGED_AND_POST_MERGE_VERIFIED`**. **PR #6 MERGED** into `main` (merge commit `30b1184`, parents `f24d1d8`+`b367d1d`; mergedAt 2026-08-16T09:24:24Z) via repo-approved merge method (no force, no `--admin` bypass). `main` HEAD = `30b1184`, contains validated feature HEAD `b367d1d`.
+- **Merge-block resolved:** ruleset `protect-main` required status-check context was `CI / quality` but the GitHub Actions check emits `quality` (job name, no workflow prefix) → required-check pending forever. Owner corrected the ruleset required check to `quality` (integration GitHub Actions). No protection weakened (still require CI pass + no-force + no-delete + 0-approval). Then merged with the green `quality` check actually counting.
+- **CI on `main` @ `30b1184`:** completed / **success**.
+- **Vercel PRODUCTION:** `dpl_GnUBWwZHuAvi6YhagmJWJxprGpiD` target=production **● Ready** (created 09:24:28Z, right after merge). Canonical alias **https://portfolio-van-tho.vercel.app** (+ `…-git-main…` alias → main-branch production binding confirmed).
+- **Production runtime smoke (anon curl):** `/vi` 200 · `/en` 200 · real content present (Hà Văn Thọ · Nguyen Tat Thanh · Expense Tracker · Giới thiệu · Kỹ năng) · all 6 anchors live (`#home #about #projects #career #skills #contact`) · admin deny (`/vi/admin`→404, `/admin`→307, `/vi/admin/profile`→404 — no open 200) · **no phone-like string** (private preserved).
+- **STOPPED after verdict — V2 NOT started.** Owner-managed pending (not V1 blockers): Experience details (`PENDING_OWNER_EXPERIENCE_DETAILS`) · public-safe resume strip-phone then Resume CTA (`PENDING_PUBLIC_SAFE_RESUME`) · V2 per-section visual enhancement + profile/identity domain expansion.
+
+### (historical) pre-merge READY-TO-MERGE checkpoint
 - **Branch:** `feat/wave-04-phase-2-public-visual-redesign` · **PR #6** (base `main` ← feature), OPEN, MERGEABLE.
 - **CODE_HEAD:** `91fad56` (fully validated). This docs commit advances HEAD → CI must re-run GREEN at the new HEAD before merge.
 - **Objective / gate:** V1 finalize → **READY TO MERGE** (`V1_MAIN_MERGED_AND_POST_MERGE_VERIFIED` pending the merge + Production deploy).
