@@ -27,7 +27,17 @@
 ### Spatial grammar (§9)
 `--container-max: 72rem` · gutter `px-6` · `--section-py` (`py-24`) · reading measure `--measure` · grid gap 3–4.
 
-## 2. Nine sections (ONE SECTION = ONE OWNER FILE)
+## 2. Sections (ONE SECTION = ONE OWNER FILE)
+
+> **IA UPDATE (Prompt 12R/V1):** the landing is now **6 recruiter-first blocks** —
+> `#home` (Hero) · `#about` · `#projects` (Expense Tracker) · `#career` (Experience & Education) ·
+> `#skills` · `#contact`. **Focus / Principles / Articles were removed from the landing** (their
+> section components deleted); the **article domain + `/articles/[slug]` detail routes remain**.
+> Skills populate from Neon skills (`getTechGroups`←`listPublicSkills`, grouped by category);
+> Education from Neon (`getProfile().education`←`listPublicEducation`). The 9-section table below is
+> historical — treat only the 6 blocks above as current.
+
+### (historical 9-section reference)
 
 | Section | Anchor | Owner file | Data source | Visual purpose | Motion signature | Notes |
 |---|---|---|---|---|---|---|
