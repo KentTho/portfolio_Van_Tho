@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/infrastructure/supabase/server-client";
+import { bootstrapOwnerAdmin } from "@/composition/identity";
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -12,6 +13,10 @@ export async function GET(request: NextRequest) {
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
+      // First-login provisioning: bridge the verified allow-listed owner to an app_users
+      // owner_admin record. Deny-by-default and idempotent; a non-allow-listed identity is
+      // simply not provisioned (the admin layout will then redirect it to /admin-login).
+      await bootstrapOwnerAdmin();
       return NextResponse.redirect(`${origin}${safePath}`);
     }
   }

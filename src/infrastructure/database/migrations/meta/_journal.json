@@ -8,6 +8,41 @@
       "when": 1785407098234,
       "tag": "0000_boring_skullbuster",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785569519805,
+      "tag": "0001_damp_warstar",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785601499071,
+      "tag": "0002_giant_mastermind",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1786251844608,
+      "tag": "0003_dry_maria_hill",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1786252130702,
+      "tag": "0004_steep_gravity",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786252279709,
+      "tag": "0005_yellow_ravenous",
+      "breakpoints": true
     }
   ]
 }

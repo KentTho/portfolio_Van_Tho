@@ -1,43 +1,103 @@
 /*
- * Design tokens — dark navy engineering editorial (Wave 01 design authority).
- * Raw semantic values only. Mapped to Tailwind utilities in globals.css (@theme).
- * Do not hardcode these colors in components; use the semantic utilities.
+ * Design tokens — COSMIC ENGINEERING EDITORIAL · brand-derived (Wave 04 Phase 2 / Prompt 12).
+ *
+ * COLOR AUTHORITY = the real logo (src/components/public/image/logo_myself.jpg):
+ * electric royal blue + metallic gold on deep space black. Blue is the dominant
+ * interactive accent; gold is a restrained premium highlight (never a full wash).
+ *
+ * Rules: components NEVER hardcode hex — use the semantic utilities generated in
+ * globals.css @theme. The legacy names (--fg/--accent/--ring/--glow-*) are kept as
+ * aliases onto the brand tokens so existing components render in-brand with no churn.
+ * All text/control colors meet WCAG AA on --canvas.
  */
 :root {
-  /* Backgrounds */
-  --canvas: #070b14; /* deep navy */
-  --surface: #0d1524;
-  --elevated: #131f34;
-  --overlay: rgba(3, 6, 12, 0.72);
+  /* ── Brand (from logo) ─────────────────────────────────────────────────── */
+  --brand-primary: #3b82f6; /* core electric blue — fills, glows, focal */
+  --brand-primary-soft: #6ba5ff; /* luminous blue — text/links/accents on dark (AA) */
+  --brand-secondary: #e9a93e; /* metallic gold — restrained highlight */
+  --brand-secondary-soft: #f3c877; /* soft gold */
+  --brand-highlight: #fbe3a6; /* gold sheen */
 
-  /* Text */
-  --fg: #e8eef7; /* primary */
-  --fg-muted: #a9b7cc; /* secondary */
-  --fg-subtle: #6b7a90; /* muted */
+  /* ── Neutrals / depth ──────────────────────────────────────────────────── */
+  --canvas: #050912; /* deep space black-navy */
+  --canvas-elevated: #0a1220;
+  --surface: #0d1526;
+  --surface-raised: #131f38;
+  --surface-hover: #1b2743; /* interactive card hover */
 
-  /* Borders */
-  --border: #1e2b42;
+  --foreground: #eaf1fb; /* primary text — ~17:1 */
+  --foreground-muted: #a6b4cd; /* secondary — ~9:1 */
+  --foreground-subtle: #6f8099; /* tertiary/meta — ~4.6:1, non-essential only */
 
-  /* Accents */
-  --accent: #22d3ee; /* cyan primary */
-  --accent-2: #2dd4bf; /* teal secondary */
-  --accent-3: #a78bfa; /* controlled purple */
+  --border: #1e2b47;
+  --border-strong: #2f4470;
 
-  /* Semantic status */
+  --focus-ring: #6ba5ff;
+
+  /* ── Depth / glow — selective (one focal point per viewport) ───────────── */
+  --glow-primary-soft: 0 0 30px color-mix(in oklab, var(--brand-primary) 20%, transparent);
+  --glow-primary-strong: 0 0 64px color-mix(in oklab, var(--brand-primary) 34%, transparent);
+  --glow-secondary-soft: 0 0 30px color-mix(in oklab, var(--brand-secondary) 18%, transparent);
+
+  /* ── Semantic status ───────────────────────────────────────────────────── */
   --success: #34d399;
   --warning: #fbbf24;
   --danger: #f87171;
-  --info: #38bdf8;
+  --info: var(--brand-primary-soft);
 
-  /* Focus */
-  --ring: #22d3ee;
+  /* ── Shape — corner-radius lock ────────────────────────────────────────── */
+  --radius: 1rem; /* 16px — cards/containers */
+  --radius-sm: 0.75rem; /* 12px — inputs */
+  --radius-pill: 9999px; /* buttons */
 
-  /* Shape */
-  --radius: 0.625rem;
+  /* ── Typography stacks (next/font injects --font-inter/-syne/-mono) ──────── */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-display: var(--font-syne), "Space Grotesk", ui-sans-serif, system-ui,
+    -apple-system, sans-serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", "Cascadia Code",
+    "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
 
-  /* Typography stacks (system-first for a deterministic offline build) */
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", "Cascadia Code", "Source Code Pro",
-    Menlo, Consolas, monospace;
+  /* ── Typographic scale anchors (§8) — responsive, QA-tuned ─────────────── */
+  --text-display: clamp(2.75rem, 6vw + 0.5rem, 5rem); /* Hero name */
+  --text-h1: clamp(2.25rem, 4vw + 0.5rem, 3.75rem);
+  --text-h2: clamp(1.75rem, 2.4vw + 0.75rem, 2.75rem);
+  --text-h3: clamp(1.25rem, 1vw + 0.75rem, 1.6rem);
+  --text-body-l: clamp(1.075rem, 0.4vw + 1rem, 1.3rem);
+  --text-body: 1rem;
+  --text-body-s: 0.875rem;
+  --text-label: 0.6875rem; /* 11px mono label */
+  --lh-display: 0.95;
+  --lh-tight: 1.1;
+  --lh-body: 1.7;
+  --tracking-display: -0.03em;
+  --tracking-tight: -0.02em;
+  --tracking-label: 0.14em;
+
+  /* ── Spatial grammar (§9) ──────────────────────────────────────────────── */
+  --container-max: 72rem; /* 1152px editorial container */
+  --gutter: 1.5rem; /* horizontal page gutter */
+  --section-py: clamp(4.5rem, 8vw, 7.5rem); /* vertical section rhythm */
+  --measure: 65ch; /* body reading measure */
+
+  /* ── Motion grammar — MOTION_INTENSITY≈5 (motivated, not decorative) ───── */
+  --motion-fast: 160ms;
+  --motion-base: 380ms;
+  --motion-slow: 700ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Legacy aliases (existing components → brand, no churn) ─────────────── */
+  --fg: var(--foreground);
+  --fg-muted: var(--foreground-muted);
+  --fg-subtle: var(--foreground-subtle);
+  --elevated: var(--surface-raised);
+  --accent: var(--brand-primary-soft); /* links + button fills (with --canvas text) — AA */
+  --accent-2: var(--brand-secondary);
+  --accent-3: var(--brand-secondary); /* legacy violet retired → gold */
+  --border-subtle: var(--border);
+  --ring: var(--focus-ring);
+  --glow-soft: var(--glow-primary-soft);
+  --glow-strong: var(--glow-primary-strong);
+  --overlay: rgba(2, 5, 12, 0.72);
 }

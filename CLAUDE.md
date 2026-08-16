@@ -141,6 +141,7 @@ Before any mutation, declare `CURRENT_WAVE`, intended add/modify/delete paths, p
 
 - `.env*` ignored except `.env.example` (placeholders only). No real secret in repo, logs, README, screenshots, or client bundle.
 - Redact credential-bearing remotes. Never log tokens/cookies/passwords/DB URLs/service keys/raw auth headers.
+- **`ENV_LOCAL_OWNER_MANAGED_STATE` (standing):** `.env.local` is Owner-managed state. AI MUST NOT overwrite, delete, recreate, or stage `.env.local`, MUST NOT run `vercel env pull` (or any sync) that targets/writes `.env.local`, and MUST NOT log its values. Vercel synchronization must instead use the `.vercel` cache where applicable, a disposable env path, or `vercel env` without writing the local file. AI may only read `.env.local` metadata/key-names for masked diagnostics — never values.
 
 ## 21. Output / evidence format
 
@@ -183,3 +184,24 @@ External "skill" README sources (e.g. mattpocock, Cline, Kilo) are **advisory**,
 - **No README command is executed** (no plugin/CLI install) without a project safety review.
 - No skill may weaken tests, TypeScript strictness, security, or Git safety; none may read or expose raw secrets.
 - Sources with unknown/unclear license stay `LOCAL_REFERENCE_ONLY` (not copied into tracked docs).
+
+## 27. Karpathy engineering discipline (adopted, project-adapted)
+
+Standing discipline for **every** Wave, integrated manually from `andrej-karpathy-skills` (MIT). These
+principles are **not new authority** — they name and reinforce rules already in this file; project
+governance (§1–§26) still wins on any conflict. Source stays advisory; no plugin was installed.
+
+- **Think Before Coding** — Don't assume; surface inconsistencies; present tradeoffs; stop and ask when
+  confused rather than guessing. Reinforces §19 scope-lock and §22 handoff.
+- **Simplicity First** — Minimum code that solves the *actual* root cause; nothing speculative. Reinforces
+  §2 non-goals, §25, and "no speculative abstraction" above.
+- **Surgical Changes** — Touch only what the request requires; match existing style; clean up only orphans
+  *your* change created; never delete pre-existing code you don't understand. Reinforces §18 exact-path
+  staging and §25.
+- **Goal-Driven Execution** — Define success criteria first; reproduce-before-fix; add a test proving the
+  fix; loop until validated with real evidence. Reinforces §21 evidence format and §24 DoD.
+
+**Session clarification rule (Owner-instituted, standing):** at the start of each working session, and
+before any large or ambiguous mutation, **ask the Owner clarifying questions** — present concrete answer
+options suited to the project plan/Wave, and always allow a custom ("Other") answer. Do not silently pick
+an interpretation on decisions that change scope, branch strategy, production exposure, or data model.

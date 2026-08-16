@@ -44,3 +44,25 @@ tmp/
 
 # Claude Code local (user-owned) settings — keep out of VCS
 .claude/settings.local.json
+
+# Playwright — reports + LOCAL-ONLY authenticated storageState (never commit)
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+tests/.auth/
+
+# Understand-Anything generated knowledge graph + cache (local tool artifact)
+.ua/
+.understand-anything/
+
+.vercel
+.env*
+
+# Local AI skill tooling state (skill content + install lock) — not project config
+.agent/
+.agents/
+skills-lock.json
+
+# Local visual-QA screenshots (Prompt 12 QA loop)
+.qa-shots/

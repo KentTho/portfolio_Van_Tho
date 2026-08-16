@@ -66,6 +66,9 @@ const eslintConfig = defineConfig([
     "build/**",
     "coverage/**",
     "next-env.d.ts",
+    // Local Understand-Anything tool artifacts (gitignored) — not application source.
+    ".ua/**",
+    ".understand-anything/**",
   ]),
 ]);
 

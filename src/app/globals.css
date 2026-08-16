@@ -1,16 +1,27 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
 
-/* Expose design tokens as Tailwind theme values so utilities are generated:
-   bg-canvas, bg-surface, text-fg, text-fg-muted, border-border, bg-accent, ring-ring, ... */
+/* Expose design tokens as Tailwind theme values (utilities are generated from these):
+   bg-canvas/-elevated, bg-surface/-raised/-hover, text-fg/-muted/-subtle, border-border/-strong,
+   bg-brand-primary/-secondary, text-accent, ring-ring, font-display/-mono, rounded-*, … */
 @theme inline {
   --color-canvas: var(--canvas);
+  --color-canvas-elevated: var(--canvas-elevated);
   --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-hover: var(--surface-hover);
   --color-elevated: var(--elevated);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-fg-subtle: var(--fg-subtle);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-border-subtle: var(--border-subtle);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-soft: var(--brand-primary-soft);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-secondary-soft: var(--brand-secondary-soft);
+  --color-brand-highlight: var(--brand-highlight);
   --color-accent: var(--accent);
   --color-accent-2: var(--accent-2);
   --color-accent-3: var(--accent-3);
@@ -20,16 +31,108 @@
   --color-info: var(--info);
   --color-ring: var(--ring);
   --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
   --font-mono: var(--font-mono);
+  --radius: var(--radius);
+  --radius-sm: var(--radius-sm);
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background-color: var(--canvas);
   color: var(--fg);
   font-family: var(--font-sans);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Respect user motion preferences globally. */
+::selection {
+  background-color: color-mix(in oklab, var(--brand-primary) 28%, transparent);
+  color: var(--foreground);
+}
+
+/* ─── Semantic typography scale (§8 — one system, consistent everywhere) ──── */
+.text-display {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: 800;
+  line-height: var(--lh-display);
+  letter-spacing: var(--tracking-display);
+}
+.text-h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-display);
+}
+.text-h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+}
+.text-h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-tight);
+}
+.text-headline {
+  /* legacy alias → H2 (kept for any older callers) */
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 700;
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-tight);
+}
+.text-body-l {
+  font-size: var(--text-body-l);
+  line-height: 1.65;
+}
+.text-body-s {
+  font-size: var(--text-body-s);
+  line-height: 1.6;
+}
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+
+/* ─── Focus ring ─────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ─── Scrollbar (subtle) ─────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--fg-subtle);
+}
+
+/* ─── Reduced motion — global gate (§29) ─────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
