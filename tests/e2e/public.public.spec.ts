@@ -35,6 +35,21 @@ for (const locale of ["vi", "en"] as const) {
     await expect(page.locator("body")).not.toContainText(/\b(draft|archived)\b/i);
   });
 
+  test(`no hydration or runtime errors on the landing (${locale})`, async ({ page }) => {
+    // Regression guard (V2 hydration hardening): the app must produce no hydration
+    // mismatch and no uncaught runtime error in a clean browser. Owner-reported
+    // warnings were browser-extension DOM mutation, not app defects — this keeps
+    // the app side honest going forward.
+    const bad: string[] = [];
+    page.on("console", (m) => {
+      if (m.type() === "error" && /hydrat/i.test(m.text())) bad.push(m.text());
+    });
+    page.on("pageerror", (e) => bad.push(`pageerror: ${e.message}`));
+    await page.goto(`/${locale}`);
+    await page.waitForLoadState("networkidle");
+    expect(bad, bad.join("\n")).toEqual([]);
+  });
+
   test(`consolidated routes redirect to landing anchors (${locale})`, async ({ page }) => {
     for (const [route, anchor] of CONSOLIDATED) {
       const res = await page.goto(`/${locale}/${route}`);
