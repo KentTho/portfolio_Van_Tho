@@ -14,10 +14,13 @@
 > resume pending. DB: ledger = 6, 25 bảng (KHÔNG migration mới trong V1 finalize). **Next candidate:**
 > `V2_PUBLIC_VISUAL_ENHANCEMENT` (không tự khởi động; UI authority = `docs/ui/PUBLIC_LANDING_DESIGN_MAP.md`).
 >
-> **⚠️ `STOP_PRODUCTION_DATA_ENVIRONMENT_DECISION_REQUIRED`:** `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT`
-> (bằng chứng hành vi secret-safe: Production render đúng các hàng chỉ từng ghi vào Neon Development; Vercel có
-> một binding `DATABASE_URL` dùng chung `Production, Preview`). Cần Owner quyết: tách Neon Production riêng vs
-> chấp nhận dùng chung cho V1. AI KHÔNG tự migrate/copy/switch. Xem HANDOFF.
+> **✅ Owner-decided — `PRODUCTION_DATABASE_ISOLATION = APPROVED_PLANNED_NOT_EXECUTED`** (thay cho STOP cũ).
+> Current classification: `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT` (bằng chứng hành vi secret-safe:
+> Production render đúng các hàng chỉ từng ghi vào Neon Development; Vercel có một binding `DATABASE_URL` dùng
+> chung `Production, Preview`). **Kiến trúc mục tiêu:** Neon Production **riêng** cho Vercel Production, cô lập
+> khỏi Development/Preview. Đây là **infrastructure task nhỏ, có kế hoạch** (chưa thực hiện — không tạo DB,
+> không migration, không copy data, không đổi `DATABASE_URL`/Vercel env trong prompt này). Xem row
+> **"INFRA-DB-ISO"** ở §2 và runbook trong HANDOFF.
 >
 > **[HISTORICAL — pre-V1, superseded]** Wave 04 Phase 2 Single Landing (Development-verified), nhánh
 > `feat/wave-04-phase-2-public-visual-redesign` @ `a151bf1`: `/vi` `/en` hợp nhất một Landing/locale; consolidated
@@ -45,7 +48,7 @@
 | `CURRENT_HEAD` | `main` @ **`feeb0bd`** (local == remote) |
 | `V1_STATUS` | ✅ **`V1_MAIN_MERGED_AND_POST_MERGE_VERIFIED`** — merged, Production live, post-merge smoke green |
 | `PRODUCTION_STATUS` | ✅ **LIVE** — `https://portfolio-van-tho.vercel.app` (Vercel Git-integration on push to `main`; `…-git-main…` alias). `/vi` `/en` 200; 6 anchor + real content; admin deny; no phone |
-| `PRODUCTION_DATABASE_TARGET` | ⚠️ **`SAME_AS_DEVELOPMENT`** (secret-safe behavioral proof) → **`STOP_PRODUCTION_DATA_ENVIRONMENT_DECISION_REQUIRED`** (Owner decision; AI no migrate/switch) |
+| `PRODUCTION_DATABASE_TARGET` | ⚠️ **`SAME_AS_DEVELOPMENT`** (secret-safe behavioral proof). Owner-decided: **`PRODUCTION_DATABASE_ISOLATION = APPROVED_PLANNED_NOT_EXECUTED`** — tách Neon Production riêng là infra task đã duyệt, chưa thực hiện (no DB create/migration/copy/env-change now) |
 | `PUBLIC_ARCHITECTURE` | ✅ **SIX_BLOCK_RECRUITER_FIRST_LANDING** — `/vi` `/en` = one landing/locale (`#home #about #projects #career #skills #contact`, locale-aware scroll-spy); consolidated `/about /projects /articles /resume /contact` → `/#anchor`; `/projects/[slug]` + `/articles/[slug]` preserved; FULL_LIVE_NEON (no fixture fallback). Focus/Principles/Articles removed from landing (article domain + detail route retained). |
 | `PUBLIC_CONTENT_STATE` | ✅ **POPULATED (real CV)** — profile (Hà Văn Thọ) · Education NTTU · 15 skills/6 groups · 6 technologies · published Expense Tracker. Experience intentionally absent (`PENDING_OWNER_EXPERIENCE_DETAILS`). Populated visual QA PASS. |
 | `MAIN_INTEGRATION_STATUS` | **INTEGRATED + V1 MERGED** — `main` @ `feeb0bd` contains validated feature HEAD `b367d1d` |
@@ -65,8 +68,8 @@
 > **not** the 100% ceiling. Per the progress scale, 100% requires production proven **with monitoring +
 > rollback + observability**, none of which are yet in place (Wave 07/10, Owner-deferred). So V1 the
 > *product scope* is CLOSED, while the *long-term platform* stays below 100%. No prod-DB **mutation** was
-> performed to author content (real content was ingested into the development database only); the standing
-> `STOP_PRODUCTION_DATA_ENVIRONMENT_DECISION_REQUIRED` is open for the Owner.
+> performed to author content (real content was ingested into the development database only). Production-DB
+> isolation is Owner-decided: `PRODUCTION_DATABASE_ISOLATION = APPROVED_PLANNED_NOT_EXECUTED` (planned infra task).
 
 ## 2. Wave status
 
@@ -91,6 +94,9 @@
 | 09 Land & remote | consolidate feature → `main` via PR | ✅ **DONE** — PR #6 + PR #7 merged to `main` @ `feeb0bd` | repo-approved merge, ruleset check corrected |
 | 10 Deployment readiness | prod runbook, preview/migration/rollback proof, **monitoring + observability** | 🔒 **PARTIAL** — Vercel Production deploy LIVE, but monitoring/rollback/observability NOT yet proven (Owner-deferred) | needs Wave 07/10 platform work |
 | **V2 Public visual enhancement** | per-section visual enhancement of the 6 blocks (Hero/About/Projects/Career/Skills/Contact) on live data | 🔓 **NEXT CANDIDATE (not started)** — UI authority `PUBLIC_LANDING_DESIGN_MAP.md` | independent backlog items NOT auto-included |
+| **INFRA-DB-ISO — Production DB isolation** | tách Neon Production riêng cho Vercel Production (cô lập khỏi Dev/Preview) | 🔓 **APPROVED_PLANNED_NOT_EXECUTED** (Owner-decided) — infra task nhỏ, chưa chạy | runbook ↓ ; no execution in this prompt |
+
+**INFRA-DB-ISO runbook (Owner-mandated, khi thực hiện — KHÔNG làm bây giờ):** `VERIFY CURRENT TARGET → BACKUP/RECOVERY PLAN → CREATE PRODUCTION TARGET → APPLY EXISTING FORWARD MIGRATIONS → TRANSFER ONLY REQUIRED REAL CONTENT → VERIFY DATA → CHANGE PRODUCTION ENV ONLY → DEPLOY → SMOKE → ROLLBACK IF FAILURE.` Bất biến: **không mất/ghi đè dữ liệu V1 hiện tại**; forward-only migration; không đổi `DATABASE_URL`/Vercel env cho tới bước "CHANGE PRODUCTION ENV ONLY"; mỗi bước có bằng chứng.
 
 ## 3. Capability levels (L0–L7)
 

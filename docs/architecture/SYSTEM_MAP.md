@@ -16,7 +16,8 @@ Xem trực tiếp trên GitHub (render Mermaid) hoặc bất kỳ trình xem Mar
 > authority, không fixture fallback) · **Public E2E 7/7** + authed E2E pass · **CI green** + **Vercel
 > Preview green**.
 > **Còn TARGET (chưa verify runtime):** monitoring/rollback/observability (Wave 07/10) · Cloudflare
-> DNS/Turnstile · preview-branch-per-PR. ⚠️ `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT` (STOP mở).
+> DNS/Turnstile · preview-branch-per-PR. ⚠️ `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT`; Owner-decided
+> `PRODUCTION_DATABASE_ISOLATION = APPROVED_PLANNED_NOT_EXECUTED` (INFRA-DB-ISO — tách prod Neon riêng, chưa chạy).
 
 ---
 

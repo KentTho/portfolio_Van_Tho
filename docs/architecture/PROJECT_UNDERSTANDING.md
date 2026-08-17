@@ -149,7 +149,7 @@ Publish/update nội dung → append `content_revisions` (đa hình, `version=ma
 - `contact_messages`, `media_assets` có bảng nhưng **chưa có backend ghi** (contact write-boundary/Turnstile/email = backlog; media attach UI sau).
 - `#career` chỉ hiện Education; **Experience cố ý vắng** (`PENDING_OWNER_EXPERIENCE_DETAILS` — không fabricate).
 - **Chưa proven:** monitoring/rollback/observability (Wave 07/10); Cloudflare DNS/Turnstile; preview-branch-per-PR.
-- ⚠️ `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT` (STOP mở — Owner quyết tách prod DB).
+- ⚠️ `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT`; Owner-decided `PRODUCTION_DATABASE_ISOLATION = APPROVED_PLANNED_NOT_EXECUTED` (INFRA-DB-ISO — tách prod Neon riêng, chưa chạy).
 
 ---
 

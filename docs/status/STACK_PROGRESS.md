@@ -12,8 +12,9 @@
 > **V1_PRODUCT_SCOPE** (recruiter-facing portfolio — CLOSED) vs **LONG_TERM_PLATFORM_ROADMAP** (observability,
 > prod-DB isolation, contact backend, preview-branch-per-PR — open).
 >
-> ⚠️ **`STOP_PRODUCTION_DATA_ENVIRONMENT_DECISION_REQUIRED`** — `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT`
-> (secret-safe behavioral proof). Caps DATABASE below full marks until Owner decides prod-DB isolation.
+> ⚠️ **`PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT`** (secret-safe behavioral proof). Owner-decided:
+> **`PRODUCTION_DATABASE_ISOLATION = APPROVED_PLANNED_NOT_EXECUTED`** (separate Neon Production = approved
+> target, tracked as planned infra task **INFRA-DB-ISO**; not executed). Caps DATABASE below full marks until executed.
 
 ## Layer percentages
 
@@ -21,7 +22,7 @@
 |---|---|---|---|---|
 | **INFRASTRUCTURE** | **82** | Vercel **Production LIVE** (Git-integration deploy on push to `main`; `…-git-main…` alias) + **Preview green** on PR head + **CI green on `main`** (`CI / quality`); Neon Dev pooled+direct, migration system, env/secret/server-only, secret-free build all verified | **monitoring/rollback/observability NOT proven** (no Sentry/health/alerting); Cloudflare DNS/Turnstile `PENDING_INTERACTIVE`; no preview-branch-per-PR | observability + rollback runbook (Wave 07/10); Cloudflare wiring |
 | **PUBLIC PRESENTATION** | **88** | **6-block recruiter-first landing per locale** (`/vi` `/en`, scroll-spy) **LIVE in Production** with **real CV content** (Hà Văn Thọ · NTTU · 15 skills/6 groups · Expense Tracker). Logo-derived brand tokens (blue+gold), portrait hero (`vantho.png`), premium motion (cursor halo/kinetic/magnetic/pointer-tilt/intro), WCAG-AA. Live Neon read model (no fixture fallback); consolidated routes → `/#anchor`; detail routes preserved. **Public E2E 7/7** + **populated visual QA PASS** + production runtime smoke green. Map `docs/ui/PUBLIC_LANDING_DESIGN_MAP.md` | a11y/Lighthouse/visual-regression hardening (Wave 08B) not run; cosmetic skill-slug tiles; V2 per-section enhancement pending | `V2_PUBLIC_VISUAL_ENHANCEMENT`; Wave 08B a11y/perf |
-| **DATABASE** | **80** | `WAVE05_DATABASE_CONTRACT_DEV_VERIFIED` + **production-serving live**: ledger = 6, **25 tables** (G1–G5), FK cascade/restrict/setnull, locale checks, atomic batched-tx + optimistic concurrency + published-only reads verified; real content persisted | ⚠️ `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT` (STOP open — no separate prod branch); no preview-branch-per-PR; no prod backup/rollback drill | Owner prod-DB isolation decision; Wave 07 Neon preview branching |
+| **DATABASE** | **80** | `WAVE05_DATABASE_CONTRACT_DEV_VERIFIED` + **production-serving live**: ledger = 6, **25 tables** (G1–G5), FK cascade/restrict/setnull, locale checks, atomic batched-tx + optimistic concurrency + published-only reads verified; real content persisted | ⚠️ `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT`; isolation `APPROVED_PLANNED_NOT_EXECUTED` (INFRA-DB-ISO); no preview-branch-per-PR; no prod backup/rollback drill | Execute INFRA-DB-ISO (separate prod Neon); Wave 07 Neon preview branching |
 | **BACKEND** | **85** | `BACKEND_APPLICATION_FOUNDATION_DEV_VERIFIED` **running in Production**: tags/technologies/projects/articles/career/profile/skills/site-settings/revisions + Public Neon Read Model. Deny-by-default authz, Zod biên, atomic `db.batch`, row_version, audit, published/visible-only; live smoke + real ingestion through the stack | contact backend deferred (write-boundary/Turnstile/email = backlog); `PROFILE_AND_PUBLIC_IDENTITY_DOMAIN_EXPANSION` (summary/headline/social/awards) needs migration | contact backend + identity domain expansion (backlog) |
 | **ADMIN (Functional CMS)** | **82** | Control plane (15 areas) with **live authenticated admin session VERIFIED end-to-end** — real CV content ingested through Admin UI → Server Action → use-case → repo (UI never touches Drizzle). All states (loading/empty/validation/authz/not-found/success/stale). First-login owner provisioning live | media attach / links / metrics / sections editor = later upgrade; media+messages still status pages | media/links/sections editors; contact inbox (backlog) |
 | **FRONTEND (public)** | **88** | Subsumed by **PUBLIC PRESENTATION** — full 6-block public UI shipped to Production with real content, i18n (vi/en), premium motion, SEO/JSON-LD, detail routes. (Old "10 = app-shell-only" metric retired.) | same as PUBLIC PRESENTATION (a11y/perf hardening, V2 enhancement) | `V2_PUBLIC_VISUAL_ENHANCEMENT` |
@@ -39,7 +40,7 @@
 
 ## Honesty ledger (what these numbers do NOT claim)
 - **Production is LIVE and verified**, but there is **no monitoring / alerting / rollback drill / observability** yet → not 100%, not L6/L7.
-- ⚠️ `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT` (behavioral proof) — production and the local development environment appear to read the **same** Neon database. `STOP_PRODUCTION_DATA_ENVIRONMENT_DECISION_REQUIRED` is open; AI performed no migrate/switch.
+- ⚠️ `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT` (behavioral proof) — production and the local development environment read the **same** Neon database. Owner-decided `PRODUCTION_DATABASE_ISOLATION = APPROVED_PLANNED_NOT_EXECUTED` (INFRA-DB-ISO planned task); AI performed no migrate/switch.
 - Real content was ingested into the **development** database only (no direct prod-DB authoring/mutation). It surfaces in Production because prod reads the same DB.
 - a11y / Lighthouse / cross-browser / visual-regression hardening (Wave 08B) not yet run.
 - Contact write-boundary / Turnstile / email backend deferred (backlog, not V1).
