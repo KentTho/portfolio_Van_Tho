@@ -29,9 +29,13 @@ Visitor-only public users · OWNER_ADMIN only (EDITOR schema-ready, UI off) · a
 
 Feature-first modular monolith, Clean Architecture layers. Neon = single primary DB. Supabase = Auth + Storage only. Vercel = runtime + CD authority. GitHub Actions = CI authority. See `docs/architecture/`.
 
-## V2 Career — Education-first timeline (2026-08-18, awaiting Owner Visual Acceptance)
+## V2 Contact + Footer — conversion point + closure (2026-08-18, awaiting Owner Visual Acceptance)
 
-- **Branch:** `feat/v2-career-experience-education` (from PR #9 head `fff79ec`) — **NOT merged**. Adds `#career` V2: central-axis timeline (Education-first) + dormant two-tab [Experience|Education] state machine (auto-enables when verified Experience is authored). Data: new `listEducation()` port method (live Neon; no fabrication). Validation GREEN (check:env·typecheck·lint·**test 195/6**·arch 10/10·secret-free build·e2e:public 7/7); QA VI+EN × 320–1440; BOTH-mode verified via throwaway harness (0 height-jump, keyboard, a11y) then deleted. `PENDING_OWNER_EXPERIENCE_DETAILS` remains (not a failure).
+- **Branch:** `feat/v2-contact-footer-enhancement` (from `main` @ `16878f5`) — **NOT merged**. `#contact` V2: conversion-first centered editorial + primary real `mailto` CTA + robust copy-email state machine (idle/copied/error, 0 width-jump, aria-live, keyboard) + verified channels only; Footer closure + Back-to-Top; year server-deterministic. **Hydration:** `EXTERNAL_BROWSER_EXTENSION_MUTATION_CONFIRMED` (clean env 0 errors; regression guard in e2e:public). `@remixicon/vue` = `WRONG_FRAMEWORK_UNUSED_DEPENDENCY` (zero imports, not staged/reverted — Owner remove). Validation GREEN (check:env·typecheck·lint·**test 198/6**·arch 10/10·secret-free build·**e2e:public 9/9**); QA VI+EN × 320–1440. No form (Wave 06A), no fabrication, phone private.
+
+## V2 Career — Education-first timeline — MERGED + Production LIVE (2026-08-18)
+
+- **Career merged:** PR #11 → `main` = **`16878f5`**; production verified (`#career` "Học vấn"/"Nguyen Tat Thanh" present). Central-axis Education-first timeline + dormant two-tab [Experience|Education] state machine (`listEducation()` port; live Neon; `PENDING_OWNER_EXPERIENCE_DETAILS` remains). Hero/Menu/About also on main (PR #10 `b360eed`).
 
 ## V2 Hero + Menu + About — Owner APPROVED + MERGED + Production LIVE (2026-08-18)
 
