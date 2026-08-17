@@ -1,11 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Mail } from "lucide-react";
-import { motion, useReducedMotion, type Variants } from "motion/react";
+import { ArrowUpRight, Mail } from "lucide-react";
+import { motion, type Variants } from "motion/react";
+import type { SocialLink } from "@/modules/public-portfolio/domain/types";
 import { PortraitFrame } from "@/components/public/visual/portrait-frame";
 import { KineticText } from "@/components/public/motion/kinetic-text";
 import { Magnetic, PointerTilt } from "@/components/public/motion/interactions";
+import { useIntroReady } from "@/components/public/motion/intro-gate";
+import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
+import { GithubMark, LinkedinMark } from "@/components/public/visual/brand-icons";
+import { EASE_OUT } from "@/components/public/motion/motion-tokens";
 
 interface Cta {
   readonly label: string;
@@ -17,147 +22,229 @@ interface HeroSectionProps {
   readonly role: string;
   readonly headline: string;
   readonly availability: string;
+  readonly intro: string;
+  readonly focusLabel: string;
+  readonly scrollLabel: string;
   readonly primary: Cta;
   readonly secondary: Cta;
+  readonly socials: readonly SocialLink[];
 }
 
-const metaContainer: Variants = {
+/** Icon for a social kind. lucide dropped brand marks, so GitHub/LinkedIn are
+ *  local SVGs; email uses lucide Mail. `resume` is filtered out before render. */
+function SocialIcon({ kind, size = 18 }: { readonly kind: SocialLink["kind"]; readonly size?: number }) {
+  if (kind === "linkedin") return <LinkedinMark size={size} />;
+  if (kind === "email") return <Mail size={size} aria-hidden />;
+  return <GithubMark size={size} />;
+}
+
+/** Zone container: children stagger in once the intro stage clears. */
+const zone = (delayChildren: number): Variants => ({
   hidden: {},
-  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
-};
-const metaItem: Variants = {
+  visible: { transition: { staggerChildren: 0.06, delayChildren } },
+});
+const rise: Variants = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_OUT } },
 };
 
 /**
- * HERO — #home. Strongest first impression. Editorial asymmetric split:
- * identity (left ~55%) + real portrait (right, vantho.png) framed on the cosmic
- * canvas with an orbital accent echoing the logo's atom/orbit motif. Motion
- * signature: BlurText name reveal + staggered meta + portrait depth entrance +
- * slow orbital drift (LEVEL 3, strategic area). All motion is reduced-motion gated.
- * Technology data authority is Neon/Admin, so no tech inventory lives here.
+ * HERO — #home (V2, corrected). Reference-inspired three-zone cinematic stage:
+ * LEFT identity (intro · 2-line name focal · lead · one primary CTA + a light
+ * secondary link), CENTER portrait as the vertical anchor (backlit, emerges from
+ * the dark, sits high), RIGHT profession (focus · role · availability) tucked
+ * close to the portrait's eye-line. Vertical social rail anchors the lower left.
+ * Motion: portrait descends while text rises (opposing vectors), released when
+ * the intro curtain lifts so the entrance is *seen*, plays once, no loop, and is
+ * fully reduced-motion gated. Brand blue accent; gold strictly restrained.
  */
 export function HeroSection({
   name,
   role,
   headline,
   availability,
+  intro,
+  focusLabel,
+  scrollLabel,
   primary,
   secondary,
+  socials,
 }: HeroSectionProps) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
+  const ready = useIntroReady();
+  const state = reduced ? false : ready ? "visible" : "hidden";
+
+  // Owner-locked name break: "Hà Văn" / "Thọ" — head = all but last word, tail = last word.
+  const parts = name.trim().split(/\s+/);
+  const nameTail = parts.length > 1 ? parts[parts.length - 1] : "";
+  const nameHead = parts.length > 1 ? parts.slice(0, -1).join(" ") : name.trim();
 
   return (
-    <section
-      aria-label="Giới thiệu"
-      className="relative mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col justify-center gap-12 px-6 pb-16 pt-28 lg:flex-row lg:items-center lg:gap-16 lg:pt-0"
-    >
-      {/* ── Left — identity ─────────────────────────────────────────────── */}
-      <motion.div
-        className="flex flex-1 flex-col lg:max-w-[55%]"
-        variants={reduced ? undefined : metaContainer}
-        initial={reduced ? false : "hidden"}
-        animate={reduced ? false : "visible"}
-      >
-        <motion.span
-          variants={reduced ? undefined : metaItem}
-          className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface/60 px-3 py-1.5 label-mono text-fg-muted"
-        >
-          <span className="relative flex h-1.5 w-1.5" aria-hidden>
-            {!reduced && (
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
-            )}
-            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
-          </span>
-          {availability}
-        </motion.span>
-
-        <div className="mt-6">
-          <KineticText text={name} as="h1" delay={0.15} className="text-display text-fg" />
-        </div>
-
-        <motion.p
-          variants={reduced ? undefined : metaItem}
-          className="mt-4 font-mono text-sm uppercase tracking-[0.16em] text-accent"
-        >
-          {role}
-        </motion.p>
-
-        <motion.p
-          variants={reduced ? undefined : metaItem}
-          className="mt-5 max-w-[46ch] text-body-l text-fg-muted"
-        >
-          {headline}
-        </motion.p>
-
+    <section aria-label="Giới thiệu" className="relative w-full overflow-hidden">
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col items-center justify-center gap-8 px-6 pb-24 pt-28 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,auto)_minmax(0,0.78fr)] lg:items-center lg:gap-x-6 lg:pb-0 lg:pt-0">
+        {/* ── LEFT — identity ─────────────────────────────────────────────── */}
         <motion.div
-          variants={reduced ? undefined : metaItem}
-          className="mt-9 flex flex-wrap items-center gap-3"
+          className="order-2 flex w-full max-w-md flex-col items-center text-center lg:order-1 lg:max-w-none lg:items-start lg:pr-2 lg:text-left"
+          variants={reduced ? undefined : zone(0.22)}
+          initial={reduced ? false : "hidden"}
+          animate={state}
         >
-          <Magnetic>
-            <Link
-              href={primary.href}
-              className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-canvas transition-[filter,box-shadow] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-              style={{ boxShadow: "var(--glow-primary-soft)" }}
-            >
-              {primary.label}
-              <ArrowRight size={15} aria-hidden />
-            </Link>
-          </Magnetic>
-          <Magnetic>
+          <motion.span variants={reduced ? undefined : rise} className="label-mono text-brand-primary-soft">
+            {intro}
+          </motion.span>
+
+          <h1
+            aria-label={name}
+            className="mt-3 font-display font-bold leading-[0.92] tracking-[-0.03em] text-fg text-[clamp(2.6rem,4.6vw+0.5rem,4.5rem)]"
+          >
+            <KineticText text={nameHead} as="span" className="block" play={!reduced && ready} delay={0.05} stagger={0.028} />
+            {nameTail && (
+              <KineticText text={nameTail} as="span" className="block" play={!reduced && ready} delay={0.2} stagger={0.028} />
+            )}
+          </h1>
+
+          <motion.p variants={reduced ? undefined : rise} className="mt-5 max-w-[40ch] text-body-l text-fg-muted">
+            {headline}
+          </motion.p>
+
+          <motion.div variants={reduced ? undefined : rise} className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 lg:justify-start">
+            <Magnetic>
+              <Link
+                href={primary.href}
+                className="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-canvas transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+                style={{ boxShadow: "var(--glow-primary-soft)" }}
+              >
+                {primary.label}
+                <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </Magnetic>
+            {/* Secondary is a light text link — must not compete with the primary CTA. */}
             <Link
               href={secondary.href}
-              className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface/50 px-6 py-3 text-sm font-medium text-fg transition-colors hover:border-accent/50 hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+              className="group inline-flex items-center gap-1.5 text-sm font-medium text-fg-muted transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
             >
-              {secondary.label}
-              <Mail size={15} aria-hidden />
+              <span className="relative">
+                {secondary.label}
+                <span aria-hidden className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-brand-primary-soft/60 transition-transform duration-300 group-hover:scale-x-100" />
+              </span>
             </Link>
-          </Magnetic>
+          </motion.div>
         </motion.div>
-      </motion.div>
 
-      {/* ── Right — portrait + orbital accent ───────────────────────────── */}
-      <motion.div
-        className="relative flex flex-1 items-center justify-center"
-        initial={reduced ? false : { opacity: 0, scale: 0.94, y: 16 }}
-        animate={reduced ? false : { opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-      >
-        {!reduced && <OrbitalAccent />}
-        <PointerTilt max={6}>
-          <PortraitFrame alt={`Chân dung ${name}`} priority />
-        </PointerTilt>
-      </motion.div>
+        {/* ── CENTER — portrait (vertical anchor, sits high) ───────────────── */}
+        <motion.div
+          className="relative order-1 flex items-center justify-center lg:order-2 lg:-translate-y-2"
+          initial={reduced ? false : { opacity: 0, scale: 0.985, y: -26 }}
+          animate={reduced ? false : ready ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.985, y: -26 }}
+          transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.1 }}
+        >
+          {!reduced && <OrbitalAccent />}
+          <PointerTilt max={4}>
+            <PortraitFrame alt={`Chân dung ${name}`} priority />
+          </PointerTilt>
+        </motion.div>
+
+        {/* ── RIGHT — profession (tucked near the portrait eye-line) ───────── */}
+        <motion.div
+          className="order-3 flex w-full max-w-md flex-col items-center text-center lg:max-w-none lg:items-end lg:-translate-y-6 lg:text-right"
+          variants={reduced ? undefined : zone(0.34)}
+          initial={reduced ? false : "hidden"}
+          animate={state}
+        >
+          <motion.span variants={reduced ? undefined : rise} className="label-mono text-brand-secondary-soft">
+            {focusLabel}
+          </motion.span>
+
+          <p className="mt-3 font-display font-semibold leading-[1.02] text-fg text-[clamp(1.75rem,2vw+1rem,2.6rem)]">
+            <KineticText text={role} as="span" play={!reduced && ready} delay={0.12} stagger={0.026} duration={0.7} />
+          </p>
+
+          <motion.span
+            variants={reduced ? undefined : rise}
+            className="mt-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface/50 px-3 py-1.5 label-mono text-fg-muted"
+          >
+            <span className="relative flex h-1.5 w-1.5" aria-hidden>
+              {!reduced && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />}
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
+            </span>
+            {availability}
+          </motion.span>
+        </motion.div>
+      </div>
+
+      {/* ── Social rail — desktop vertical, lower left ───────────────────── */}
+      {socials.length > 0 && (
+        <motion.ul
+          aria-label="Liên kết mạng xã hội"
+          className="pointer-events-none absolute bottom-16 left-6 z-10 hidden flex-col gap-1 lg:flex"
+          variants={reduced ? undefined : zone(0.46)}
+          initial={reduced ? false : "hidden"}
+          animate={state}
+        >
+          {socials.map((s) => (
+            <motion.li key={s.href} variants={reduced ? undefined : rise} className="pointer-events-auto">
+              <a
+                href={s.href}
+                target={s.kind === "email" ? undefined : "_blank"}
+                rel={s.kind === "email" ? undefined : "noopener noreferrer"}
+                aria-label={s.label}
+                className="group flex h-10 w-10 items-center justify-center rounded-full text-fg-subtle transition-all duration-300 hover:translate-x-1 hover:text-brand-primary-soft focus-visible:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <SocialIcon kind={s.kind} />
+              </a>
+            </motion.li>
+          ))}
+          <li aria-hidden className="ml-[19px] mt-1 h-14 w-px bg-gradient-to-b from-border-strong to-transparent" />
+        </motion.ul>
+      )}
+
+      {/* Mobile social row */}
+      {socials.length > 0 && (
+        <div className="mx-auto -mt-4 flex max-w-6xl items-center justify-center gap-4 px-6 pb-10 lg:hidden">
+          {socials.map((s) => (
+            <a
+              key={s.href}
+              href={s.href}
+              target={s.kind === "email" ? undefined : "_blank"}
+              rel={s.kind === "email" ? undefined : "noopener noreferrer"}
+              aria-label={s.label}
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-fg-subtle transition-colors hover:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <SocialIcon kind={s.kind} />
+            </a>
+          ))}
+        </div>
+      )}
+
+      {/* Scroll cue — desktop only, bottom center */}
+      <div aria-hidden className="pointer-events-none absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex">
+        <span className="label-mono text-fg-subtle">{scrollLabel}</span>
+        <span className="relative h-9 w-px overflow-hidden bg-border-strong">
+          {!reduced && (
+            <motion.span
+              className="absolute inset-x-0 top-0 h-3 bg-brand-primary-soft"
+              animate={{ y: ["-100%", "300%"] }}
+              transition={{ duration: 1.8, ease: "easeInOut", repeat: Infinity }}
+            />
+          )}
+        </span>
+      </div>
     </section>
   );
 }
 
-/** Slow concentric orbital rings (blue + gold) echoing the logo. Decorative;
- *  rendered only when motion is allowed. */
+/** Single very-subtle concentric orbital echoing the logo. Decorative and quiet —
+ *  it must never out-shout the portrait. Rendered only when motion is allowed. */
 function OrbitalAccent() {
   return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center"
-    >
+    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
       <motion.div
-        className="absolute aspect-square w-[118%] rounded-full border border-brand-primary/15"
+        className="absolute aspect-square w-[104%] rounded-full border border-brand-primary/8"
         animate={{ rotate: 360 }}
-        transition={{ duration: 64, ease: "linear", repeat: Infinity }}
-      />
-      <motion.div
-        className="absolute aspect-square w-[92%] rounded-full border border-brand-secondary/12"
-        animate={{ rotate: -360 }}
-        transition={{ duration: 96, ease: "linear", repeat: Infinity }}
-      />
-      <motion.div
-        className="absolute aspect-square w-[118%]"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 64, ease: "linear", repeat: Infinity }}
+        transition={{ duration: 90, ease: "linear", repeat: Infinity }}
       >
         <span
-          className="absolute left-1/2 top-0 h-2 w-2 -translate-x-1/2 rounded-full bg-brand-primary"
+          className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-brand-primary/70"
           style={{ boxShadow: "var(--glow-primary-soft)" }}
         />
       </motion.div>

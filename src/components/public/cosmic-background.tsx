@@ -5,28 +5,31 @@
 export function CosmicBackground() {
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+      {/* Restrained ambient aurora — darker canvas overall so the hero portrait
+          backlight, not the background, carries the light (Owner V2 direction). */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 70%)",
+            "radial-gradient(ellipse 70% 45% at 50% -12%, color-mix(in oklab, var(--accent) 7%, transparent), transparent 68%)",
         }}
       />
       <div
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(ellipse 50% 40% at 85% 10%, color-mix(in oklab, var(--accent-3) 10%, transparent), transparent 60%)",
+            "radial-gradient(ellipse 42% 34% at 86% 8%, color-mix(in oklab, var(--accent-3) 5%, transparent), transparent 60%)",
         }}
       />
+      {/* Atmospheric grid — barely-there texture, never a subject. */}
       <div
-        className="absolute inset-0 opacity-[0.14]"
+        className="absolute inset-0 opacity-[0.05]"
         style={{
           backgroundImage:
             "linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)",
-          backgroundSize: "56px 56px",
-          maskImage: "radial-gradient(ellipse 65% 55% at 50% 0%, #000 35%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 65% 55% at 50% 0%, #000 35%, transparent 100%)",
+          backgroundSize: "60px 60px",
+          maskImage: "radial-gradient(ellipse 58% 48% at 50% 2%, #000 22%, transparent 92%)",
+          WebkitMaskImage: "radial-gradient(ellipse 58% 48% at 50% 2%, #000 22%, transparent 92%)",
         }}
       />
     </div>

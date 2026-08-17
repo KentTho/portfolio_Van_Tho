@@ -63,6 +63,13 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       ? profile.socials
       : [{ kind: "github" as const, label: "GitHub", href: SITE.repositoryUrl }];
 
+  // Hero social rail — real socials only (resume excluded: PENDING_PUBLIC_SAFE_RESUME).
+  // Guarantee a GitHub anchor via the real repository link if the profile has none.
+  const heroSocials = profile.socials.filter((s) => s.kind !== "resume");
+  if (!heroSocials.some((s) => s.kind === "github" || s.kind === "source")) {
+    heroSocials.push({ kind: "github", label: "GitHub", href: SITE.repositoryUrl });
+  }
+
   const personLd = {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -91,8 +98,12 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
           role={heroRole}
           headline={heroHeadline}
           availability={dict.hero.availability}
+          intro={dict.hero.intro}
+          focusLabel={dict.hero.focus}
+          scrollLabel={dict.hero.scroll}
           primary={{ label: dict.actions.viewProjects, href: `/${locale}#projects` }}
           secondary={{ label: dict.actions.contactMe, href: `/${locale}#contact` }}
+          socials={heroSocials}
         />
       </div>
 

@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { motion, useMotionValue, useSpring, useReducedMotion } from "motion/react";
+import { motion, useMotionValue, useSpring } from "motion/react";
 import { POINTER_SPRING } from "@/components/public/motion/motion-tokens";
+import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 
 /**
  * Magnetic — a small pointer-attraction wrapper for CTAs (Prompt 12R).
@@ -19,7 +20,7 @@ export function Magnetic({
   readonly strength?: number;
   readonly className?: string;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const ref = useRef<HTMLSpanElement>(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -67,7 +68,7 @@ export function PointerTilt({
   readonly max?: number;
   readonly className?: string;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const ref = useRef<HTMLDivElement>(null);
   const rx = useMotionValue(0);
   const ry = useMotionValue(0);

@@ -7,6 +7,19 @@
 > Design language: **COSMIC ENGINEERING EDITORIAL** — depth · atmosphere · brand geometry ·
 > controlled motion. Palette lấy từ logo thật (`src/components/public/image/logo_myself.jpg`):
 > **xanh royal điện + vàng kim trên nền đen**. Dials: DESIGN_VARIANCE≈7 · MOTION_INTENSITY≈5 · VISUAL_DENSITY≈5.
+>
+> **[V2 — Hero + Menu + About · 2026-08-18 · branch `feat/v2-hero-menu-enhancement` · PR #9 · CHỜ OWNER VISUAL ACCEPTANCE]**
+> Reference `docs/image_demo_portfolio/{hero-section,About}.png` + `HEROAUDIT.md` / `Menu_audit.md` / `ABOUT01audit.md`
+> (học composition/lighting/rhythm — KHÔNG clone, KHÔNG tím). **Hero (corrected):** 3-zone (LEFT identity · CENTER
+> portrait anchor · RIGHT profession) — **tên 2 dòng "Hà Văn"/"Thọ"** (Owner-locked), portrait lớn hơn + cao hơn +
+> backlight blue tập trung (portrait nổi hơn nền), right zone kéo gần eye-line, **1 CTA primary "Xem dự án" + "Liên hệ"
+> = text-link nhẹ**, orbital giảm còn 1 ring rất mờ. **Canvas tối hơn + grid mờ hơn** (`cosmic-background`). **Menu:**
+> verified vs `Menu_audit` — active = underline glow ≠ hover underline-grow, scroll-spy đúng cả 6 block (Contact
+> activate ở bottom, KHÔNG dead-zone), anchor offset qua `scroll-mt-20`, brand=Syne / nav=Inter. **About (V2 mới):**
+> editorial split — statement (eyebrow/Syne headline/Inter lead) + **backlit identity fact-panel** (Vai trò/Địa điểm/
+> Học vấn thật + orbital echo) — continuation của Hero, không card-grid, không portrait-repeat. **Hydration:**
+> `EXTERNAL_BROWSER_EXTENSION_MUTATION_CONFIRMED` (clean env 0 errors; Owner's warning = Liner/`data-be-installed`
+> extension). Chưa merge vào main. Các section Projects/Career/Skills/Contact **KHÔNG đổi** phiên này.
 
 ## 1. Global foundation
 
@@ -15,9 +28,12 @@
 | **Design tokens** (màu/shape/typography scale/spacing/motion) | `src/styles/tokens.css` | Brand canonical `--brand-primary/-soft/-secondary/-secondary-soft/-highlight`, `--canvas(-elevated)`, `--surface(-raised/-hover)`, `--foreground(-muted/-subtle)`, `--border(-strong)`, `--focus-ring`, `--glow-primary-soft/-strong`, `--glow-secondary-soft`. Legacy `--fg/--accent/--ring/--glow-*` = **alias** trỏ brand (đừng xóa — nhiều component dùng). **Không hardcode hex trong component.** |
 | **Theme mapping + typography classes** | `src/app/globals.css` | `@theme` sinh utility (`bg-brand-primary`, `text-accent`, `border-border-strong`…). Typography: `.text-display / .text-h1 / .text-h2 / .text-h3 / .text-body-l / .text-body-s / .label-mono`. Reduced-motion global gate. |
 | **Fonts** | `src/app/layout.tsx` | `Syne` (display, `--font-syne`) · `Inter` (body, `--font-inter`) · `JetBrains_Mono` (mono, `--font-mono`). Nhất quán toàn site — không thêm font khác. |
-| **Atmospheric background** | `src/components/public/cosmic-background.tsx` | Aurora xanh (top) + glow vàng + masked grid. Pure CSS, fixed, `-z-10`. Dùng brand qua alias. |
+| **Atmospheric background** | `src/components/public/cosmic-background.tsx` | **V2: darker/quieter** — restrained aurora (blue 7% / gold 5%) + **barely-there grid (opacity 0.05)** so the hero portrait backlight, not the background, carries the light (Owner V2 direction). Pure CSS, fixed, `-z-10`. |
 | **Scroll-reveal primitive** | `src/components/public/reveal.tsx` | `Reveal` (whileInView, once, reduced-motion aware). Motion signature dùng chung cho entrance. |
-| **Portrait primitive** | `src/components/public/visual/portrait-frame.tsx` | `vantho.png` next/image + brand glow + gold hairline + bottom-fade vào canvas. |
+| **Portrait primitive** | `src/components/public/visual/portrait-frame.tsx` | **V2: frameless** — `vantho.png` next/image (object-contain, no distortion) *emerging from canvas*: blue backlight + restrained gold undertone (silhouette separation), radial vignette + multiply sink + bottom-fade dissolve the studio backdrop's rectangular edges (no card/box). Pointer depth layered by Hero via `PointerTilt`. |
+| **Brand marks** | `src/components/public/visual/brand-icons.tsx` | GitHub/LinkedIn inline SVG (`currentColor`) — lucide dropped brand glyphs. Used by Hero social rail. |
+| **Intro gate** | `src/components/public/motion/intro-gate.ts` | Single-authority "stage clear" signal (`markIntroReady`/`useIntroReady`). IntroCurtain fires it as it lifts so the Hero entrance is *seen*, not hidden behind the curtain. |
+| **Reduced-motion (hydration-safe)** | `src/components/public/motion/use-reduced-motion-safe.ts` | Returns `false` on server + first client render, real value after mount → no hydration mismatch for components that branch DOM on reduced motion (KineticText, Reveal, Magnetic/PointerTilt, CursorHalo, Hero). |
 | **Technology tile** | `src/components/technology/technology-logo.tsx` | Map canonical tech id → tile màu brand riêng của tech (short-code fallback). **Data authority = Neon/Admin** (`src/config/technology-catalog.ts` chỉ định nghĩa cách render, KHÔNG phải inventory). |
 
 ### Typography roles (§8 — tách biệt tiêu đề/phụ/nội dung)
@@ -41,8 +57,8 @@
 
 | Section | Anchor | Owner file | Data source | Visual purpose | Motion signature | Notes |
 |---|---|---|---|---|---|---|
-| **Hero** | `#home` | `sections/hero-section.tsx` | `profile` (name/role/headline) + `portrait-frame` | First impression: identity + portrait | BlurText name + staggered meta + portrait depth entrance + slow orbital drift (LEVEL 3) | Fallback name = `SITE.owner` khi profile trống. Không chứa tech inventory. |
-| **About** | `#about` | `sections/about-section.tsx` | `profile.summary` + facts (role/location/languages) | Bio + technical snapshot | `Reveal` prose + facts grid | Education để ở Experience (tránh trùng). |
+| **Hero** | `#home` | `sections/hero-section.tsx` | `profile` (name/role/headline/**socials**) + `portrait-frame` + hero labels (`dict.hero.intro/focus/scroll`) | First impression: identity + portrait + profession | **V2 3-zone (corrected):** LEFT identity (intro eyebrow → **2-line name** `KineticText` "Hà Văn"/"Thọ" focal → lead → **1 primary CTA + light secondary link**) · CENTER portrait anchor (large, high, focused blue backlight, descends -26→0, `PointerTilt` max 4°) · RIGHT profession (focus eyebrow → `KineticText` role → availability chip, tucked near eye-line) · vertical social rail · scroll cue. Opposing vectors (portrait down / text up), released by `intro-gate` when curtain lifts, **once, no loop**, reduced-motion gated. Single orbital ring (very faint). CTAs: Xem dự án→#projects (primary), Liên hệ→#contact (text link; no Resume — `PENDING_PUBLIC_SAFE_RESUME`). | Name break Owner-locked. Fallback name = `SITE.owner`. Social rail = real socials only (GitHub + email). Không tech inventory. |
+| **About** | `#about` | `sections/about-section.tsx` | `profile.summary` (fallback `dict.meta.homeDescription`) + facts (role/location/**education**) + `dict.about.{eyebrow,headline}` | **V2 continuation of Hero:** "how I build" | **V2 editorial split:** statement (mono eyebrow → Syne headline → Inter lead) + **backlit identity fact-panel** (blue backlight + orbital echo + mono-label fact rail); `Reveal` once. NOT a card grid, NOT a portrait-repeat. | Real facts only; empty facts drop out. Summary falls back to site description (config, not fabricated). |
 | **Focus** | `#focus` | `sections/focus-section.tsx` | `profile.focusAreas` | Trọng tâm kỹ thuật (pills) | `Reveal` stagger pills | Empty → chỉ heading. |
 | **Projects** | `#projects` | `sections/featured-projects-section.tsx` | `repo.listProjects()` (LIVE Neon) | Case-study cards | hover lift + border glow (`Reveal` stagger) | Empty state chỉnh chu. Detail: `projects/[slug]`. `viewAllHref` optional (không dùng ở landing). |
 | **Experience** | `#experience` | `sections/experience-section.tsx` | `repo.listExperience()` + `profile.education` | Timeline nghề nghiệp + học vấn | timeline entry reveal | Empty state. |
@@ -56,7 +72,7 @@
 | Element | File | Ghi chú |
 |---|---|---|
 | **Landing composer** | `src/app/[locale]/page.tsx` | Fetch profile/groups/projects/articles/experience; anchor wrappers `#id scroll-mt-20`; fallbacks empty-state; JSON-LD. |
-| **Header** | `src/components/public/public-header.tsx` | Anchor-aware nav + IntersectionObserver scroll-spy + blur/transparency transition + layoutId indicator + mobile drawer. Nav array ở `layout.tsx`. |
+| **Header** | `src/components/public/public-header.tsx` | Brand-left + nav-right (recruiter-first: About/Projects/Career/Skills/Contact). Anchor-aware + IntersectionObserver scroll-spy + transparent→blur on scroll. **V2 hover/active grammar:** active = glowing `layoutId` **underline** (not a pill fill); hover = left-origin underline grow. Mobile drawer. Nav array ở `layout.tsx`. |
 | **Footer** | `src/components/public/public-footer.tsx` | Minimal closure (hairline + social pills). Không cạnh tranh Contact. |
 | **Section shell** | `src/components/public/section-heading.tsx` | `.text-h2` title + `.text-body` subtitle (max 1 eyebrow/3 sections). |
 

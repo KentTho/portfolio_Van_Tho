@@ -3,7 +3,8 @@
 > Sơ đồ toàn dự án: **Cơ sở hạ tầng · Cơ sở dữ liệu (ERD) · Backend (luồng xử lý)**.
 > Vẽ **natively** bằng Mermaid (Owner chọn không cài plugin ngoài; nguồn tham khảo
 > `Understand-Anything` giữ ở dạng local reference — CLAUDE.md §26). **Cập nhật (2026-08-16): `main` @
-> `feeb0bd` — ✅ V1 merged, Production LIVE.** Neon **Development** (production-serving), ledger = 6, 25 bảng.
+> `6cc060e` — ✅ V1 merged, Production LIVE.** Neon **Development** (production-serving), ledger = 6, 25 bảng.
+> **V2 branch (PR #9, chưa merge):** chỉ đổi presentation (Hero/Menu/About visual) — kiến trúc/data-flow/ERD/auth **không đổi**.
 
 Xem trực tiếp trên GitHub (render Mermaid) hoặc bất kỳ trình xem Markdown hỗ trợ Mermaid.
 
