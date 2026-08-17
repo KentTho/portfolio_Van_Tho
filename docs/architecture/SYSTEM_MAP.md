@@ -2,20 +2,21 @@
 
 > Sơ đồ toàn dự án: **Cơ sở hạ tầng · Cơ sở dữ liệu (ERD) · Backend (luồng xử lý)**.
 > Vẽ **natively** bằng Mermaid (Owner chọn không cài plugin ngoài; nguồn tham khảo
-> `Understand-Anything` giữ ở dạng local reference — CLAUDE.md §26). Cập nhật: Wave 05 Final
-> Foundation Gate, nhánh `integration/pre-fe-foundation` (từ `e7f8e02`). Neon **Development**,
-> ledger = 6, 25 bảng.
+> `Understand-Anything` giữ ở dạng local reference — CLAUDE.md §26). **Cập nhật (2026-08-16): `main` @
+> `feeb0bd` — ✅ V1 merged, Production LIVE.** Neon **Development** (production-serving), ledger = 6, 25 bảng.
 
 Xem trực tiếp trên GitHub (render Mermaid) hoặc bất kỳ trình xem Markdown hỗ trợ Mermaid.
 
 > **LEGEND — phân biệt mục tiêu vs thực tế:**
 > `[TARGET]` = kiến trúc mục tiêu (chưa chạy thật). `[LIVE]` = đã kiểm chứng runtime thật.
-> **Đã LIVE:** Neon Dev (25 bảng, ledger=6) · Public Neon read model (6 live smoke) ·
-> **GitHub OAuth → `owner_admin` mapping trong `app_users` (1 owner, active, verified)** ·
-> **Trang công khai đọc trực tiếp live Neon** (`NeonPortfolioRepository`, single runtime authority,
-> không fixture fallback) · **Public browser E2E 9/9** (no admin/draft/archive leak).
-> **Còn TARGET (chưa verify runtime):** Cloudflare DNS/Turnstile · Vercel Preview/Production ·
-> authenticated admin E2E (cần storageState OAuth headed — PENDING_OPERATOR).
+> **Đã LIVE (Production):** **Vercel Production** (`portfolio-van-tho.vercel.app`, Git-integration deploy
+> on push to `main`) · Neon (25 bảng, ledger=6) **production-serving** · Public Neon read model **populated
+> với nội dung CV thật** · **GitHub OAuth → `owner_admin` (1 owner, active, verified) + authenticated admin
+> session** · **Trang công khai đọc trực tiếp live Neon** (`NeonPortfolioRepository`, single runtime
+> authority, không fixture fallback) · **Public E2E 7/7** + authed E2E pass · **CI green** + **Vercel
+> Preview green**.
+> **Còn TARGET (chưa verify runtime):** monitoring/rollback/observability (Wave 07/10) · Cloudflare
+> DNS/Turnstile · preview-branch-per-PR. ⚠️ `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT` (STOP mở).
 
 ---
 
@@ -46,7 +47,8 @@ flowchart TB
 
 **Ranh giới quyền lực:** Next.js/Vercel = backend authority duy nhất · Neon = primary DB duy
 nhất · Supabase = chỉ Auth + Storage · Cloudflare = DNS + Turnstile · GitHub Actions = CI.
-Production/Preview/DNS **chưa** kích hoạt trong phase này (deferred).
+**Vercel Production + Preview đã LIVE** (deploy on push to `main`). Cloudflare DNS/Turnstile +
+monitoring/rollback/observability **chưa** kích hoạt (Owner-deferred, Wave 07/10).
 
 ---
 
