@@ -29,10 +29,10 @@ Visitor-only public users · OWNER_ADMIN only (EDITOR schema-ready, UI off) · a
 
 Feature-first modular monolith, Clean Architecture layers. Neon = single primary DB. Supabase = Auth + Storage only. Vercel = runtime + CD authority. GitHub Actions = CI authority. See `docs/architecture/`.
 
-## V2 in progress — Hero + Header rebuild (2026-08-17, awaiting Owner Visual Acceptance)
+## V2 in progress — Hero (corrected) + Menu + About (2026-08-18, awaiting Owner Visual Acceptance)
 
-- **Branch:** `feat/v2-hero-menu-enhancement` from `main` @ `6cc060e` — **NOT merged** (Owner Visual Acceptance gate; PR opened). Scope = `#home` Hero + Header + shared primitives only; other sections untouched; no DB/backend/auth change.
-- **Delivered:** reference-inspired 3-zone Hero (identity/portrait/profession) + social rail + scroll cue on real Neon content; frameless backlit portrait; header underline hover/active; visible entrance choreography (`intro-gate` coordinates with IntroCurtain); brand blue/gold preserved. Self-healed a `prefers-reduced-motion` hydration mismatch (`use-reduced-motion-safe`). Validation GREEN (check:env·typecheck·lint·test 186/6·arch 10/10·secret-free build·e2e:public 7/7); visual QA VI+EN × 1440/1024/768/390/320. Owner UI map: `docs/ui/PUBLIC_LANDING_DESIGN_MAP.md`.
+- **Branch:** `feat/v2-hero-menu-enhancement` from `main` @ `6cc060e`, **PR #9** — **NOT merged** (Owner Visual Acceptance gate). Scope = `#home` Hero + Header + `#about` About + shared primitives; Projects/Career/Skills/Contact untouched; no DB/backend/auth change.
+- **Delivered:** 3-zone Hero corrected (2-line name "Hà Văn"/"Thọ", portrait anchor bigger/higher/focused-backlight, right zone near eye-line, single primary CTA + light secondary link, darker canvas/dimmer grid); Menu verified vs `Menu_audit` (active≠hover, scroll-spy all 6 blocks incl. Contact no-dead-zone, anchor offset); About redesigned as editorial split (statement + backlit identity fact-panel, real facts, continuation of Hero). Entrance visible (`intro-gate`), brand blue/gold, reduced-motion hydration-safe (`use-reduced-motion-safe`). **Hydration forensic:** `EXTERNAL_BROWSER_EXTENSION_MUTATION_CONFIRMED` (clean env 0 errors; Owner warning = Liner/`data-be-installed` extension). Validation GREEN (check:env·typecheck·lint·test 186/6·arch 10/10·secret-free build·e2e:public 7/7); QA VI+EN × 320/390/768/1024/1440 (overflowX=0, console clean). Owner UI map: `docs/ui/PUBLIC_LANDING_DESIGN_MAP.md`.
 - **Anomaly (pre-existing, not V2, not staged):** `package.json`/`pnpm-lock.yaml` add `@remixicon/vue` (Vue pkg in a React repo) — Owner should review/remove.
 
 ## Current machine state — ✅ V1 CLOSED, Production LIVE (2026-08-16)
