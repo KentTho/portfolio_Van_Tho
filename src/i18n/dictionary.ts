@@ -22,7 +22,7 @@ export interface Dictionary {
     | "closeMenu",
     string
   >;
-  hero: Record<"availability" | "scroll", string>;
+  hero: Record<"availability" | "scroll" | "intro" | "focus", string>;
   sections: Record<
     "focus" | "techMatrix" | "featured" | "principles" | "writing" | "experience" | "contactCta",
     string

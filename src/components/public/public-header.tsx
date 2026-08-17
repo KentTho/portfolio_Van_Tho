@@ -110,21 +110,30 @@ export function PublicHeader({
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`relative rounded-md px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                className={`group relative rounded-md px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                   active
                     ? "text-fg"
                     : "text-fg-muted hover:text-fg focus-visible:text-fg"
                 }`}
               >
+                <span className="relative">{item.label}</span>
+                {/* Hover underline — grows from the left (non-active only). */}
+                {!active && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-3 bottom-1 h-px origin-left scale-x-0 bg-brand-primary-soft/50 transition-transform duration-300 ease-out group-hover:scale-x-100"
+                  />
+                )}
+                {/* Active indicator — a glowing underline that slides between links. */}
                 {active && (
                   <motion.span
                     layoutId="nav-indicator"
-                    className="absolute inset-0 rounded-md bg-elevated"
-                    transition={{ type: "spring", stiffness: 400, damping: 35 }}
+                    className="absolute inset-x-2.5 bottom-1 h-[2px] rounded-full bg-brand-primary-soft"
+                    style={{ boxShadow: "var(--glow-primary-soft)" }}
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
                     aria-hidden
                   />
                 )}
-                <span className="relative">{item.label}</span>
               </Link>
             );
           })}

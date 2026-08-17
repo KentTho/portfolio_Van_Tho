@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { EASE_OUT } from "@/components/public/motion/motion-tokens";
+import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 
 /**
  * KineticText — premium per-character mask reveal for the Hero name / major
@@ -15,15 +16,20 @@ export function KineticText({
   className,
   delay = 0,
   stagger = 0.035,
+  duration = 0.6,
   as = "span",
+  play = true,
 }: {
   readonly text: string;
   readonly className?: string;
   readonly delay?: number;
   readonly stagger?: number;
+  readonly duration?: number;
   readonly as?: "span" | "h1" | "h2";
+  /** Gate the reveal (e.g. until the intro curtain clears). Holds hidden while false. */
+  readonly play?: boolean;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const Tag = as;
 
   if (reduced) return <Tag className={className}>{text}</Tag>;
@@ -38,9 +44,9 @@ export function KineticText({
               <motion.span
                 className="inline-block"
                 initial={{ y: "110%" }}
-                animate={{ y: 0 }}
+                animate={play ? { y: 0 } : { y: "110%" }}
                 transition={{
-                  duration: 0.6,
+                  duration,
                   ease: EASE_OUT,
                   delay: delay + (wi * 6 + ci) * stagger,
                 }}

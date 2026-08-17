@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { motion, useMotionValue, useSpring, useReducedMotion } from "motion/react";
+import { motion, useMotionValue, useSpring } from "motion/react";
+import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 
 /**
  * CursorHalo — desktop signature pointer halo (Prompt 12R, Owner-specified).
@@ -13,7 +14,7 @@ import { motion, useMotionValue, useSpring, useReducedMotion } from "motion/reac
  * prefers-reduced-motion. Uses motion values (no React re-render per frame).
  */
 export function CursorHalo() {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const x = useMotionValue(-100);
   const y = useMotionValue(-100);
   const scale = useMotionValue(0.6);

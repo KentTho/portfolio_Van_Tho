@@ -3,27 +3,40 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { EASE_OUT } from "@/components/public/motion/motion-tokens";
+import { markIntroReady } from "@/components/public/motion/intro-gate";
 
 const SESSION_KEY = "vt-intro-shown";
 
 /**
- * IntroCurtain — a brief cinematic brand reveal (~1.2s) on the first visit of a
- * session only (Prompt 12R). Never blocks longer than needed, never replays on
- * client navigation (sessionStorage guard), and is skipped entirely under
- * prefers-reduced-motion. Purely decorative overlay; content renders underneath.
+ * IntroCurtain — a brief cinematic brand reveal (~0.9s) on the first visit of a
+ * session only (Prompt 12R / V2). Never replays on client navigation
+ * (sessionStorage guard) and is skipped entirely under prefers-reduced-motion.
+ *
+ * It is the single authority for the intro gate: it calls `markIntroReady()` the
+ * moment it begins lifting so the hero entrance plays *as the stage clears*
+ * (visible), not hidden behind the curtain. When it won't show (repeat visit /
+ * reduced motion) it opens the gate immediately.
  */
 export function IntroCurtain({ name }: { readonly name: string }) {
   const reduced = useReducedMotion();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    if (reduced) return;
-    if (sessionStorage.getItem(SESSION_KEY)) return;
+    if (reduced || sessionStorage.getItem(SESSION_KEY)) {
+      // No curtain → the stage is already clear; let the hero enter immediately.
+      markIntroReady();
+      return;
+    }
     sessionStorage.setItem(SESSION_KEY, "1");
     // Defer the show to the next frame so the state update is not applied
     // synchronously inside the effect (react-hooks/set-state-in-effect).
     const raf = requestAnimationFrame(() => setShow(true));
-    const t = setTimeout(() => setShow(false), 1250);
+    const t = setTimeout(() => {
+      setShow(false);
+      // Curtain starts lifting now — release the hero entrance so it animates
+      // into view as the curtain clears (not behind it).
+      markIntroReady();
+    }, 900);
     return () => {
       cancelAnimationFrame(raf);
       clearTimeout(t);

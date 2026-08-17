@@ -24,7 +24,12 @@ export const vi: Dictionary = {
     openMenu: "Mở menu",
     closeMenu: "Đóng menu",
   },
-  hero: { availability: "Sẵn sàng cho vị trí Kỹ sư Phần mềm", scroll: "Cuộn" },
+  hero: {
+    availability: "Sẵn sàng cho vị trí Kỹ sư Phần mềm",
+    scroll: "Cuộn",
+    intro: "Xin chào, tôi là",
+    focus: "Định hướng",
+  },
   sections: {
     focus: "Trọng tâm chuyên môn",
     techMatrix: "Năng lực & công nghệ",

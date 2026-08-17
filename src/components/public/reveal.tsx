@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import type { ReactNode } from "react";
+import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 
 interface RevealProps {
   readonly children: ReactNode;
@@ -16,7 +17,7 @@ interface RevealProps {
  * with no transform (design policy §L / accessibility §T). transform+opacity only.
  */
 export function Reveal({ children, delay = 0, className, as = "div" }: RevealProps) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
   const Tag = as === "li" ? motion.li : motion.div;
 
   if (reduced) {
