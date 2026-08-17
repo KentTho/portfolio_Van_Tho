@@ -9,7 +9,7 @@
 > **xanh royal điện + vàng kim trên nền đen**. Dials: DESIGN_VARIANCE≈7 · MOTION_INTENSITY≈5 · VISUAL_DENSITY≈5.
 >
 > **[V2 — Hero+Menu+About = APPROVED (PR #9); Career IN PROGRESS · 2026-08-18]**
-> **Hero + Menu + About:** Owner **APPROVED** visual. **PR #9** (`feat/v2-hero-menu-enhancement`) merge **PENDING** — GitHub API outage (503) chặn `gh merge`; sẽ merge khi API hồi phục (git push/CI vẫn hoạt động). **Career (`#career`):** branch `feat/v2-career-experience-education` (từ PR #9 head `fff79ec`) — **Education-first timeline** (central-axis, milestone node + glow, year metadata, Syne institution authority) với **dormant two-tab state machine** [Kinh nghiệm | Học vấn] tự bật khi verified Experience xuất hiện (không rewrite). No fabrication (Experience thật vẫn `PENDING_OWNER_EXPERIENCE_DETAILS`). Chi tiết ↓.
+> **Hero + Menu + About:** Owner **APPROVED** + **MERGED to main** (`main` = `b360eed`, Hero/Menu/About head `fff79ec` đã vào main qua PR #10 trong lúc GitHub API outage) + **Production LIVE** (verified). **Career (`#career`):** branch `feat/v2-career-experience-education` (**PR #11**, base main) — **Education-first timeline** (central-axis, milestone node + glow, year metadata, Syne institution authority) với **dormant two-tab state machine** [Kinh nghiệm | Học vấn] tự bật khi verified Experience xuất hiện (không rewrite). No fabrication (Experience thật vẫn `PENDING_OWNER_EXPERIENCE_DETAILS`). Chi tiết ↓.
 >
 > **[HISTORICAL — Hero+Menu+About V2 detail · branch `feat/v2-hero-menu-enhancement` · PR #9]**
 > Reference `docs/image_demo_portfolio/{hero-section,About}.png` + `HEROAUDIT.md` / `Menu_audit.md` / `ABOUT01audit.md`
