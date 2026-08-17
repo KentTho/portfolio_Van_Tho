@@ -84,3 +84,19 @@ export interface ExperienceItem {
   readonly highlights: readonly Localized<string>[];
   readonly sample: boolean;
 }
+
+/**
+ * A single verified education milestone for the Career timeline. Education rows are
+ * flat (no per-locale translation table), so institution/field are plain strings.
+ * Years are structured so the view can format the period per locale ("2022 — nay" /
+ * "2022 — Present"). Empty `endYear` with `isCurrent` means ongoing.
+ */
+export interface EducationItem {
+  readonly id: string;
+  readonly institution: string;
+  readonly field: string;
+  readonly startYear: string;
+  readonly endYear: string;
+  readonly isCurrent: boolean;
+  readonly sample: boolean;
+}

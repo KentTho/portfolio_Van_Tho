@@ -24,6 +24,10 @@ export interface Dictionary {
   >;
   hero: Record<"availability" | "scroll" | "intro" | "focus", string>;
   about: Record<"eyebrow" | "headline", string>;
+  career: Record<
+    "eyebrow" | "title" | "lead" | "tabExperience" | "tabEducation" | "present",
+    string
+  >;
   sections: Record<
     "focus" | "techMatrix" | "featured" | "principles" | "writing" | "experience" | "contactCta",
     string

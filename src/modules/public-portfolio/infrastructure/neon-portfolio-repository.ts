@@ -3,6 +3,7 @@ import type { PortfolioRepository } from "@/modules/public-portfolio/application
 import type {
   ArticleDetail,
   ArticleSummary,
+  EducationItem,
   ExperienceItem,
   Profile,
   ProjectDetail,
@@ -211,5 +212,21 @@ export class NeonPortfolioRepository implements PortfolioRepository {
         sample: false,
       };
     });
+  }
+
+  async listEducation(): Promise<readonly EducationItem[]> {
+    // Structured education milestones for the Career timeline (visible rows only,
+    // sorted by the read model). Years are split so the view formats the period
+    // per locale; `field` prefers fieldOfStudy, then degree.
+    const rows = await this.rm.listPublicEducation();
+    return rows.map((e) => ({
+      id: `${e.institution}::${e.startDate ?? ""}`,
+      institution: e.institution,
+      field: (e.fieldOfStudy ?? e.degree ?? "").trim(),
+      startYear: e.startDate ? e.startDate.slice(0, 4) : "",
+      endYear: e.endDate ? e.endDate.slice(0, 4) : "",
+      isCurrent: e.isCurrent,
+      sample: false,
+    }));
   }
 }

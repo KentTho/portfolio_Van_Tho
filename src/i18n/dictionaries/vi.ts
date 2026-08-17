@@ -34,6 +34,14 @@ export const vi: Dictionary = {
     eyebrow: "Về tôi",
     headline: "Cách tôi xây dựng",
   },
+  career: {
+    eyebrow: "Hành trình",
+    title: "Học vấn & Kinh nghiệm",
+    lead: "Dòng thời gian được xác minh — nền tảng học vấn và quá trình phát triển kỹ thuật.",
+    tabExperience: "Kinh nghiệm",
+    tabEducation: "Học vấn",
+    present: "Hiện tại",
+  },
   sections: {
     focus: "Trọng tâm chuyên môn",
     techMatrix: "Năng lực & công nghệ",
