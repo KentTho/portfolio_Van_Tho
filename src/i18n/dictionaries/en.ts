@@ -34,6 +34,14 @@ export const en: Dictionary = {
     eyebrow: "About",
     headline: "How I build",
   },
+  career: {
+    eyebrow: "Journey",
+    title: "Education & Experience",
+    lead: "A verified timeline — academic foundation and technical growth.",
+    tabExperience: "Experience",
+    tabEducation: "Education",
+    present: "Present",
+  },
   sections: {
     focus: "Professional focus",
     techMatrix: "Capabilities & technology",

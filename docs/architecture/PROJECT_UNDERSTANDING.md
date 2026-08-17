@@ -10,9 +10,11 @@
 > Bổ trợ: [`SYSTEM_MAP.md`](SYSTEM_MAP.md) (ERD + Mermaid infra/data/BE) · [`REPORTS_INDEX.md`](../ai/REPORTS_INDEX.md) (bản đồ báo cáo).
 > **Trạng thái (2026-08-16): `main` @ `feeb0bd`→`6cc060e` — ✅ V1 merged, Production LIVE** (`portfolio-van-tho.vercel.app`).
 > Inventory dưới đây từ **machine scan** trên `src/` (271 file .ts/.tsx tại thời điểm scan).
-> **V2 branch `feat/v2-hero-menu-enhancement` (PR #9, chưa merge):** thay đổi **presentation-only** (Hero/Menu/About visual +
-> primitives `motion/intro-gate`, `motion/use-reduced-motion-safe`, `visual/brand-icons`) — **không** đổi domain/application/
-> infrastructure/route/DB. Hydration forensic: app-side sạch (0 errors clean env); warning phía Owner = browser-extension mutation.
+> **V2 branch `feat/v2-hero-menu-enhancement` (PR #9, Owner-approved, merge pending API):** presentation-only
+> (Hero/Menu/About + primitives `motion/intro-gate`, `motion/use-reduced-motion-safe`, `visual/brand-icons`).
+> **V2 branch `feat/v2-career-experience-education` (chưa merge):** Career timeline — **+1 port method
+> `listEducation()`** (`PortfolioRepository` port + neon/static impls) + `EducationItem` domain type + pure
+> `sections/career-tabs.ts`; presentation client component. **Không** đổi DB/schema/route/auth. Hydration app-side sạch.
 
 ---
 

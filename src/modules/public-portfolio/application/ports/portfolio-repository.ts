@@ -1,6 +1,7 @@
 import type {
   ArticleDetail,
   ArticleSummary,
+  EducationItem,
   ExperienceItem,
   Profile,
   ProjectDetail,
@@ -22,4 +23,5 @@ export interface PortfolioRepository {
   listArticles(): Promise<readonly ArticleSummary[]>;
   getArticle(slug: string): Promise<ArticleDetail | null>;
   listExperience(): Promise<readonly ExperienceItem[]>;
+  listEducation(): Promise<readonly EducationItem[]>;
 }

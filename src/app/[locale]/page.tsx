@@ -43,11 +43,12 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
 
   const dict = getDictionary(locale);
   const repo = getPortfolioRepository();
-  const [profile, groups, projects, experience] = await Promise.all([
+  const [profile, groups, projects, experience, education] = await Promise.all([
     repo.getProfile(),
     repo.getTechGroups(),
     repo.listProjects(),
     repo.listExperience(),
+    repo.listEducation(),
   ]);
 
   // Graceful empty-state fallbacks (Owner fills the real profile via Admin; these
@@ -116,7 +117,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       </div>
 
       <div id="career" className="scroll-mt-20">
-        <ExperienceSection experience={experience} profile={profile} locale={locale} dict={dict} />
+        <ExperienceSection experience={experience} education={education} locale={locale} t={dict.career} />
       </div>
 
       <div id="skills" className="scroll-mt-20">

@@ -81,6 +81,34 @@ describe("NeonPortfolioRepository (mapper)", () => {
     );
   });
 
+  it("maps public education rows into structured Career timeline milestones", async () => {
+    const repo = new NeonPortfolioRepository(
+      fakeReadModel({
+        listPublicEducation: async () => [
+          {
+            institution: "Nguyen Tat Thanh University",
+            degree: null,
+            fieldOfStudy: "Software Engineering",
+            startDate: "2022-10-01",
+            endDate: null,
+            isCurrent: true,
+            url: null,
+          },
+        ],
+      }),
+    );
+    const edu = await repo.listEducation();
+    expect(edu).toHaveLength(1);
+    expect(edu[0]).toMatchObject({
+      institution: "Nguyen Tat Thanh University",
+      field: "Software Engineering",
+      startYear: "2022",
+      endYear: "",
+      isCurrent: true,
+      sample: false,
+    });
+  });
+
   it("zips vi/en project summaries and marks live rows non-sample", async () => {
     const repo = new NeonPortfolioRepository(
       fakeReadModel({

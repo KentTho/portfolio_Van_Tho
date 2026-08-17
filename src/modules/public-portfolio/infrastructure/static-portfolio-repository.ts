@@ -74,4 +74,9 @@ export class StaticPortfolioRepository implements PortfolioRepository {
   async listExperience() {
     return experience;
   }
+
+  async listEducation() {
+    // Fixtures carry no education rows; the live Neon repository is the authority.
+    return [];
+  }
 }
