@@ -20,15 +20,15 @@ export function PortraitFrame({
   readonly priority?: boolean;
 }) {
   return (
-    <div className="relative mx-auto w-full max-w-[17rem] sm:max-w-[20rem] lg:max-w-[24rem]">
-      {/* Backlight — blue core behind the torso, restrained gold undertone below.
-          This is the silhouette/canvas separation (dark-on-dark rim light). */}
+    <div className="relative mx-auto w-full max-w-[18rem] sm:max-w-[21rem] lg:max-w-[27rem]">
+      {/* Backlight — focused blue core behind head/torso (the light source of the
+          hero), restrained gold undertone below. Dark-on-dark silhouette rim. */}
       <div
         aria-hidden
-        className="absolute -inset-x-16 -bottom-10 -top-6 -z-10 blur-3xl"
+        className="absolute -inset-x-20 -bottom-12 -top-10 -z-10 blur-3xl"
         style={{
           background:
-            "radial-gradient(50% 46% at 50% 42%, color-mix(in oklab, var(--brand-primary) 40%, transparent), transparent 70%), radial-gradient(42% 34% at 50% 74%, color-mix(in oklab, var(--brand-secondary) 16%, transparent), transparent 72%)",
+            "radial-gradient(46% 42% at 50% 34%, color-mix(in oklab, var(--brand-primary) 52%, transparent), transparent 68%), radial-gradient(40% 30% at 50% 72%, color-mix(in oklab, var(--brand-secondary) 15%, transparent), transparent 74%)",
         }}
       />
 

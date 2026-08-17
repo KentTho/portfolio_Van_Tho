@@ -30,6 +30,10 @@ export const vi: Dictionary = {
     intro: "Xin chào, tôi là",
     focus: "Định hướng",
   },
+  about: {
+    eyebrow: "Về tôi",
+    headline: "Cách tôi xây dựng",
+  },
   sections: {
     focus: "Trọng tâm chuyên môn",
     techMatrix: "Năng lực & công nghệ",

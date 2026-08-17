@@ -30,6 +30,10 @@ export const en: Dictionary = {
     intro: "Hi, I'm",
     focus: "Focus",
   },
+  about: {
+    eyebrow: "About",
+    headline: "How I build",
+  },
   sections: {
     focus: "Professional focus",
     techMatrix: "Capabilities & technology",
