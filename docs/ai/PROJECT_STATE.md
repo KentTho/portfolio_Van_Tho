@@ -29,9 +29,13 @@ Visitor-only public users · OWNER_ADMIN only (EDITOR schema-ready, UI off) · a
 
 Feature-first modular monolith, Clean Architecture layers. Neon = single primary DB. Supabase = Auth + Storage only. Vercel = runtime + CD authority. GitHub Actions = CI authority. See `docs/architecture/`.
 
-## V2 in progress — Hero (corrected) + Menu + About (2026-08-18, awaiting Owner Visual Acceptance)
+## V2 Career — Education-first timeline (2026-08-18, awaiting Owner Visual Acceptance)
 
-- **Branch:** `feat/v2-hero-menu-enhancement` from `main` @ `6cc060e`, **PR #9** — **NOT merged** (Owner Visual Acceptance gate). Scope = `#home` Hero + Header + `#about` About + shared primitives; Projects/Career/Skills/Contact untouched; no DB/backend/auth change.
+- **Branch:** `feat/v2-career-experience-education` (from PR #9 head `fff79ec`) — **NOT merged**. Adds `#career` V2: central-axis timeline (Education-first) + dormant two-tab [Experience|Education] state machine (auto-enables when verified Experience is authored). Data: new `listEducation()` port method (live Neon; no fabrication). Validation GREEN (check:env·typecheck·lint·**test 195/6**·arch 10/10·secret-free build·e2e:public 7/7); QA VI+EN × 320–1440; BOTH-mode verified via throwaway harness (0 height-jump, keyboard, a11y) then deleted. `PENDING_OWNER_EXPERIENCE_DETAILS` remains (not a failure).
+
+## V2 Hero + Menu + About — Owner APPROVED (2026-08-18); PR #9 merge pending API outage
+
+- **Branch:** `feat/v2-hero-menu-enhancement` from `main` @ `6cc060e`, **PR #9** — **Owner-APPROVED visual**; merge **PENDING** (GitHub API 503 outage blocked `gh merge`; will merge when API recovers). Career branch is stacked on the approved head `fff79ec`. Scope = `#home` Hero + Header + `#about` About + shared primitives; no DB/backend/auth change.
 - **Delivered:** 3-zone Hero corrected (2-line name "Hà Văn"/"Thọ", portrait anchor bigger/higher/focused-backlight, right zone near eye-line, single primary CTA + light secondary link, darker canvas/dimmer grid); Menu verified vs `Menu_audit` (active≠hover, scroll-spy all 6 blocks incl. Contact no-dead-zone, anchor offset); About redesigned as editorial split (statement + backlit identity fact-panel, real facts, continuation of Hero). Entrance visible (`intro-gate`), brand blue/gold, reduced-motion hydration-safe (`use-reduced-motion-safe`). **Hydration forensic:** `EXTERNAL_BROWSER_EXTENSION_MUTATION_CONFIRMED` (clean env 0 errors; Owner warning = Liner/`data-be-installed` extension). Validation GREEN (check:env·typecheck·lint·test 186/6·arch 10/10·secret-free build·e2e:public 7/7); QA VI+EN × 320/390/768/1024/1440 (overflowX=0, console clean). Owner UI map: `docs/ui/PUBLIC_LANDING_DESIGN_MAP.md`.
 - **Anomaly (pre-existing, not V2, not staged):** `package.json`/`pnpm-lock.yaml` add `@remixicon/vue` (Vue pkg in a React repo) — Owner should review/remove.
 

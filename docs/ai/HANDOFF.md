@@ -1,6 +1,18 @@
 # HANDOFF
 
-## V2 IN PROGRESS — Hero (corrected) + Menu + About · CHỜ OWNER VISUAL ACCEPTANCE (2026-08-18)
+## V2 CAREER — Education-first timeline (experience-ready) · CHỜ OWNER VISUAL ACCEPTANCE (2026-08-18)
+- **Branch:** `feat/v2-career-experience-education` @ HEAD (pushed) — branched from **`fff79ec`** (PR #9 head = approved Hero/Menu/About). **NOT merged.**
+- **⚠️ PR #9 (Hero/Menu/About) = Owner-APPROVED but merge PENDING** — GitHub API outage (HTTP 503) blocked `gh pr merge`/REST merge this session. `git push`/CI/Vercel work (git protocol). **Next step when API recovers:** merge PR #9 to main first, then the Career PR. `main` still `6cc060e`; Career branch already contains the approved Hero/Menu/About (from `fff79ec`).
+- **Career delivered (V2-CAREER-EXPERIENCE-EDUCATION-01):**
+  - **Data:** added `EducationItem` type + **`listEducation()` port method** (neon impl maps `listPublicEducation` → structured milestones; static impl → `[]`). Live Neon authority; no fabrication. Wired in `page.tsx`.
+  - **Component:** `experience-section.tsx` rewritten as a **client Career section** — central-axis timeline (milestone node + brand glow, gold year metadata via `formatPeriod`, Syne institution/role H3, Inter detail), alternating on desktop / left-rail single-column on mobile. Line-draw (scaleY once) + milestone stagger, reduced-motion→static (`useReducedMotionSafe`).
+  - **State machine (`career-tabs.ts`, pure + unit-tested):** Education-only → single timeline (NO empty tab, per Owner 1B); Experience+Education → `role=tablist` [Kinh nghiệm|Học vấn] (default Experience), crossfade+y panel transition, **grid-stacked panels = 0 height jump (verified)**, roving keyboard (Arrow/Home/End), `aria-selected/controls`, focus-visible, ≥44px targets.
+  - **Verified BOTH-mode** via throwaway `[locale]/career-harness` (pure mock props, never Neon) — 2 tabs, height-jump 0px, keyboard cycles, 0 errors — then **deleted** (not committed).
+  - **Files:** `sections/experience-section.tsx`, new `sections/career-tabs.ts`, `visual`→no, `domain/types.ts` (+EducationItem), `application/ports/portfolio-repository.ts` (+listEducation), `infrastructure/{neon,static}-portfolio-repository.ts`, `app/[locale]/page.tsx`, `i18n/{dictionary,dictionaries/vi,dictionaries/en}.ts` (+career copy); tests `tests/unit/career-tabs.test.ts`, `tests/unit/neon-portfolio-repository.test.ts`.
+  - **Validation GREEN:** check:env 18/0 · typecheck · lint · **test 195/6** (32 files) · arch 10/10 · secret-free build · e2e:public 7/7 · diff-check clean · Career QA VI+EN × 320/390/768/1024/1440 (overflowX=0, console/hydration clean).
+  - **OPEN (not a failure):** `PENDING_OWNER_EXPERIENCE_DETAILS` — Experience real rows (company/title/dates) still absent; the two-tab mode auto-enables when authored.
+
+## V2 IN PROGRESS — Hero (corrected) + Menu + About · Owner APPROVED (2026-08-18)
 - **Branch:** `feat/v2-hero-menu-enhancement` (from `main` @ `6cc060e`), **PR #9**. **NOT merged** (Owner Visual Acceptance gate).
 - **This session (V2-HERO-MENU-CORRECTION-AND-ABOUT-01):**
   - **Hero corrected** per Owner defects: **name 2 lines "Hà Văn"/"Thọ"** (locked); portrait bigger + higher + focused blue backlight (true center anchor, emerges from dark); right "Software Engineer" tucked closer to eye-line; **single primary CTA "Xem dự án" + "Liên hệ" as a light text link**; orbital reduced to one very faint ring; **canvas darker + grid dimmed** (`cosmic-background`).
