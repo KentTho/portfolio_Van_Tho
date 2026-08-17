@@ -7,6 +7,13 @@
 > Design language: **COSMIC ENGINEERING EDITORIAL** — depth · atmosphere · brand geometry ·
 > controlled motion. Palette lấy từ logo thật (`src/components/public/image/logo_myself.jpg`):
 > **xanh royal điện + vàng kim trên nền đen**. Dials: DESIGN_VARIANCE≈7 · MOTION_INTENSITY≈5 · VISUAL_DENSITY≈5.
+>
+> **[V2 — Hero + Header rebuilt · 2026-08-17 · branch `feat/v2-hero-menu-enhancement` · CHỜ OWNER VISUAL ACCEPTANCE]**
+> `#home` Hero được dựng lại theo **reference `docs/image_demo_portfolio/hero-section.png`** (style/composition/motion
+> logic — KHÔNG clone, KHÔNG tím) + `HEROAUDIT.md`: **3-zone bất đối xứng** (LEFT identity · CENTER portrait ·
+> RIGHT profession) + vertical social rail + scroll cue. Header refine hover/active = underline indicator.
+> Entrance choreography hiển thị được (coordinate với IntroCurtain qua `intro-gate`). Các section khác (About…Contact)
+> **KHÔNG đổi** ở prompt này (V2-HERO-MENU scope). Chưa merge vào main.
 
 ## 1. Global foundation
 
@@ -17,7 +24,10 @@
 | **Fonts** | `src/app/layout.tsx` | `Syne` (display, `--font-syne`) · `Inter` (body, `--font-inter`) · `JetBrains_Mono` (mono, `--font-mono`). Nhất quán toàn site — không thêm font khác. |
 | **Atmospheric background** | `src/components/public/cosmic-background.tsx` | Aurora xanh (top) + glow vàng + masked grid. Pure CSS, fixed, `-z-10`. Dùng brand qua alias. |
 | **Scroll-reveal primitive** | `src/components/public/reveal.tsx` | `Reveal` (whileInView, once, reduced-motion aware). Motion signature dùng chung cho entrance. |
-| **Portrait primitive** | `src/components/public/visual/portrait-frame.tsx` | `vantho.png` next/image + brand glow + gold hairline + bottom-fade vào canvas. |
+| **Portrait primitive** | `src/components/public/visual/portrait-frame.tsx` | **V2: frameless** — `vantho.png` next/image (object-contain, no distortion) *emerging from canvas*: blue backlight + restrained gold undertone (silhouette separation), radial vignette + multiply sink + bottom-fade dissolve the studio backdrop's rectangular edges (no card/box). Pointer depth layered by Hero via `PointerTilt`. |
+| **Brand marks** | `src/components/public/visual/brand-icons.tsx` | GitHub/LinkedIn inline SVG (`currentColor`) — lucide dropped brand glyphs. Used by Hero social rail. |
+| **Intro gate** | `src/components/public/motion/intro-gate.ts` | Single-authority "stage clear" signal (`markIntroReady`/`useIntroReady`). IntroCurtain fires it as it lifts so the Hero entrance is *seen*, not hidden behind the curtain. |
+| **Reduced-motion (hydration-safe)** | `src/components/public/motion/use-reduced-motion-safe.ts` | Returns `false` on server + first client render, real value after mount → no hydration mismatch for components that branch DOM on reduced motion (KineticText, Reveal, Magnetic/PointerTilt, CursorHalo, Hero). |
 | **Technology tile** | `src/components/technology/technology-logo.tsx` | Map canonical tech id → tile màu brand riêng của tech (short-code fallback). **Data authority = Neon/Admin** (`src/config/technology-catalog.ts` chỉ định nghĩa cách render, KHÔNG phải inventory). |
 
 ### Typography roles (§8 — tách biệt tiêu đề/phụ/nội dung)
@@ -41,7 +51,7 @@
 
 | Section | Anchor | Owner file | Data source | Visual purpose | Motion signature | Notes |
 |---|---|---|---|---|---|---|
-| **Hero** | `#home` | `sections/hero-section.tsx` | `profile` (name/role/headline) + `portrait-frame` | First impression: identity + portrait | BlurText name + staggered meta + portrait depth entrance + slow orbital drift (LEVEL 3) | Fallback name = `SITE.owner` khi profile trống. Không chứa tech inventory. |
+| **Hero** | `#home` | `sections/hero-section.tsx` | `profile` (name/role/headline/**socials**) + `portrait-frame` + hero labels (`dict.hero.intro/focus/scroll`) | First impression: identity + portrait + profession | **V2 3-zone:** LEFT identity (intro eyebrow → `KineticText` name focal → headline value line → CTAs) · CENTER portrait (descends -28→0, backlit, `PointerTilt`) · RIGHT profession (focus eyebrow → `KineticText` role → availability chip) · vertical social rail · scroll cue. Opposing vectors (portrait down / text up), released by `intro-gate` when curtain lifts, **once, no loop**, reduced-motion gated. CTAs: Xem dự án→#projects, Liên hệ→#contact (no Resume — `PENDING_PUBLIC_SAFE_RESUME`). | Fallback name = `SITE.owner`. Social rail = real socials only (GitHub + email; resume excluded). Không tech inventory. |
 | **About** | `#about` | `sections/about-section.tsx` | `profile.summary` + facts (role/location/languages) | Bio + technical snapshot | `Reveal` prose + facts grid | Education để ở Experience (tránh trùng). |
 | **Focus** | `#focus` | `sections/focus-section.tsx` | `profile.focusAreas` | Trọng tâm kỹ thuật (pills) | `Reveal` stagger pills | Empty → chỉ heading. |
 | **Projects** | `#projects` | `sections/featured-projects-section.tsx` | `repo.listProjects()` (LIVE Neon) | Case-study cards | hover lift + border glow (`Reveal` stagger) | Empty state chỉnh chu. Detail: `projects/[slug]`. `viewAllHref` optional (không dùng ở landing). |
@@ -56,7 +66,7 @@
 | Element | File | Ghi chú |
 |---|---|---|
 | **Landing composer** | `src/app/[locale]/page.tsx` | Fetch profile/groups/projects/articles/experience; anchor wrappers `#id scroll-mt-20`; fallbacks empty-state; JSON-LD. |
-| **Header** | `src/components/public/public-header.tsx` | Anchor-aware nav + IntersectionObserver scroll-spy + blur/transparency transition + layoutId indicator + mobile drawer. Nav array ở `layout.tsx`. |
+| **Header** | `src/components/public/public-header.tsx` | Brand-left + nav-right (recruiter-first: About/Projects/Career/Skills/Contact). Anchor-aware + IntersectionObserver scroll-spy + transparent→blur on scroll. **V2 hover/active grammar:** active = glowing `layoutId` **underline** (not a pill fill); hover = left-origin underline grow. Mobile drawer. Nav array ở `layout.tsx`. |
 | **Footer** | `src/components/public/public-footer.tsx` | Minimal closure (hairline + social pills). Không cạnh tranh Contact. |
 | **Section shell** | `src/components/public/section-heading.tsx` | `.text-h2` title + `.text-body` subtitle (max 1 eyebrow/3 sections). |
 

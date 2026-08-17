@@ -1,5 +1,16 @@
 # HANDOFF
 
+## V2 IN PROGRESS — Hero + Header rebuild · CHỜ OWNER VISUAL ACCEPTANCE (2026-08-17)
+- **Branch:** `feat/v2-hero-menu-enhancement` (from `main` @ `6cc060e`). **NOT merged** (Owner Visual Acceptance gate). PR opened, no merge.
+- **Scope (locked):** V2-HERO-MENU-01 — **only** `#home` Hero + Header/Nav + shared motion/visual primitives they need. About/Projects/Career/Skills/Contact **untouched**. No DB/schema/backend/auth change.
+- **What changed:** Hero rebuilt to a **reference-inspired 3-zone** composition (LEFT identity · CENTER backlit portrait · RIGHT profession) + vertical social rail + scroll cue, driven by real Neon content (name/role/headline/socials). Portrait made **frameless** (emerges from canvas; no card box). Header hover/active → **underline** grammar. Entrance choreography now **visible** (coordinated with IntroCurtain via new `intro-gate`). Brand blue/gold preserved (no purple). Reference: `docs/image_demo_portfolio/hero-section.png`; motion source: `HEROAUDIT.md`.
+- **New files:** `motion/intro-gate.ts`, `motion/use-reduced-motion-safe.ts`, `visual/brand-icons.tsx`. **Edited:** `sections/hero-section.tsx`, `visual/portrait-frame.tsx`, `public-header.tsx`, `motion/{intro-curtain,kinetic-text,interactions,cursor-halo}.tsx`, `reveal.tsx`, `app/[locale]/page.tsx`, `i18n/{dictionary,dictionaries/vi,dictionaries/en}.ts`.
+- **Bug fixed (self-heal):** `prefers-reduced-motion` caused a **hydration mismatch** (reduced=false on server vs true on client-first-render while components branched DOM on it). Fixed with `useReducedMotionSafe` applied to KineticText / Reveal / Magnetic·PointerTilt / CursorHalo / Hero → **0 hydration errors** (verified reduced + normal). Also: lucide dropped brand icons → local `brand-icons.tsx`.
+- **QA (dev, real Neon content):** VI+EN × 1440/1024/768/390/320 — 3-zone desktop, stacked mobile, no horizontal overflow, no console errors, reduced-motion renders content in place, keyboard focus-visible works, single `<h1>` (name), social aria-labels real (GitHub + email). Portrait blends into canvas (faint soft edge on narrowest mobile — acceptable; cannot bg-remove per "don't alter Owner photo").
+- **Validation GREEN:** check:env 18/0 · typecheck (clean `.next`) · lint · **test 186/6** · arch 10/10 · **secret-free build ✓** · **e2e:public 7/7** · git diff --check clean.
+- **⚠️ Pre-existing anomaly (NOT V2):** working tree has uncommitted `package.json`/`pnpm-lock.yaml` adding **`@remixicon/vue`** (a Vue package in a React/Next repo — wrong framework, unused). NOT introduced by V2, NOT staged. Owner should review/remove.
+- **NEXT after Owner accepts:** `V2-ABOUT-01`. Do NOT proceed to About or merge until acceptance.
+
 ## CURRENT CHECKPOINT — ✅ V1_MAIN_MERGED_AND_POST_MERGE_VERIFIED · POST-V1 STATE RECONCILED (2026-08-16)
 - **`main` HEAD = `feeb0bd`** (local == remote). Lineage: PR #6 (CV-driven 6-block single-landing) merge commit `30b1184` (parents `f24d1d8`+`b367d1d`; mergedAt 09:24:24Z) → PR #7 (docs post-merge reconcile) merge commit `feeb0bd` (mergedAt 09:41:18Z). **This docs branch `docs/post-v1-state-reconcile`** = a third reconcile pass (post-V1 drift closure + V2 entry; no code/schema change).
 - **Verdict:** **`V1_MAIN_MERGED_AND_POST_MERGE_VERIFIED`** via repo-approved merge (no force, no `--admin` bypass). `main` contains validated feature HEAD `b367d1d`.
