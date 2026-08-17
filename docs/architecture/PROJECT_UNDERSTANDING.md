@@ -8,7 +8,8 @@
 > và "guided tours". Sinh từ **inventory thực tế** của cây `src/`, không bịa.
 >
 > Bổ trợ: [`SYSTEM_MAP.md`](SYSTEM_MAP.md) (ERD + Mermaid infra/data/BE) · [`REPORTS_INDEX.md`](../ai/REPORTS_INDEX.md) (bản đồ báo cáo).
-> Trạng thái: nhánh `integration/pre-fe-foundation` @ `a086c84`.
+> **Trạng thái (2026-08-16): `main` @ `feeb0bd` — ✅ V1 merged, Production LIVE** (`portfolio-van-tho.vercel.app`).
+> Inventory dưới đây từ **machine scan mới** trên `src/` hiện tại (271 file .ts/.tsx).
 
 ---
 
@@ -143,11 +144,12 @@ Publish/update nội dung → append `content_revisions` (đa hình, `version=ma
 
 ## 6. Graph Reviewer — Độ phủ & khoảng trống
 
-**Đã phủ (LIVE-verified):** 13 module application · public live-Neon read · admin control plane 15 vùng · auth owner_admin · DB 25 bảng/ledger 6 · public E2E 9/9.
+**Đã phủ (LIVE-verified, Production):** 13 module application · public live-Neon read **populated với nội dung CV thật** (profile/Education/15 skills/6 tech/Expense Tracker) · admin control plane 15 vùng với **live authenticated session** · auth owner_admin · DB 25 bảng/ledger 6 · **public E2E 7/7** + authed E2E pass · **Vercel Production LIVE + Preview green + CI green** trên `main` @ `feeb0bd`.
 **Khoảng trống có chủ đích (không phải lỗi):**
-- `contact_messages`, `media_assets` có bảng nhưng **chưa có backend ghi** (contact/Turnstile/email = Wave **06A**; media attach UI sau).
-- Vài trường view Wave-04 (tech-matrix, case-study) render rỗng tới khi Owner author nội dung (Neon Dev ~0 published) — empty state trung thực.
-- Chưa: Vercel Preview, Cloudflare, observability, production (Wave 07A/10).
+- `contact_messages`, `media_assets` có bảng nhưng **chưa có backend ghi** (contact write-boundary/Turnstile/email = backlog; media attach UI sau).
+- `#career` chỉ hiện Education; **Experience cố ý vắng** (`PENDING_OWNER_EXPERIENCE_DETAILS` — không fabricate).
+- **Chưa proven:** monitoring/rollback/observability (Wave 07/10); Cloudflare DNS/Turnstile; preview-branch-per-PR.
+- ⚠️ `PRODUCTION_DATABASE_TARGET = SAME_AS_DEVELOPMENT`; Owner-decided `PRODUCTION_DATABASE_ISOLATION = APPROVED_PLANNED_NOT_EXECUTED` (INFRA-DB-ISO — tách prod Neon riêng, chưa chạy).
 
 ---
 
@@ -166,8 +168,11 @@ Publish/update nội dung → append `content_revisions` (đa hình, `version=ma
 ---
 *Phương pháp Understand-Anything áp dụng natively (bản đọc-được, an toàn governance).*
 
-> **✅ Bản graph tương tác đã được sinh (local):** plugin `understand-anything@2.9.4` đã cài + chạy
-> `/understand` trên nhánh này → **`.ua/knowledge-graph.json`** (567 node · 591 edge · 10 layer ·
-> 13 tour step; 273 file code phân tích, phạm vi `src/` — loại `tests/`,`docs/`). `.ua/` được **gitignore**
-> (artifact cục bộ, tái sinh được). Xem tương tác: chạy **`/understand-anything:understand-dashboard`**;
-> hỏi đáp code: `/understand-anything:understand-chat`. Tài liệu `.md` này là bản tóm tắt bền vững trong repo.
+> **Understand-Anything refresh (2026-08-16, post-V1):** áp dụng **natively** (Owner-chosen method, không
+> cài plugin — CLAUDE.md §26). Machine scan mới trên `main` @ `feeb0bd`: **271 file .ts/.tsx** dưới `src/`
+> (giảm 2 so với 273 tiền-V1 = đúng 3 section component Focus/Principles/Articles đã xóa), **13 module · 14
+> composition root · 15 port · 13 use-case · 12 repo · 25 bảng · 8 public page · 15 admin area · 2 boundary
+> route · 5 e2e**. Layer graph = 4 tầng Clean Architecture + composition (bất biến, arch test 10/10). Guided
+> tours = 5 (A–E, §5). Bản `.ua/knowledge-graph.json` tương tác **KHÔNG tái sinh phiên này** — số node/edge
+> plugin cũ (567/591/273) đã **superseded**; tài liệu `.md` native này là authority trong repo. `.ua/` vẫn
+> gitignored nếu Owner chọn chạy plugin cục bộ sau.

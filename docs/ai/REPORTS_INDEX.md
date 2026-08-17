@@ -43,5 +43,19 @@ Báo cáo tổng kết (verdict, % tiến độ, việc còn lại) được ghi
 của phiên đó, **và** cô đọng vào `HANDOFF.md` (mục "Completed" mới nhất) + cập nhật `PROJECT_STATE.md`.
 Không có file "report_YYYYMMDD" rời rạc — để tránh phân mảnh, trạng thái luôn hội tụ về 4 file ở Mục 1.
 
+## 6. Thẩm quyền tài liệu (sau V1)
+
+| Vai trò | File authority |
+|---|---|
+| Machine truth | Git / source / runtime (luôn thắng docs) |
+| Trạng thái dự án hiện tại | `docs/ai/PROJECT_STATE.md` |
+| Kế hoạch tổng | `ROADMAP.md` |
+| % theo lớp | `docs/status/STACK_PROGRESS.md` |
+| Bàn giao xuyên phiên | `docs/ai/HANDOFF.md` |
+| Hiểu hệ thống | `docs/architecture/PROJECT_UNDERSTANDING.md` + `SYSTEM_MAP.md` |
+| **UI ownership / IA hiện hành (6-block)** | `docs/ui/PUBLIC_LANDING_DESIGN_MAP.md` |
+| **Định hướng visual lịch sử (design source)** | `docs/ui/PREMIUM_PORTFOLIO_DESIGN_BRIEF.md` |
+| Quy trình | `docs/ai/WORKING_METHOD.md` + `CLAUDE.md` |
+
 ---
-*Cập nhật: nhánh `integration/pre-fe-foundation` @ `a086c84`.*
+*Cập nhật (2026-08-16): `main` @ `feeb0bd` — ✅ `V1_MAIN_MERGED_AND_POST_MERGE_VERIFIED`, Production LIVE (`portfolio-van-tho.vercel.app`). Next candidate: `V2_PUBLIC_VISUAL_ENHANCEMENT`.*

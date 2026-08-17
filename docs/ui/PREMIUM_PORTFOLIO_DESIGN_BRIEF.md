@@ -1,8 +1,14 @@
 # PREMIUM PORTFOLIO — DESIGN BRIEF (Prompt 12R, Phase 2)
 
-> Chờ Owner APPROVE trước khi build (Phase 3). Language: cosmic engineering editorial,
-> recruiter-first, premium interactive — KHÔNG effect showcase. Nguồn: 6 design sources +
-> UI/UX Pro Max + Taste. Quyết định discovery đã khóa (xem §DEPENDENCY & §SIGNATURE).
+> **[STATUS 2026-08-16 — HISTORICAL / DESIGN REFERENCE]** File này là **nguồn định hướng visual & lịch sử
+> discovery**, KHÔNG phải tracker trạng thái. **IA hiện hành (V1, đã ship Production) = 6 blocks**
+> (`#home #about #projects #career #skills #contact`) — thẩm quyền IA/section-ownership hiện tại là
+> **[`PUBLIC_LANDING_DESIGN_MAP.md`](PUBLIC_LANDING_DESIGN_MAP.md)**. Content hierarchy 9-section bên dưới
+> (Focus/Principles/Articles) là **phương án discovery lịch sử** — Focus/Principles/Articles đã được gỡ khỏi
+> landing ở V1. Giữ nguyên brief để tham chiếu palette/typography/motion/grid cho **`V2_PUBLIC_VISUAL_ENHANCEMENT`**.
+>
+> Language: cosmic engineering editorial, recruiter-first, premium interactive — KHÔNG effect showcase.
+> Nguồn: 6 design sources + UI/UX Pro Max + Taste. Quyết định discovery đã khóa (xem §DEPENDENCY & §SIGNATURE).
 
 ## 1. IDENTITY
 Van Tho — **Software Engineer** (Full-Stack · Backend · AI/Automation · Clean Architecture). Portfolio = bằng chứng năng lực kỹ thuật, tự nó là sản phẩm chứng minh kỹ năng.
