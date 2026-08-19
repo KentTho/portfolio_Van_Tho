@@ -29,9 +29,13 @@ Visitor-only public users · OWNER_ADMIN only (EDITOR schema-ready, UI off) · a
 
 Feature-first modular monolith, Clean Architecture layers. Neon = single primary DB. Supabase = Auth + Storage only. Vercel = runtime + CD authority. GitHub Actions = CI authority. See `docs/architecture/`.
 
-## V2 Contact + Footer — conversion point + closure (2026-08-18, awaiting Owner Visual Acceptance)
+## V2 Global Navigation + Motion System (2026-08-18, awaiting Owner Visual Acceptance)
 
-- **Branch:** `feat/v2-contact-footer-enhancement` (from `main` @ `16878f5`) — **NOT merged**. `#contact` V2: conversion-first centered editorial + primary real `mailto` CTA + robust copy-email state machine (idle/copied/error, 0 width-jump, aria-live, keyboard) + verified channels only; Footer closure + Back-to-Top; year server-deterministic. **Hydration:** `EXTERNAL_BROWSER_EXTENSION_MUTATION_CONFIRMED` (clean env 0 errors; regression guard in e2e:public). `@remixicon/vue` = `WRONG_FRAMEWORK_UNUSED_DEPENDENCY` (zero imports, not staged/reverted — Owner remove). Validation GREEN (check:env·typecheck·lint·**test 198/6**·arch 10/10·secret-free build·**e2e:public 9/9**); QA VI+EN × 320–1440. No form (Wave 06A), no fabrication, phone private.
+- **Branch:** `feat/v2-global-navigation-motion-system` (from `main` @ `9939ec5`) — **NOT merged**. Compact/expanded icon-capsule nav (active always expanded, inactive compact, hover/focus expand — 0 header CLS, no dead-zone, aria-current=location), brand=Home, mobile icon+full-label drawer; MASTER-MOTION-02 handoff (Reveal once/no-replay already compliant + ambient aurora recede past Hero). `@remixicon/vue` removed (uncommitted anomaly reverted; zero imports). One framework (Next/React), one animation authority (motion/react+CSS), no new dep. Validation GREEN (check:env·typecheck·lint·**test 198/6**·arch 10/10·secret-free build·**e2e:public 11/11**); QA VI+EN × 320–1440 (nav states, 1024 fit, mobile, hydration 0).
+
+## V2 Contact + Footer — MERGED + Production LIVE (2026-08-18)
+
+- **Merged:** PR #12 → `main` = **`9939ec5`**; production verified (Contact "Gửi email"/"Sao chép email", Footer "Lên đầu"). Conversion-first Contact (real mailto + robust copy-email state machine, 0 width-jump, aria-live) + Footer closure + Back-to-Top. **Branch history (superseded):** `feat/v2-contact-footer-enhancement` (from `main` @ `16878f5`). `#contact` V2: conversion-first centered editorial + primary real `mailto` CTA + robust copy-email state machine (idle/copied/error, 0 width-jump, aria-live, keyboard) + verified channels only; Footer closure + Back-to-Top; year server-deterministic. **Hydration:** `EXTERNAL_BROWSER_EXTENSION_MUTATION_CONFIRMED` (clean env 0 errors; regression guard in e2e:public). `@remixicon/vue` = `WRONG_FRAMEWORK_UNUSED_DEPENDENCY` (zero imports, not staged/reverted — Owner remove). Validation GREEN (check:env·typecheck·lint·**test 198/6**·arch 10/10·secret-free build·**e2e:public 9/9**); QA VI+EN × 320–1440. No form (Wave 06A), no fabrication, phone private.
 
 ## V2 Career — Education-first timeline — MERGED + Production LIVE (2026-08-18)
 

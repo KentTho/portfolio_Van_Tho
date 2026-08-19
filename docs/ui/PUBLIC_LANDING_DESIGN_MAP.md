@@ -9,7 +9,7 @@
 > **xanh royal điện + vàng kim trên nền đen**. Dials: DESIGN_VARIANCE≈7 · MOTION_INTENSITY≈5 · VISUAL_DENSITY≈5.
 >
 > **[V2 — Hero+Menu+About = APPROVED (PR #9); Career IN PROGRESS · 2026-08-18]**
-> **Hero+Menu+About + Career:** ✅ **APPROVED + MERGED + Production LIVE.** `main` = **`16878f5`** (Career PR #11 merged). Hero/Menu/About (PR #10 `b360eed`) + Career đều trên main, production verified. **Contact + Footer (`#contact`):** branch `feat/v2-contact-footer-enhancement` (**PR** mở, base main) — conversion-first Contact + Footer closure + Back-to-Top. **Hydration:** `EXTERNAL_BROWSER_EXTENSION_MUTATION_CONFIRMED` (clean Chromium 0 errors; Owner trace = Liner `data-liner-extension-version` + `data-be-installed` extension injection — no app fix, no suppressHydrationWarning; regression guard added tới e2e:public). Chi tiết Career ↓.
+> **Hero+Menu+About + Career + Contact/Footer:** ✅ **APPROVED + MERGED + Production LIVE.** `main` = **`9939ec5`** (Contact/Footer PR #12 merged). Tất cả 6 block V2 + Footer trên main, production verified. **Global Navigation + Motion (`#header` + cross-section):** branch `feat/v2-global-navigation-motion-system` (**PR** mở, base main) — compact/expanded icon-capsule nav (Owner 2A) + MASTER-MOTION-02 handoff (Owner 3A). Chi tiết ở §Header + §Motion. **Hydration:** `EXTERNAL_BROWSER_EXTENSION_MUTATION_CONFIRMED` (clean Chromium 0 errors; Owner trace = Liner `data-liner-extension-version` + `data-be-installed` extension injection — no app fix, no suppressHydrationWarning; regression guard added tới e2e:public). Chi tiết Career ↓.
 >
 > **[HISTORICAL — Career `#career` detail]** branch `feat/v2-career-experience-education` — **Education-first timeline** (central-axis, milestone node + glow, year metadata, Syne institution authority) với **dormant two-tab state machine** [Kinh nghiệm | Học vấn] tự bật khi verified Experience xuất hiện (không rewrite). No fabrication (Experience thật vẫn `PENDING_OWNER_EXPERIENCE_DETAILS`). Chi tiết ↓.
 >
@@ -77,14 +77,17 @@
 | Element | File | Ghi chú |
 |---|---|---|
 | **Landing composer** | `src/app/[locale]/page.tsx` | Fetch profile/groups/projects/articles/experience; anchor wrappers `#id scroll-mt-20`; fallbacks empty-state; JSON-LD. |
-| **Header** | `src/components/public/public-header.tsx` | Brand-left + nav-right (recruiter-first: About/Projects/Career/Skills/Contact). Anchor-aware + IntersectionObserver scroll-spy + transparent→blur on scroll. **V2 hover/active grammar:** active = glowing `layoutId` **underline** (not a pill fill); hover = left-origin underline grow. Mobile drawer. Nav array ở `layout.tsx`. |
+| **Header** | `src/components/public/public-header.tsx` (client) | Brand-left (**= Home**, subtle active treatment at top) + **compact/expanded icon-capsule nav** right (Owner 2A, adapted from `Menu-Update`, NOT copied). **State model:** `active` section = capsule **always expanded** [icon + label] (blue tint + gold micro-hairline, `aria-current="location"`); `inactive` = **compact icon** capsule (icon always visible + `aria-label`); **hover/focus-visible** inactive → temporary expand (label via **grid-column `0fr→1fr` transition → 0 header CLS**, brand/locale never jump). Icons (lucide): About=UserRound · Projects=FolderKanban · Career=Briefcase · Skills=Code2 · Contact=Mail. One IntersectionObserver scroll-spy (6 blocks, **no dead-zone** — Contact active through footer; verified). transparent→blur on scroll. `LanguageSwitcher` separate. **Mobile:** explicit icon + **full-label** drawer (no icon-only mystery), `aria-expanded/controls`, Escape. `useReducedMotionSafe`. Nav array ở `layout.tsx`. |
 | **Footer** | `src/components/public/public-footer.tsx` (server) | **V2 page closure:** brand + `madeWith` + `© {year}` (server-computed → deterministic, no hydration risk) · verified links (hover increases affordance) · **Back-to-Top** control (`/{locale}#home`, native smooth-scroll, ≥44px, `dict.footer.backToTop`). Hairline top border, minimal, không cạnh tranh Contact. Receives `locale`. |
 | **Section shell** | `src/components/public/section-heading.tsx` | `.text-h2` title + `.text-body` subtitle (max 1 eyebrow/3 sections). |
 
-## 4. Motion architecture (§12)
-- Grammar chung: easing `--ease-out` (cubic-bezier .22,1,.36,1), duration 380–700ms, entrance từ dưới lên (`y+16→0`, opacity).
-- Strategic continuous motion: **Hero** (orbital drift). Projects/Skills = interaction-on-hover (không loop).
-- **MUST honor `prefers-reduced-motion`** (global CSS gate + per-component `useReducedMotion`).
+## 4. Motion architecture — MASTER-MOTION-02 (Owner 3A `HYBRID_PERSISTENT_HANDOFF`)
+- Grammar chung: easing `--ease-out` (cubic-bezier .22,1,.36,1), duration 380–700ms, entrance từ dưới lên (`y+16→24→0`, opacity).
+- **State model per core content:** BEFORE (opacity~0/y) → ENTERING (~480–620ms, small stagger) → **SETTLED** → HANDOFF (de-emphasize *decorative* only) → **PERSISTENT**. `Reveal` = **once=true, no replay**, content in DOM from first render → **fast-scroll safe** (never blank; no 2s wait), re-entry keeps content readable (no replay blanking, no Hero IntroCurtain replay).
+- **Cross-section handoff (ambient recede):** `cosmic-background.tsx` (client, ONE IntersectionObserver on `#home`) lowers the aurora opacity (1→0.5) once the Hero scrolls away — decorative depth recedes so "focus moves forward"; **core text never hidden**. Reduced-motion → instant (no transition).
+- **Reject list (from `MASTERSCROLL.md`):** reset:true replay · 2000ms reveals · viewFactor:0 early trigger · content→opacity 0 after leaving · blank-on-fast-scroll · scroll-jacking · section pinning · offscreen continuous loops.
+- Strategic continuous motion: **Hero** (single faint orbital + backlight). CursorHalo = pointer-fine only. Projects/Skills = interaction-on-hover (no loop). Career/Contact/Footer = no loop.
+- **MUST honor `prefers-reduced-motion`** (global CSS gate + `useReducedMotionSafe` — hydration-safe, all DOM-branching components). Nav labels usable without animated interpolation; content immediate.
 
 ## 5. React Bits / 3D (§26–§27)
 - Dùng: **BlurText** (`components/ui/blur-text.tsx`) ở Hero name. **0 component React Bits mới thêm** (CSS + `motion/react` đủ).

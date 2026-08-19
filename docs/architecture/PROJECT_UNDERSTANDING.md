@@ -13,10 +13,12 @@
 > **V2 branch `feat/v2-hero-menu-enhancement` (PR #9, Owner-approved, merge pending API):** presentation-only
 > (Hero/Menu/About + primitives `motion/intro-gate`, `motion/use-reduced-motion-safe`, `visual/brand-icons`).
 > **Career (MERGED to main `16878f5`):** +1 port method `listEducation()` + `EducationItem` type + pure `sections/career-tabs.ts`.
-> **V2 branch `feat/v2-contact-footer-enhancement` (chưa merge):** Contact conversion redesign + Footer closure/Back-to-Top —
-> presentation-only (client `contact-cta-section` + pure `contact-copy.ts`; server footer +`locale` prop). **Không** đổi
-> port/domain/DB/route/auth. Hydration forensic: app-side sạch (clean-env 0 errors + e2e regression guard); Owner warning =
-> browser-extension mutation (Liner/`data-be-installed`). `@remixicon/vue` = wrong-framework unused dep (Owner nên gỡ).
+> **Contact/Footer (MERGED to main `9939ec5`):** conversion Contact + `contact-copy.ts` + Footer Back-to-Top.
+> **V2 branch `feat/v2-global-navigation-motion-system` (chưa merge):** global nav rebuild (compact/expanded icon-capsule,
+> `public-header.tsx` client) + MASTER-MOTION-02 handoff (`cosmic-background.tsx` → **client**, +1 IntersectionObserver on
+> `#home` for ambient recede). Presentation-only — **không** đổi port/domain/DB/route/auth. **`@remixicon/vue` removed** (was
+> an uncommitted anomaly; committed state always clean) → one frontend framework (Next/React) + one animation authority
+> (motion/react + CSS), no new dependency. Hydration app-side sạch (e2e regression guard). Owner warning = browser-extension mutation.
 
 ---
 
