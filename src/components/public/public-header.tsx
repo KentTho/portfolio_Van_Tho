@@ -3,10 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { Menu, X, UserRound, FolderKanban, Briefcase, Code2, Mail, type LucideIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import type { Locale } from "@/shared/i18n";
 import { LanguageSwitcher } from "@/components/public/language-switcher";
+import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 
 export interface NavItem {
   readonly href: string;
@@ -22,12 +23,27 @@ interface PublicHeaderProps {
   readonly closeLabel: string;
 }
 
+/** Section id → semantic icon (adapted, not copied, from Menu-Update). */
+const SECTION_ICON: Record<string, LucideIcon> = {
+  about: UserRound,
+  projects: FolderKanban,
+  career: Briefcase,
+  skills: Code2,
+  contact: Mail,
+};
+const idOf = (href: string) => href.split("#")[1] ?? "";
+
 /**
- * COSMIC ENGINEERING EDITORIAL — Public Header
+ * COSMIC ENGINEERING EDITORIAL — Public Header (V2 global nav).
  *
- * Single-line desktop nav. Max height 72px. Sticky with backdrop-blur that
- * activates after 40px scroll (avoids top-of-page blur competing with hero).
- * Active link: left-margin accent indicator (not a background fill).
+ * Precision-instrument navigation adapted from Menu-Update: each section is a
+ * compact icon capsule that expands to [icon + label] when it is the ACTIVE
+ * section (always) or on hover/focus (temporary). Brand = Home (subtle active
+ * treatment at the top). Layout-stable — the label expands via a grid-column
+ * transition inside the capsule (no header CLS, brand/locale never jump). One
+ * IntersectionObserver drives the active section across all six blocks (no
+ * dead-zone; Contact stays active through the footer). Mobile keeps an explicit
+ * icon + full-label drawer (no icon-only mystery menu). Reduced-motion safe.
  */
 export function PublicHeader({
   locale,
@@ -42,7 +58,7 @@ export function PublicHeader({
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeId, setActiveId] = useState("");
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -50,19 +66,15 @@ export function PublicHeader({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Scroll-spy: highlight the nav anchor for the section currently in view.
-  // Only active on the landing page; detail routes have no in-page sections.
+  // Scroll-spy: one observer, all six blocks. Only on the landing page.
   useEffect(() => {
-    // Off-landing (e.g. a detail route) there are no in-page sections to observe.
-    // activeId keeps its last value but isActive() ignores it while !isLanding.
     if (!isLanding) return;
     const targets = items
-      .map((item) => item.href.split("#")[1])
-      .filter((id): id is string => Boolean(id))
+      .map((item) => idOf(item.href))
+      .filter(Boolean)
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
     if (targets.length === 0) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
@@ -76,68 +88,70 @@ export function PublicHeader({
     return () => observer.disconnect();
   }, [isLanding, items]);
 
-  const isActive = (href: string) => {
-    const hash = href.split("#")[1];
-    return isLanding && !!hash && hash === activeId;
-  };
+  const isActive = (href: string) => isLanding && idOf(href) === activeId && activeId !== "";
+  // At the top / Hero (no section active) the brand carries the Home orientation.
+  const atHome = isLanding && activeId === "";
 
   return (
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "border-b border-border/50 bg-canvas/90 backdrop-blur-md"
+          ? "border-b border-border/50 bg-canvas/80 backdrop-blur-md"
           : "border-b border-transparent bg-transparent"
       }`}
     >
       <div className="mx-auto flex h-[68px] w-full max-w-6xl items-center justify-between px-6">
-        {/* Brand wordmark */}
+        {/* Brand = Home */}
         <Link
           href={`/${locale}`}
-          className="font-display text-base font-bold tracking-tight text-fg transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+          aria-current={atHome ? "page" : undefined}
+          className="group font-display text-base font-bold tracking-tight text-fg transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
         >
           {brand}
-          <span className="ml-[3px] text-accent" aria-hidden>
+          <span
+            className={`ml-[3px] transition-all duration-300 ${atHome ? "text-brand-primary-soft" : "text-accent"}`}
+            style={atHome ? { textShadow: "var(--glow-primary-soft)" } : undefined}
+            aria-hidden
+          >
             .
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <nav aria-label="Primary" className="hidden items-center gap-0.5 md:flex">
+        {/* Desktop nav — compact/expanded capsules */}
+        <nav aria-label="Primary" className="hidden items-center gap-1.5 md:flex">
           {items.map((item) => {
             const active = isActive(item.href);
+            const Icon = SECTION_ICON[idOf(item.href)] ?? UserRound;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={`group relative rounded-md px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                aria-label={item.label}
+                aria-current={active ? "location" : undefined}
+                className={`group relative flex h-9 items-center rounded-full border px-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ${
                   active
-                    ? "text-fg"
-                    : "text-fg-muted hover:text-fg focus-visible:text-fg"
+                    ? "border-brand-primary-soft/40 bg-brand-primary/10 text-brand-primary-soft"
+                    : "border-transparent text-fg-muted hover:border-border-strong/60 hover:bg-surface/50 hover:text-fg focus-visible:text-fg"
                 }`}
+                style={active ? { boxShadow: "inset 0 0 0 1px color-mix(in oklab, var(--brand-secondary) 12%, transparent)" } : undefined}
               >
-                <span className="relative">{item.label}</span>
-                {/* Hover underline — grows from the left (non-active only). */}
-                {!active && (
-                  <span
-                    aria-hidden
-                    className="absolute inset-x-3 bottom-1 h-px origin-left scale-x-0 bg-brand-primary-soft/50 transition-transform duration-300 ease-out group-hover:scale-x-100"
-                  />
-                )}
-                {/* Active indicator — a glowing underline that slides between links. */}
-                {active && (
-                  <motion.span
-                    layoutId="nav-indicator"
-                    className="absolute inset-x-2.5 bottom-1 h-[2px] rounded-full bg-brand-primary-soft"
-                    style={{ boxShadow: "var(--glow-primary-soft)" }}
-                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
-                    aria-hidden
-                  />
-                )}
+                <Icon size={18} aria-hidden className="shrink-0" />
+                {/* Label expands via grid-column (0fr→1fr): no width jump elsewhere. */}
+                <span
+                  className={`grid overflow-hidden transition-[grid-template-columns] duration-300 ease-out ${
+                    active
+                      ? "grid-cols-[1fr]"
+                      : "grid-cols-[0fr] group-hover:grid-cols-[1fr] group-focus-visible:grid-cols-[1fr]"
+                  }`}
+                >
+                  <span className="min-w-0 overflow-hidden">
+                    <span className="whitespace-nowrap pl-2 pr-0.5 text-sm font-medium">{item.label}</span>
+                  </span>
+                </span>
               </Link>
             );
           })}
-          <span className="mx-2 h-4 w-px bg-border" aria-hidden />
+          <span className="mx-1 h-4 w-px bg-border" aria-hidden />
           <LanguageSwitcher locale={locale} label={switchLanguageLabel} />
         </nav>
 
@@ -148,18 +162,20 @@ export function PublicHeader({
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
+            aria-controls="mobile-nav"
             aria-label={open ? closeLabel : openLabel}
-            className="grid h-8 w-8 place-items-center rounded-md border border-border text-fg-muted transition-colors hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="grid h-9 w-9 place-items-center rounded-md border border-border text-fg-muted transition-colors hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            {open ? <X size={16} aria-hidden /> : <Menu size={16} aria-hidden />}
+            {open ? <X size={18} aria-hidden /> : <Menu size={18} aria-hidden />}
           </button>
         </div>
       </div>
 
-      {/* Mobile drawer */}
+      {/* Mobile drawer — explicit icon + full label */}
       <AnimatePresence>
         {open && (
           <motion.nav
+            id="mobile-nav"
             aria-label="Mobile"
             className="border-t border-border bg-canvas md:hidden"
             initial={reduced ? false : { height: 0, opacity: 0 }}
@@ -167,23 +183,28 @@ export function PublicHeader({
             exit={reduced ? {} : { height: 0, opacity: 0 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
           >
-            <ul className="mx-auto flex w-full max-w-6xl flex-col gap-0.5 px-6 py-4">
-              {items.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    aria-current={isActive(item.href) ? "page" : undefined}
-                    className={`block rounded-md px-3 py-2.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                      isActive(item.href)
-                        ? "bg-elevated text-fg"
-                        : "text-fg-muted hover:bg-elevated/60 hover:text-fg"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+            <ul className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-6 py-4">
+              {items.map((item) => {
+                const active = isActive(item.href);
+                const Icon = SECTION_ICON[idOf(item.href)] ?? UserRound;
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={() => setOpen(false)}
+                      aria-current={active ? "location" : undefined}
+                      className={`flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                        active
+                          ? "bg-brand-primary/10 text-brand-primary-soft"
+                          : "text-fg-muted hover:bg-elevated/60 hover:text-fg"
+                      }`}
+                    >
+                      <Icon size={18} aria-hidden className="shrink-0" />
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </motion.nav>
         )}
