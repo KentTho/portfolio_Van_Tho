@@ -58,7 +58,7 @@ export default async function LocaleLayout({
       <main id="main-content" className="flex-1">
         {children}
       </main>
-      <PublicFooter profile={profile} dict={dict} />
+      <PublicFooter profile={profile} locale={locale} dict={dict} />
     </div>
   );
 }

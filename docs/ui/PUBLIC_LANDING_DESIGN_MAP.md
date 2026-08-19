@@ -9,7 +9,9 @@
 > **xanh royal điện + vàng kim trên nền đen**. Dials: DESIGN_VARIANCE≈7 · MOTION_INTENSITY≈5 · VISUAL_DENSITY≈5.
 >
 > **[V2 — Hero+Menu+About = APPROVED (PR #9); Career IN PROGRESS · 2026-08-18]**
-> **Hero + Menu + About:** Owner **APPROVED** + **MERGED to main** (`main` = `b360eed`, Hero/Menu/About head `fff79ec` đã vào main qua PR #10 trong lúc GitHub API outage) + **Production LIVE** (verified). **Career (`#career`):** branch `feat/v2-career-experience-education` (**PR #11**, base main) — **Education-first timeline** (central-axis, milestone node + glow, year metadata, Syne institution authority) với **dormant two-tab state machine** [Kinh nghiệm | Học vấn] tự bật khi verified Experience xuất hiện (không rewrite). No fabrication (Experience thật vẫn `PENDING_OWNER_EXPERIENCE_DETAILS`). Chi tiết ↓.
+> **Hero+Menu+About + Career:** ✅ **APPROVED + MERGED + Production LIVE.** `main` = **`16878f5`** (Career PR #11 merged). Hero/Menu/About (PR #10 `b360eed`) + Career đều trên main, production verified. **Contact + Footer (`#contact`):** branch `feat/v2-contact-footer-enhancement` (**PR** mở, base main) — conversion-first Contact + Footer closure + Back-to-Top. **Hydration:** `EXTERNAL_BROWSER_EXTENSION_MUTATION_CONFIRMED` (clean Chromium 0 errors; Owner trace = Liner `data-liner-extension-version` + `data-be-installed` extension injection — no app fix, no suppressHydrationWarning; regression guard added tới e2e:public). Chi tiết Career ↓.
+>
+> **[HISTORICAL — Career `#career` detail]** branch `feat/v2-career-experience-education` — **Education-first timeline** (central-axis, milestone node + glow, year metadata, Syne institution authority) với **dormant two-tab state machine** [Kinh nghiệm | Học vấn] tự bật khi verified Experience xuất hiện (không rewrite). No fabrication (Experience thật vẫn `PENDING_OWNER_EXPERIENCE_DETAILS`). Chi tiết ↓.
 >
 > **[HISTORICAL — Hero+Menu+About V2 detail · branch `feat/v2-hero-menu-enhancement` · PR #9]**
 > Reference `docs/image_demo_portfolio/{hero-section,About}.png` + `HEROAUDIT.md` / `Menu_audit.md` / `ABOUT01audit.md`
@@ -68,7 +70,7 @@
 | **Skills** | `#skills` | `sections/tech-matrix-section.tsx` | `repo.getTechGroups()` (**hiện `[]` — chưa có nguồn Neon cho groups**) | Tech matrix (logo tiles) | grid reveal + tile depth | **Data authority = Neon/Admin only.** Empty tới khi Owner thêm. |
 | **Principles** | `#principles` | `sections/principles-section.tsx` | `dict.principles` | Manifesto kỹ thuật | sequential numbered reveal + hairline | Typography là visual chính. |
 | **Articles** | `#articles` | `sections/articles-section.tsx` | `repo.listArticles()` (LIVE Neon) | Publication list | staggered editorial reveal | Empty state. Detail: `articles/[slug]`. |
-| **Contact** | `#contact` | `sections/contact-cta-section.tsx` | `contactSocials` (profile socials, fallback GitHub `SITE.repositoryUrl`) | Closing CTA + verified links | glow entrance + CTA feedback | Contact **form** = Wave 06A (không fake submit). Email = primary button khi có. |
+| **Contact** | `#contact` | `sections/contact-cta-section.tsx` (client) + pure `sections/contact-copy.ts` | real `email` (profile publicEmail) + verified `channels` (GitHub via `SITE.repositoryUrl`) + `dict.contact.*` | **V2 conversion point:** centered editorial (eyebrow → Syne headline → recruiter lead), **primary real `mailto` CTA "Gửi email"** + **copy-email state machine** (idle/copied/error, clipboard try/catch, timer cleanup, **grid-stacked labels = 0 width jump**, `role=status` aria-live, keyboard) + verified channels (hover **increases** affordance, external rel). No glass card, one accent. | entrance stagger once (reduced-motion static). **No form** (Wave 06A), no fake submit, no fabricated socials. |
 
 ## 3. Header / Footer / Section composer
 
@@ -76,7 +78,7 @@
 |---|---|---|
 | **Landing composer** | `src/app/[locale]/page.tsx` | Fetch profile/groups/projects/articles/experience; anchor wrappers `#id scroll-mt-20`; fallbacks empty-state; JSON-LD. |
 | **Header** | `src/components/public/public-header.tsx` | Brand-left + nav-right (recruiter-first: About/Projects/Career/Skills/Contact). Anchor-aware + IntersectionObserver scroll-spy + transparent→blur on scroll. **V2 hover/active grammar:** active = glowing `layoutId` **underline** (not a pill fill); hover = left-origin underline grow. Mobile drawer. Nav array ở `layout.tsx`. |
-| **Footer** | `src/components/public/public-footer.tsx` | Minimal closure (hairline + social pills). Không cạnh tranh Contact. |
+| **Footer** | `src/components/public/public-footer.tsx` (server) | **V2 page closure:** brand + `madeWith` + `© {year}` (server-computed → deterministic, no hydration risk) · verified links (hover increases affordance) · **Back-to-Top** control (`/{locale}#home`, native smooth-scroll, ≥44px, `dict.footer.backToTop`). Hairline top border, minimal, không cạnh tranh Contact. Receives `locale`. |
 | **Section shell** | `src/components/public/section-heading.tsx` | `.text-h2` title + `.text-body` subtitle (max 1 eyebrow/3 sections). |
 
 ## 4. Motion architecture (§12)

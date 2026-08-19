@@ -59,9 +59,28 @@ export interface Dictionary {
     | "nextStep",
     string
   >;
-  contact: Record<"title" | "subtitle" | "name" | "email" | "message" | "send" | "note", string>;
+  contact: Record<
+    | "title"
+    | "subtitle"
+    | "name"
+    | "email"
+    | "message"
+    | "send"
+    | "note"
+    | "eyebrow"
+    | "headline"
+    | "lead"
+    | "emailMe"
+    | "copyEmail"
+    | "copied"
+    | "copyError"
+    | "copiedAnnounce"
+    | "copyErrorAnnounce"
+    | "channels",
+    string
+  >;
   principles: ReadonlyArray<{ title: string; body: string }>;
-  footer: Record<"madeWith" | "rights", string>;
+  footer: Record<"madeWith" | "rights" | "backToTop", string>;
   meta: Record<
     | "homeTitle"
     | "homeDescription"

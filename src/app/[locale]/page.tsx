@@ -57,12 +57,15 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   const heroRole = pick(profile.role, locale).trim() || dict.meta.homeTitle;
   const heroHeadline = pick(profile.headline, locale).trim() || dict.meta.homeDescription;
 
-  // Contact always offers at least one verified way to reach out. Owner profile
-  // socials win; otherwise fall back to the real GitHub repository link (config).
-  const contactSocials =
-    profile.socials.length > 0
-      ? profile.socials
-      : [{ kind: "github" as const, label: "GitHub", href: SITE.repositoryUrl }];
+  // Contact — real public email as the primary action + verified professional
+  // channels (GitHub via the real repository link if the profile has none). No
+  // fabricated platforms; resume excluded (PENDING_PUBLIC_SAFE_RESUME).
+  const emailSocial = profile.socials.find((s) => s.kind === "email");
+  const contactEmail = emailSocial ? { address: emailSocial.label, href: emailSocial.href } : null;
+  const contactChannels = profile.socials.filter((s) => s.kind !== "email" && s.kind !== "resume");
+  if (!contactChannels.some((s) => s.kind === "github" || s.kind === "source")) {
+    contactChannels.push({ kind: "github", label: "GitHub", href: SITE.repositoryUrl });
+  }
 
   // Hero social rail — real socials only (resume excluded: PENDING_PUBLIC_SAFE_RESUME).
   // Guarantee a GitHub anchor via the real repository link if the profile has none.
@@ -125,7 +128,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       </div>
 
       <div id="contact" className="scroll-mt-20">
-        <ContactCtaSection socials={contactSocials} dict={dict} />
+        <ContactCtaSection email={contactEmail} channels={contactChannels} t={dict.contact} />
       </div>
     </>
   );
