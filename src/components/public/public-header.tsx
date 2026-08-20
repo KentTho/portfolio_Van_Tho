@@ -145,7 +145,13 @@ export function PublicHeader({
                   }`}
                 >
                   <span className="min-w-0 overflow-hidden">
-                    <span className="whitespace-nowrap pl-2 pr-0.5 text-sm font-medium">{item.label}</span>
+                    <span
+                      className={`block whitespace-nowrap pl-2 pr-0.5 text-sm font-medium transition-opacity duration-300 ${
+                        active ? "opacity-100" : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
                   </span>
                 </span>
               </Link>

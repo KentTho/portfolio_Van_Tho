@@ -28,11 +28,13 @@ export function TechMatrixSection({
       {/* Hairline divider above section */}
       <div className="mb-12 h-px w-full bg-border/50" aria-hidden />
 
-      <SectionHeading
-        id="tech-heading"
-        title={dict.sections.techMatrix}
-        subtitle={dict.home.techSubtitle}
-      />
+      <Reveal>
+        <SectionHeading
+          id="tech-heading"
+          title={dict.sections.techMatrix}
+          subtitle={dict.home.techSubtitle}
+        />
+      </Reveal>
 
       {groups.length === 0 ? (
         <div className="rounded-2xl border border-border border-dashed bg-surface/20 px-8 py-12 text-center">
@@ -45,8 +47,8 @@ export function TechMatrixSection({
           {groups.map((group, index) => (
             <Reveal
               key={group.id}
-              delay={index * 0.04}
-              className="rounded-2xl border border-border bg-surface/30 p-6 transition-colors hover:bg-surface-hover"
+              delay={index * 0.09}
+              className="rounded-2xl border border-border bg-surface/30 p-6 transition-colors hover:-translate-y-0.5 hover:bg-surface-hover motion-reduce:hover:translate-y-0"
             >
               {/* Group label */}
               <p className="label-mono mb-1">{pick(group.title, locale)}</p>
