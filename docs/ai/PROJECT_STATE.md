@@ -29,9 +29,9 @@ Visitor-only public users · OWNER_ADMIN only (EDITOR schema-ready, UI off) · a
 
 Feature-first modular monolith, Clean Architecture layers. Neon = single primary DB. Supabase = Auth + Storage only. Vercel = runtime + CD authority. GitHub Actions = CI authority. See `docs/architecture/`.
 
-## V2 Global Navigation + Motion System (2026-08-18, awaiting Owner Visual Acceptance)
+## V2 Global Navigation + Motion System — VISIBLE-PREMIUM (2026-08-18, Owner-authorized merge)
 
-- **Branch:** `feat/v2-global-navigation-motion-system` (from `main` @ `9939ec5`) — **NOT merged**. Compact/expanded icon-capsule nav (active always expanded, inactive compact, hover/focus expand — 0 header CLS, no dead-zone, aria-current=location), brand=Home, mobile icon+full-label drawer; MASTER-MOTION-02 handoff (Reveal once/no-replay already compliant + ambient aurora recede past Hero). `@remixicon/vue` removed (uncommitted anomaly reverted; zero imports). One framework (Next/React), one animation authority (motion/react+CSS), no new dep. Validation GREEN (check:env·typecheck·lint·**test 198/6**·arch 10/10·secret-free build·**e2e:public 11/11**); QA VI+EN × 320–1440 (nav states, 1024 fit, mobile, hydration 0).
+- **Branch:** `feat/v2-global-navigation-motion-system` (from `main` @ `9939ec5`), **PR #13**. Compact/expanded icon-capsule nav (active always expanded, no dead-zone, 0 header CLS, mobile full-label drawer) + **visible-premium MASTER-MOTION-02** motion (perception-first: ~28–34px/0.7s, per-section choreography — Hero descend, **About converge**, Projects/Skills stagger, Career timeline-draw, Contact emphasis; `Reveal` reworked directional; once/no-replay/reduced-safe; ambient aurora recede). Applied /taste-design + /ui-ux-pro-max. `@remixicon/vue` removed (one framework). Validation GREEN (check:env·typecheck·lint·**test 198/6**·arch 10/10·secret-free build·**e2e:public 11/11**); QA VI+EN × 320–1440 (overflowX=0, hydration 0, perception verified). Owner authorized merge → Production.
 
 ## V2 Contact + Footer — MERGED + Production LIVE (2026-08-18)
 
