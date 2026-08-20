@@ -188,8 +188,8 @@ function Timeline({
     visible: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
   };
   const node: Variants = {
-    hidden: { opacity: 0, y: 18 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_OUT } },
+    hidden: { opacity: 0, y: 28 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.62, ease: EASE_OUT } },
   };
 
   return (

@@ -44,8 +44,8 @@ const zone = (delayChildren: number): Variants => ({
   visible: { transition: { staggerChildren: 0.06, delayChildren } },
 });
 const rise: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE_OUT } },
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.62, ease: EASE_OUT } },
 };
 
 /**
@@ -134,9 +134,9 @@ export function HeroSection({
         {/* ── CENTER — portrait (vertical anchor, sits high) ───────────────── */}
         <motion.div
           className="relative order-1 flex items-center justify-center lg:order-2 lg:-translate-y-2"
-          initial={reduced ? false : { opacity: 0, scale: 0.985, y: -26 }}
-          animate={reduced ? false : ready ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.985, y: -26 }}
-          transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.1 }}
+          initial={reduced ? false : { opacity: 0, scale: 0.985, y: -34 }}
+          animate={reduced ? false : ready ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.985, y: -34 }}
+          transition={{ duration: 0.85, ease: EASE_OUT, delay: 0.1 }}
         >
           {!reduced && <OrbitalAccent />}
           <PointerTilt max={4}>

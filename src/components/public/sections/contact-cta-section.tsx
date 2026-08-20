@@ -38,11 +38,11 @@ function ChannelIcon({ kind }: { readonly kind: SocialLink["kind"] }) {
 
 const container: Variants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.06, delayChildren: 0.02 } },
+  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.04 } },
 };
 const rise: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE_OUT } },
+  hidden: { opacity: 0, y: 26 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.68, ease: EASE_OUT } },
 };
 
 /**

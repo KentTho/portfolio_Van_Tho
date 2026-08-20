@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { pick, type Locale } from "@/shared/i18n";
+import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 import type { Dictionary } from "@/i18n/dictionary";
 import type { ProjectSummary } from "@/modules/public-portfolio/domain/types";
 import { TechnologyLogo } from "@/components/technology/technology-logo";
@@ -30,18 +31,20 @@ export function FeaturedProjectsSection({
    * landing the section already lists every published project, so it is omitted. */
   readonly viewAllHref?: string;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotionSafe();
 
   return (
     <section
       aria-labelledby="featured-heading"
       className="mx-auto w-full max-w-6xl px-6 py-24"
     >
-      <SectionHeading
-        id="featured-heading"
-        title={dict.sections.featured}
-        subtitle={dict.home.featuredSubtitle}
-      />
+      <Reveal>
+        <SectionHeading
+          id="featured-heading"
+          title={dict.sections.featured}
+          subtitle={dict.home.featuredSubtitle}
+        />
+      </Reveal>
 
       {projects.length === 0 ? (
         <div className="rounded-2xl border border-border border-dashed bg-surface/20 px-8 py-16 text-center">

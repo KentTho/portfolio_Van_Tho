@@ -35,6 +35,23 @@ for (const locale of ["vi", "en"] as const) {
     await expect(page.locator("body")).not.toContainText(/\b(draft|archived)\b/i);
   });
 
+  test(`navigation active state hands off across all sections with no dead-zone (${locale})`, async ({ page }) => {
+    // V2 global nav: brand = Home at the top; each section owns the active capsule
+    // as it scrolls into view; Contact stays active through the footer (no dead-zone).
+    await page.goto(`/${locale}`);
+    await expect(page.locator('header a[aria-current="page"]')).toBeVisible();
+    for (const id of ["about", "projects", "career", "skills", "contact"] as const) {
+      await page.evaluate((i) => document.getElementById(i)?.scrollIntoView({ block: "center" }), id);
+      await expect(
+        page.locator(`nav[aria-label="Primary"] a[href$="#${id}"][aria-current="location"]`),
+      ).toHaveCount(1, { timeout: 4000 });
+    }
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect(
+      page.locator('nav[aria-label="Primary"] a[href$="#contact"][aria-current="location"]'),
+    ).toHaveCount(1, { timeout: 4000 });
+  });
+
   test(`no hydration or runtime errors on the landing (${locale})`, async ({ page }) => {
     // Regression guard (V2 hydration hardening): the app must produce no hydration
     // mismatch and no uncaught runtime error in a clean browser. Owner-reported

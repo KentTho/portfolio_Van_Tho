@@ -29,10 +29,10 @@ export function AboutSection({
   ].filter((fact) => fact.value.trim().length > 0);
 
   return (
-    <section aria-labelledby="about-heading" className="mx-auto w-full max-w-6xl px-6 py-28 lg:py-36">
+    <section aria-labelledby="about-heading" className="mx-auto w-full max-w-6xl overflow-x-clip px-6 py-28 lg:py-36">
       <div className="grid gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16">
         {/* ── Statement ─────────────────────────────────────────────────── */}
-        <Reveal className="max-w-xl">
+        <Reveal direction="left" distance={34} className="max-w-xl">
           <p className="label-mono text-brand-primary-soft">{dict.about.eyebrow}</p>
           <h2
             id="about-heading"
@@ -45,7 +45,7 @@ export function AboutSection({
 
         {/* ── Identity panel (visual block) — backlit fact rail ─────────── */}
         {facts.length > 0 && (
-          <Reveal delay={0.12} className="relative">
+          <Reveal direction="right" distance={34} delay={0.08} className="relative">
             {/* Restrained blue backlight tying the panel to the hero. */}
             <div
               aria-hidden
