@@ -7,7 +7,7 @@ import type { EducationItem, ExperienceItem } from "@/modules/public-portfolio/d
 import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 import { EASE_OUT } from "@/components/public/motion/motion-tokens";
 import { careerTabKeys, formatPeriod, type CareerTabKey } from "@/components/public/sections/career-tabs";
-
+import { useReplayableReveal } from "@/components/public/motion/use-replayable-reveal";
 interface CareerCopy {
   readonly eyebrow: string;
   readonly title: string;
@@ -192,13 +192,18 @@ function Timeline({
     visible: { opacity: 1, y: 0, transition: { duration: 0.62, ease: EASE_OUT } },
   };
 
+  const { ref: timelineRef, hasEntered: timelineEntered } = useReplayableReveal<HTMLOListElement>(
+    "-10% 0px -20% 0px",
+    "20% 0px 20% 0px"
+  );
+
   return (
     <motion.ol
+      ref={timelineRef}
       className="relative mx-auto max-w-3xl lg:max-w-4xl"
       variants={reduced ? undefined : list}
       initial={reduced ? false : "hidden"}
-      whileInView={reduced ? undefined : "visible"}
-      viewport={{ once: true, margin: "-80px" }}
+      animate={reduced ? false : (timelineEntered) ? "visible" : "hidden"}
     >
       {/* Axis — left rail on mobile, centred on desktop. Draws top→down once. */}
       <motion.span
@@ -206,8 +211,7 @@ function Timeline({
         className="absolute left-[9px] top-1 h-[calc(100%-0.5rem)] w-px bg-gradient-to-b from-border-strong via-border-strong to-transparent lg:left-1/2 lg:-translate-x-1/2"
         style={{ transformOrigin: "top" }}
         initial={reduced ? false : { scaleY: 0 }}
-        whileInView={reduced ? undefined : { scaleY: 1 }}
-        viewport={{ once: true, margin: "-80px" }}
+        animate={timelineEntered ? { scaleY: 1 } : { scaleY: 0 }}
         transition={{ duration: 0.9, ease: EASE_OUT, delay: 0.1 }}
       />
 

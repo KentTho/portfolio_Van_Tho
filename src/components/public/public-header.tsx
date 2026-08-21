@@ -56,15 +56,8 @@ export function PublicHeader({
   const pathname = usePathname();
   const isLanding = pathname === `/${locale}`;
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const [activeId, setActiveId] = useState("");
   const reduced = useReducedMotionSafe();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // Scroll-spy: one observer, all six blocks. Only on the landing page.
   useEffect(() => {
@@ -93,14 +86,13 @@ export function PublicHeader({
   const atHome = isLanding && activeId === "";
 
   return (
-    <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "border-b border-border/50 bg-canvas/80 backdrop-blur-md"
-          : "border-b border-transparent bg-transparent"
-      }`}
-    >
-      <div className="mx-auto flex h-[68px] w-full max-w-6xl items-center justify-between px-6">
+    <header className="sticky top-0 z-50 pointer-events-none w-full transition-all duration-300">
+      {/* 
+        Header shell is completely transparent to avoid a full-width colored bar seam.
+        pointer-events-none allows clicks to pass through to the active scene below,
+        while pointer-events-auto on the inner container restores interactivity for nav items.
+      */}
+      <div className="pointer-events-auto mx-auto flex h-[68px] w-full max-w-6xl items-center justify-between px-6">
         {/* Brand = Home */}
         <Link
           href={`/${locale}`}
@@ -183,7 +175,7 @@ export function PublicHeader({
           <motion.nav
             id="mobile-nav"
             aria-label="Mobile"
-            className="border-t border-border bg-canvas md:hidden"
+            className="pointer-events-auto border-t border-border bg-canvas md:hidden"
             initial={reduced ? false : { height: 0, opacity: 0 }}
             animate={reduced ? {} : { height: "auto", opacity: 1 }}
             exit={reduced ? {} : { height: 0, opacity: 0 }}

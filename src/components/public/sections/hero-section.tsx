@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUpRight, Mail } from "lucide-react";
-import { motion, type Variants } from "motion/react";
+import { motion, useScroll, useTransform, type Variants } from "motion/react";
 import type { SocialLink } from "@/modules/public-portfolio/domain/types";
 import { PortraitFrame } from "@/components/public/visual/portrait-frame";
 import { KineticText } from "@/components/public/motion/kinetic-text";
@@ -11,6 +11,8 @@ import { useIntroReady } from "@/components/public/motion/intro-gate";
 import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 import { GithubMark, LinkedinMark } from "@/components/public/visual/brand-icons";
 import { EASE_OUT } from "@/components/public/motion/motion-tokens";
+import { useReplayableReveal } from "@/components/public/motion/use-replayable-reveal";
+import { cn } from "@/lib/utils";
 
 interface Cta {
   readonly label: string;
@@ -72,7 +74,22 @@ export function HeroSection({
 }: HeroSectionProps) {
   const reduced = useReducedMotionSafe();
   const ready = useIntroReady();
-  const state = reduced ? false : ready ? "visible" : "hidden";
+  
+  const { ref: heroRef, hasEntered } = useReplayableReveal(
+    "-10% 0px -10% 0px", // Enter threshold
+    "30% 0px 30% 0px"  // Exit arm threshold
+  );
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Scroll-linked transition: video fades and scales slightly as user scrolls down.
+  const videoOpacity = useTransform(scrollYProgress, [0, 0.45, 1], [1, 1, 0]);
+  const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.05]);
+
+  const state = reduced ? false : (ready && hasEntered) ? "visible" : "hidden";
 
   // Owner-locked name break: "Hà Văn" / "Thọ" — head = all but last word, tail = last word.
   const parts = name.trim().split(/\s+/);
@@ -80,11 +97,16 @@ export function HeroSection({
   const nameHead = parts.length > 1 ? parts.slice(0, -1).join(" ") : name.trim();
 
   return (
-    <section aria-label="Giới thiệu" className="relative w-full overflow-hidden">
-      <div className="mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col items-center justify-center gap-8 px-6 pb-24 pt-28 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,auto)_minmax(0,0.78fr)] lg:items-center lg:gap-x-6 lg:pb-0 lg:pt-0">
+    <section ref={heroRef} aria-label="Giới thiệu" className="relative w-full overflow-hidden" style={{ perspective: "1200px" }}>
+      {!reduced && (
+        <motion.div style={{ opacity: videoOpacity, scale: videoScale }} className="pointer-events-none absolute inset-0 -z-20">
+          <AmbientVideoField />
+        </motion.div>
+      )}
+      <div className="mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col items-center justify-center gap-8 px-6 pb-24 pt-28 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,auto)_minmax(0,0.78fr)] lg:items-center lg:gap-x-6 lg:pb-0 lg:pt-0" style={{ transformStyle: "preserve-3d" }}>
         {/* ── LEFT — identity ─────────────────────────────────────────────── */}
         <motion.div
-          className="order-2 flex w-full max-w-md flex-col items-center text-center lg:order-1 lg:max-w-none lg:items-start lg:pr-2 lg:text-left"
+          className={cn("order-2 flex w-full max-w-md flex-col items-center text-center lg:order-1 lg:max-w-none lg:items-start lg:pr-2 lg:text-left")}
           variants={reduced ? undefined : zone(0.22)}
           initial={reduced ? false : "hidden"}
           animate={state}
@@ -97,9 +119,9 @@ export function HeroSection({
             aria-label={name}
             className="mt-3 font-display font-bold leading-[0.92] tracking-[-0.03em] text-fg text-[clamp(2.6rem,4.6vw+0.5rem,4.5rem)]"
           >
-            <KineticText text={nameHead} as="span" className="block" play={!reduced && ready} delay={0.05} stagger={0.028} />
+            <KineticText text={nameHead} as="span" className="block" play={!reduced && ready && hasEntered} delay={0.05} stagger={0.028} />
             {nameTail && (
-              <KineticText text={nameTail} as="span" className="block" play={!reduced && ready} delay={0.2} stagger={0.028} />
+              <KineticText text={nameTail} as="span" className="block" play={!reduced && ready && hasEntered} delay={0.2} stagger={0.028} />
             )}
           </h1>
 
@@ -133,12 +155,11 @@ export function HeroSection({
 
         {/* ── CENTER — portrait (vertical anchor, sits high) ───────────────── */}
         <motion.div
-          className="relative order-1 flex items-center justify-center lg:order-2 lg:-translate-y-2"
+          className={cn("relative order-1 flex items-center justify-center lg:order-2 lg:-translate-y-2")}
           initial={reduced ? false : { opacity: 0, scale: 0.985, y: -34 }}
-          animate={reduced ? false : ready ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.985, y: -34 }}
+          animate={reduced ? false : (ready && hasEntered) ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.985, y: -34 }}
           transition={{ duration: 0.85, ease: EASE_OUT, delay: 0.1 }}
         >
-          {!reduced && <OrbitalAccent />}
           <PointerTilt max={4}>
             <PortraitFrame alt={`Chân dung ${name}`} priority />
           </PointerTilt>
@@ -146,7 +167,7 @@ export function HeroSection({
 
         {/* ── RIGHT — profession (tucked near the portrait eye-line) ───────── */}
         <motion.div
-          className="order-3 flex w-full max-w-md flex-col items-center text-center lg:max-w-none lg:items-end lg:-translate-y-6 lg:text-right"
+          className={cn("order-3 flex w-full max-w-md flex-col items-center text-center lg:max-w-none lg:items-end lg:-translate-y-6 lg:text-right")}
           variants={reduced ? undefined : zone(0.34)}
           initial={reduced ? false : "hidden"}
           animate={state}
@@ -156,7 +177,7 @@ export function HeroSection({
           </motion.span>
 
           <p className="mt-3 font-display font-semibold leading-[1.02] text-fg text-[clamp(1.75rem,2vw+1rem,2.6rem)]">
-            <KineticText text={role} as="span" play={!reduced && ready} delay={0.12} stagger={0.026} duration={0.7} />
+            <KineticText text={role} as="span" play={!reduced && ready && hasEntered} delay={0.12} stagger={0.026} duration={0.7} />
           </p>
 
           <motion.span
@@ -176,7 +197,7 @@ export function HeroSection({
       {socials.length > 0 && (
         <motion.ul
           aria-label="Liên kết mạng xã hội"
-          className="pointer-events-none absolute bottom-16 left-6 z-10 hidden flex-col gap-1 lg:flex"
+          className={cn("pointer-events-none absolute bottom-16 left-6 z-10 hidden flex-col gap-1 lg:flex")}
           variants={reduced ? undefined : zone(0.46)}
           initial={reduced ? false : "hidden"}
           animate={state}
@@ -233,21 +254,40 @@ export function HeroSection({
   );
 }
 
-/** Single very-subtle concentric orbital echoing the logo. Decorative and quiet —
- *  it must never out-shout the portrait. Rendered only when motion is allowed. */
-function OrbitalAccent() {
+/** 
+ * Atmospheric video field that sits at the very back of the Hero scene.
+ * Uses a deep radial mask to ensure rectangular edges vanish, combined
+ * with screen blend mode and blur to feel like an optical light source.
+ */
+function AmbientVideoField() {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center">
-      <motion.div
-        className="absolute aspect-square w-[104%] rounded-full border border-brand-primary/8"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 90, ease: "linear", repeat: Infinity }}
+    <motion.div 
+      aria-hidden 
+      className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
+      initial={{ opacity: 0, scale: 1.05 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 2.4, ease: EASE_OUT }}
+      style={{ transform: "translateZ(-100px)" }}
+    >
+      <div 
+        className="relative h-[110vh] w-[110vw] max-w-[1400px] opacity-[0.35] mix-blend-screen"
+        style={{ 
+          maskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)",
+          WebkitMaskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)"
+        }}
       >
-        <span
-          className="absolute left-1/2 top-0 h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-brand-primary/70"
-          style={{ boxShadow: "var(--glow-primary-soft)" }}
-        />
-      </motion.div>
-    </div>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden="true"
+          className="h-full w-full object-cover blur-[1px]"
+        >
+          <source src="/video/GEMINI_IMAGE_TO_VIDEO.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </motion.div>
   );
 }
+
