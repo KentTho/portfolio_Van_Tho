@@ -143,3 +143,14 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Vivid substrate — mobile simplification (Owner Q05A): fewer/cheaper optical
+   layers so battery/perf/readability win. Scene identity kept via composition. */
+@media (max-width: 767px) {
+  .vivid-substrate .vivid-prism {
+    filter: none;
+  }
+  .vivid-substrate .vivid-prism svg {
+    filter: blur(6px) !important;
+  }
+}
