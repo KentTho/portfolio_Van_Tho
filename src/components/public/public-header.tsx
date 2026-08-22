@@ -87,7 +87,7 @@ export function PublicHeader({
 
   return (
     <header className="sticky top-0 z-50 pointer-events-none w-full transition-all duration-300">
-      {/* 
+      {/*
         Header shell is completely transparent to avoid a full-width colored bar seam.
         pointer-events-none allows clicks to pass through to the active scene below,
         while pointer-events-auto on the inner container restores interactivity for nav items.

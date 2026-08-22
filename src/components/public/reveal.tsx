@@ -45,10 +45,10 @@ export function Reveal({
 }: RevealProps) {
   const reduced = useReducedMotionSafe();
   const Tag = as === "li" ? motion.li : motion.div;
-  
+
   // Custom hysteresis hooks for enter/exit (replaces whileInView with once: true)
   // approx heuristic based on amount
-  const marginOffset = Math.max(0, Math.min(40, (1 - amount) * 100)); 
+  const marginOffset = Math.max(0, Math.min(40, (1 - amount) * 100));
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { ref, hasEntered } = useReplayableReveal<any>(
     `-${marginOffset}% 0px -${marginOffset}% 0px`, // Enter threshold

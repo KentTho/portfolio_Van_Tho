@@ -220,7 +220,7 @@ export function CosmicBackground() {
   );
 }
 
-/** Brand-recoloured chromatic prism (CSS). Rebuilt as a sharp optical field 
+/** Brand-recoloured chromatic prism (CSS). Rebuilt as a sharp optical field
  *  (refractive fragments + linear gradient masks) rather than a blurry blob.
  *  Uses restrained gold and cool blue. One slow shimmer nudges the fragments;
  *  off under reduced motion + on mobile (CSS). */

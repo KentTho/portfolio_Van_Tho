@@ -5,7 +5,7 @@ import { useInView } from "motion/react";
 
 /**
  * Hysteresis-driven replayable reveal.
- * 
+ *
  * Rules:
  * A. Section becomes eligible to play only when it enters a meaningful focus threshold.
  * B. After playback completes: stay SETTLED.
@@ -21,7 +21,7 @@ export function useReplayableReveal<T extends Element = HTMLDivElement>(
   const isEntering = useInView(ref, { margin: enterMargin as any });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const isSafelyOut = !useInView(ref, { margin: exitMargin as any });
-  
+
   const [hasEntered, setHasEntered] = useState(false);
 
   useEffect(() => {

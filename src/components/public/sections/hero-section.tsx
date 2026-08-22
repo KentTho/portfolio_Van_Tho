@@ -74,7 +74,7 @@ export function HeroSection({
 }: HeroSectionProps) {
   const reduced = useReducedMotionSafe();
   const ready = useIntroReady();
-  
+
   const { ref: heroRef, hasEntered } = useReplayableReveal(
     "-10% 0px -10% 0px", // Enter threshold
     "30% 0px 30% 0px"  // Exit arm threshold
@@ -254,24 +254,24 @@ export function HeroSection({
   );
 }
 
-/** 
+/**
  * Atmospheric video field that sits at the very back of the Hero scene.
  * Uses a deep radial mask to ensure rectangular edges vanish, combined
  * with screen blend mode and blur to feel like an optical light source.
  */
 function AmbientVideoField() {
   return (
-    <motion.div 
-      aria-hidden 
+    <motion.div
+      aria-hidden
       className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
       initial={{ opacity: 0, scale: 1.05 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 2.4, ease: EASE_OUT }}
       style={{ transform: "translateZ(-100px)" }}
     >
-      <div 
+      <div
         className="relative h-[110vh] w-[110vw] max-w-[1400px] opacity-[0.35] mix-blend-screen"
-        style={{ 
+        style={{
           maskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)",
           WebkitMaskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)"
         }}
@@ -290,4 +290,3 @@ function AmbientVideoField() {
     </motion.div>
   );
 }
-

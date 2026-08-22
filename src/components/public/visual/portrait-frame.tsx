@@ -47,7 +47,7 @@ export function PortraitFrame({
           }}
         />
 
-        {/* Cool brand tint over the subject to marry skin/shirt to the blue canvas. 
+        {/* Cool brand tint over the subject to marry skin/shirt to the blue canvas.
             This is applied with mix-blend-soft-light over the masked area only. */}
         <div
           aria-hidden
