@@ -55,10 +55,7 @@ export function AboutSection({
                   "radial-gradient(60% 55% at 70% 20%, color-mix(in oklab, var(--brand-primary) 16%, transparent), transparent 72%)",
               }}
             />
-            <div
-              className="relative overflow-hidden rounded-3xl border border-border-strong/70 bg-surface/40 p-8 backdrop-blur-sm sm:p-10"
-              style={{ boxShadow: "inset 0 1px 0 color-mix(in oklab, var(--brand-primary-soft) 12%, transparent)" }}
-            >
+            <div className="relative overflow-hidden rounded-3xl border border-border-strong/70 bg-surface/40 p-8 backdrop-blur-sm sm:p-10" style={{ boxShadow: "inset 0 1px 0 color-mix(in oklab, var(--brand-primary-soft) 12%, transparent)" }}>
               {/* Orbital echo of the logo — quiet continuity with the hero. */}
               <div
                 aria-hidden

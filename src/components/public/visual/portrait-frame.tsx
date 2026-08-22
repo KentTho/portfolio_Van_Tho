@@ -2,14 +2,12 @@ import Image from "next/image";
 import portraitImg from "@/components/public/image/vantho.png";
 
 /**
- * PortraitFrame — the real Owner portrait (vantho.png, 1090×1443) presented
- * frameless on the cosmic canvas (V2): a blue backlight (with a restrained gold
- * undertone) separates the silhouette from the near-black canvas, a radial
- * vignette + bottom fade dissolve the studio backdrop's rectangular edges so the
- * subject reads as *emerging from depth* rather than sitting in a card/box.
+ * PortraitFrame — the real Owner portrait presented frameless on the cosmic
+ * canvas (V2). A precise optical mask (radial vignette + bottom linear fade)
+ * completely dissolves the rectangular edges of the studio backdrop so the
+ * subject emerges organically from the depth field. Backlight separates the
+ * silhouette from the canvas.
  *
- * No hard border, no surface box (recruiter-first cinematic, not a SaaS card).
- * next/image handles responsive sizing + blur placeholder; no distortion.
  * Server component (pure CSS; pointer depth is layered by the hero via PointerTilt).
  */
 export function PortraitFrame({
@@ -32,7 +30,7 @@ export function PortraitFrame({
         }}
       />
 
-      {/* Portrait — bottom-masked so the figure dissolves into the canvas floor. */}
+      {/* Portrait — precise mask-composite dissolves all 4 edges (radial + linear bottom). */}
       <div className="relative">
         <Image
           src={portraitImg}
@@ -42,47 +40,26 @@ export function PortraitFrame({
           sizes="(max-width: 640px) 68vw, (max-width: 1024px) 20rem, 24rem"
           className="h-auto w-full select-none object-contain"
           style={{
-            WebkitMaskImage: "linear-gradient(to top, transparent 1%, #000 18%)",
-            maskImage: "linear-gradient(to top, transparent 1%, #000 18%)",
+            WebkitMaskImage: "radial-gradient(ellipse 70% 65% at 50% 45%, #000 45%, transparent 85%), linear-gradient(to top, transparent 1%, #000 22%)",
+            maskImage: "radial-gradient(ellipse 70% 65% at 50% 45%, #000 45%, transparent 85%), linear-gradient(to top, transparent 1%, #000 22%)",
+            WebkitMaskComposite: "source-in, intersect",
+            maskComposite: "intersect",
           }}
         />
 
-        {/* Sink the light studio backdrop toward the canvas at the top + sides. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 mix-blend-multiply"
-          style={{
-            background:
-              "radial-gradient(64% 58% at 50% 40%, transparent 40%, var(--canvas) 86%)",
-          }}
-        />
-
-        {/* Radial vignette — feather the photo's rectangular edges into the canvas
-            (opaque canvas by ~84% radius so no rectangular frame remains). */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(66% 60% at 50% 40%, transparent 38%, var(--canvas) 84%)",
-          }}
-        />
-
-        {/* Cool brand tint over the subject to marry skin/shirt to the blue canvas. */}
+        {/* Cool brand tint over the subject to marry skin/shirt to the blue canvas.
+            This is applied with mix-blend-soft-light over the masked area only. */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 mix-blend-soft-light"
           style={{
             background:
               "linear-gradient(180deg, color-mix(in oklab, var(--brand-primary) 26%, transparent) 0%, transparent 46%)",
+            WebkitMaskImage: "radial-gradient(ellipse 70% 65% at 50% 45%, #000 45%, transparent 85%), linear-gradient(to top, transparent 1%, #000 22%)",
+            maskImage: "radial-gradient(ellipse 70% 65% at 50% 45%, #000 45%, transparent 85%), linear-gradient(to top, transparent 1%, #000 22%)",
+            WebkitMaskComposite: "source-in, intersect",
+            maskComposite: "intersect",
           }}
-        />
-
-        {/* Bottom fade — dissolve the floor into --canvas (emerge-from-depth). */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2"
-          style={{ background: "linear-gradient(to top, var(--canvas) 10%, transparent)" }}
         />
       </div>
     </div>

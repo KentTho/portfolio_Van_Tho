@@ -48,24 +48,27 @@ export function TechMatrixSection({
             <Reveal
               key={group.id}
               delay={index * 0.09}
-              className="rounded-2xl border border-border bg-surface/30 p-6 transition-colors hover:-translate-y-0.5 hover:bg-surface-hover motion-reduce:hover:translate-y-0"
             >
-              {/* Group label */}
-              <p className="label-mono mb-1">{pick(group.title, locale)}</p>
-              {/* Caption */}
-              {group.caption && (
-                <p className="mb-5 text-xs leading-relaxed text-fg-subtle">
-                  {pick(group.caption, locale)}
-                </p>
-              )}
-              {/* Logos */}
-              <ul className="flex flex-wrap gap-3" aria-label={pick(group.title, locale)}>
-                {group.techIds.map((id) => (
-                  <li key={id}>
-                    <TechnologyLogo id={id} size={44} showLabel />
-                  </li>
-                ))}
-              </ul>
+              <div className="h-full group">
+                <div className="h-full rounded-2xl border border-border bg-surface/30 p-6 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_12px_24px_-12px_rgba(0,0,0,0.4)] group-hover:bg-surface/50 group-hover:border-border-strong motion-reduce:group-hover:translate-y-0">
+                  {/* Group label */}
+                  <p className="label-mono mb-1">{pick(group.title, locale)}</p>
+                  {/* Caption */}
+                  {group.caption && (
+                    <p className="mb-5 text-xs leading-relaxed text-fg-subtle transition-colors group-hover:text-fg-muted">
+                      {pick(group.caption, locale)}
+                    </p>
+                  )}
+                  {/* Logos */}
+                  <ul className="flex flex-wrap gap-3" aria-label={pick(group.title, locale)}>
+                    {group.techIds.map((id) => (
+                      <li key={id} className="transition-transform duration-300 group-hover:-translate-y-0.5">
+                        <TechnologyLogo id={id} size={44} showLabel />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
             </Reveal>
           ))}
         </div>

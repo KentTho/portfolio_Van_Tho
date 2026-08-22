@@ -14,7 +14,9 @@
 > (Hero/Menu/About + primitives `motion/intro-gate`, `motion/use-reduced-motion-safe`, `visual/brand-icons`).
 > **Career (MERGED to main `16878f5`):** +1 port method `listEducation()` + `EducationItem` type + pure `sections/career-tabs.ts`.
 > **Contact/Footer (MERGED to main `9939ec5`):** conversion Contact + `contact-copy.ts` + Footer Back-to-Top.
-> **V2 branch `feat/v2-global-navigation-motion-system` (chưa merge):** global nav rebuild (compact/expanded icon-capsule,
+> **Global nav + motion (MERGED to main `68e6f9e`):** `public-header.tsx` compact/expanded icon-capsule + visible-premium MASTER-MOTION-02; `@remixicon/vue` removed → one framework (Next/React), one animation authority.
+> **V2 branch `feat/v2-vivid-visual-substrate-and-motion-rebase-03` (chưa merge):** `cosmic-background.tsx` → **section-aware vivid substrate** (client, graphite-veil depth + brand chromatic prism CSS/SVG, one centre-band + one footer IntersectionObserver, pointer-light rAF `--vx/--vy`, `--ease-scene-focus` token). Presentation-only — **không** đổi port/domain/DB/route/auth, **no new dependency (no WebGL)**. `vivid_co/` = untracked design-token reference (mechanics ported, not staged, content not copied). *(Historical prior line preserved below for context.)*
+> **[historical]** global nav rebuild (compact/expanded icon-capsule,
 > `public-header.tsx` client) + MASTER-MOTION-02 handoff (`cosmic-background.tsx` → **client**, +1 IntersectionObserver on
 > `#home` for ambient recede). Presentation-only — **không** đổi port/domain/DB/route/auth. **`@remixicon/vue` removed** (was
 > an uncommitted anomaly; committed state always clean) → one frontend framework (Next/React) + one animation authority
