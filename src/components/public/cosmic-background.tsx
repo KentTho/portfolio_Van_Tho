@@ -220,38 +220,51 @@ export function CosmicBackground() {
   );
 }
 
-/** Brand-recoloured chromatic prism (CSS/SVG). Three channel-offset crystal
- *  copies — cool-blue / electric-blue / restrained-gold — blurred and screen-
- *  blended to read as optical dispersion WITHOUT red/lime/purple. One slow
- *  shimmer nudges the offsets (~7s); off under reduced motion + on mobile (CSS). */
+/** Brand-recoloured chromatic prism (CSS). Rebuilt as a sharp optical field 
+ *  (refractive fragments + linear gradient masks) rather than a blurry blob.
+ *  Uses restrained gold and cool blue. One slow shimmer nudges the fragments;
+ *  off under reduced motion + on mobile (CSS). */
 function BrandPrism({ still }: { readonly still: boolean }) {
-  const shimmer = still
-    ? undefined
-    : { x: [-6, 6, -6], y: [4, -4, 4], rotate: [-1.5, 1.5, -1.5] };
+  const float1 = still ? undefined : { y: [-8, 8, -8], rotate: [-2, 2, -2] };
+  const float2 = still ? undefined : { y: [6, -6, 6], rotate: [1, -1, 1] };
+  const pulse = still ? undefined : { opacity: [0.4, 0.8, 0.4] };
 
   return (
-    <div className="vivid-prism relative h-full w-full [filter:blur(2px)]">
-      {(
-        [
-          { color: "var(--brand-primary-soft)", dx: -10, dy: -6, delay: 0 },
-          { color: "var(--brand-primary)", dx: 0, dy: 0, delay: 0 },
-          { color: "var(--brand-secondary)", dx: 10, dy: 7, delay: 0 },
-        ] as const
-      ).map((ch, i) => (
-        <motion.svg
-          key={i}
-          viewBox="0 0 200 200"
-          className="absolute inset-0 h-full w-full mix-blend-screen [filter:blur(10px)]"
-          style={{ x: ch.dx, y: ch.dy }}
-          animate={shimmer && i !== 1 ? shimmer : undefined}
-          transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, delay: i * 0.4 }}
-          aria-hidden
-        >
-          {/* A faceted crystal silhouette — two overlapping refractive faces. */}
-          <polygon points="100,18 150,70 120,150 80,150 50,70" fill={ch.color} opacity="0.5" />
-          <polygon points="100,40 128,78 108,132 92,132 72,78" fill={ch.color} opacity="0.35" />
-        </motion.svg>
-      ))}
+    <div className="vivid-prism relative h-full w-full opacity-75 mix-blend-screen">
+      {/* Primary Optical Shard — crisp glass plane */}
+      <motion.div
+        className="absolute left-[20%] top-[20%] h-[60%] w-[60%] -rotate-12 rounded-[2rem] border border-brand-primary/20 backdrop-blur-lg"
+        style={{
+          background: "linear-gradient(135deg, color-mix(in oklab, var(--brand-primary) 12%, transparent), transparent 60%)",
+          boxShadow: "inset 1px 1px 0 color-mix(in oklab, var(--brand-primary-soft) 30%, transparent)",
+          maskImage: "linear-gradient(135deg, #000 20%, transparent 80%)",
+          WebkitMaskImage: "linear-gradient(135deg, #000 20%, transparent 80%)",
+        }}
+        animate={float1}
+        transition={{ duration: 9, ease: "easeInOut", repeat: Infinity }}
+      />
+
+      {/* Secondary Refractive Fragment — restrained gold accent */}
+      <motion.div
+        className="absolute left-[35%] top-[35%] h-[45%] w-[45%] rotate-6 rounded-[1.5rem] border border-brand-secondary/15 backdrop-blur-md"
+        style={{
+          background: "linear-gradient(225deg, color-mix(in oklab, var(--brand-secondary) 8%, transparent), transparent 70%)",
+          maskImage: "linear-gradient(225deg, #000 30%, transparent 90%)",
+          WebkitMaskImage: "linear-gradient(225deg, #000 30%, transparent 90%)",
+        }}
+        animate={float2}
+        transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, delay: 0.5 }}
+      />
+
+      {/* Chromatic Edge / Light Streak — intersecting the fragments */}
+      <motion.div
+        className="absolute left-[45%] top-[15%] h-[70%] w-px rotate-[35deg]"
+        style={{
+          background: "linear-gradient(to bottom, transparent, var(--brand-primary-soft) 40%, var(--brand-secondary) 60%, transparent)",
+        }}
+        animate={pulse}
+        transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
+      />
     </div>
   );
 }

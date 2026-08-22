@@ -29,7 +29,6 @@ export function useReplayableReveal<T extends Element = HTMLDivElement>(
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasEntered(true);
     } else if (isSafelyOut && hasEntered) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setHasEntered(false);
     }
   }, [isEntering, isSafelyOut, hasEntered]);

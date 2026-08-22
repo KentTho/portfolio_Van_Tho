@@ -8,6 +8,8 @@ import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-mot
 import { GithubMark, LinkedinMark } from "@/components/public/visual/brand-icons";
 import { EASE_OUT } from "@/components/public/motion/motion-tokens";
 import { copyAnnounce, type CopyState } from "@/components/public/sections/contact-copy";
+import { useReplayableReveal } from "@/components/public/motion/use-replayable-reveal";
+import { Magnetic } from "@/components/public/motion/interactions";
 
 interface ContactCopy {
   readonly eyebrow: string;
@@ -77,14 +79,16 @@ export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps
     timerRef.current = window.setTimeout(() => setCopyState("idle"), 2200);
   };
 
+  const { ref, hasEntered } = useReplayableReveal("-10% 0px -10% 0px", "20% 0px 20% 0px");
+
   return (
     <section aria-labelledby="contact-heading" className="mx-auto w-full max-w-6xl px-6 py-28 lg:py-36">
       <motion.div
+        ref={ref}
         className="mx-auto flex max-w-2xl flex-col items-center text-center"
         variants={reduced ? undefined : container}
         initial={reduced ? false : "hidden"}
-        whileInView={reduced ? undefined : "visible"}
-        viewport={{ once: true, margin: "-100px" }}
+        animate={hasEntered ? "visible" : "hidden"}
       >
         <motion.p variants={reduced ? undefined : rise} className="label-mono text-brand-primary-soft">
           {t.eyebrow}
@@ -103,14 +107,16 @@ export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps
         {/* Actions — primary real email, secondary copy utility */}
         <motion.div variants={reduced ? undefined : rise} className="mt-9 flex flex-col items-center gap-3 sm:flex-row">
           {email && (
-            <a
-              href={email.href}
-              className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-accent px-8 text-sm font-semibold text-canvas transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-              style={{ boxShadow: "var(--glow-primary-soft)" }}
-            >
-              <Mail size={16} aria-hidden />
-              {t.emailMe}
-            </a>
+            <Magnetic>
+              <a
+                href={email.href}
+                className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-accent px-8 text-sm font-semibold text-canvas transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+                style={{ boxShadow: "var(--glow-primary-soft)" }}
+              >
+                <Mail size={16} aria-hidden />
+                {t.emailMe}
+              </a>
+            </Magnetic>
           )}
           {email && (
             <button

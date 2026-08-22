@@ -11,6 +11,7 @@ import { TechnologyLogo } from "@/components/technology/technology-logo";
 import { SampleBadge } from "@/components/public/sample-badge";
 import { SectionHeading } from "@/components/public/section-heading";
 import { Reveal } from "@/components/public/reveal";
+import { PointerTilt } from "@/components/public/motion/interactions";
 
 /**
  * COSMIC ENGINEERING EDITORIAL — Featured Projects
@@ -103,23 +104,25 @@ function ProjectCard({
       whileHover={
         reduced
           ? undefined
-          : { y: -4, boxShadow: "var(--glow-soft)" }
+          : { y: -6, boxShadow: "var(--glow-soft)" }
       }
       transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
       className="h-full"
     >
-      <Link
-        href={href}
-        className="group flex h-full flex-col rounded-2xl border border-border bg-surface/40 p-6 transition-colors hover:border-accent/30 hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-      >
-        {/* Meta row */}
-        <div className="flex items-center justify-between">
+      <PointerTilt max={1.5} className="h-full">
+        <Link
+          href={href}
+          className="group flex h-full flex-col rounded-2xl border border-border bg-surface/40 p-6 transition-colors hover:border-accent/30 hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
+          style={{ transformStyle: "preserve-3d" }}
+        >
+          {/* Meta row */}
+          <div className="flex items-center justify-between" style={{ transform: "translateZ(20px)" }}>
           <span className="label-mono">{project.year ?? ""}</span>
           {project.sample ? <SampleBadge label={sampleLabel} /> : null}
         </div>
 
         {/* Title */}
-        <h3 className="mt-4 font-display text-xl font-bold tracking-tight text-fg transition-colors group-hover:text-accent">
+        <h3 className="mt-4 font-display text-xl font-bold tracking-tight text-fg transition-colors group-hover:text-accent" style={{ transform: "translateZ(40px)" }}>
           {pick(project.title, locale)}
         </h3>
 
@@ -129,7 +132,7 @@ function ProjectCard({
         </p>
 
         {/* Tech logos */}
-        <ul className="mt-5 flex flex-wrap gap-2" aria-label="Technologies">
+        <ul className="mt-5 flex flex-wrap gap-2" aria-label="Technologies" style={{ transform: "translateZ(25px)" }}>
           {project.techIds.slice(0, 5).map((id) => (
             <li key={id}>
               <TechnologyLogo id={id} size={28} />
@@ -138,11 +141,12 @@ function ProjectCard({
         </ul>
 
         {/* View indicator */}
-        <div className="mt-4 flex items-center gap-1 text-xs text-fg-subtle transition-colors group-hover:text-accent">
+        <div className="mt-4 flex items-center gap-1 text-xs text-fg-subtle transition-colors group-hover:text-accent" style={{ transform: "translateZ(10px)" }}>
           <ArrowUpRight size={13} aria-hidden />
           <span>View project</span>
         </div>
-      </Link>
+        </Link>
+      </PointerTilt>
     </motion.div>
   );
 }
