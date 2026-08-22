@@ -6,7 +6,10 @@
 > observable/rollback-able platform.
 >
 > **V1 the *product scope* is CLOSED** (merged to `main` @ `feeb0bd`, Vercel Production LIVE at
-> `portfolio-van-tho.vercel.app`, post-merge smoke green). **100% is still not reached** — it requires
+> `portfolio-van-tho.vercel.app`, post-merge smoke green). **V2 public visual — vivid foundation (substrate +
+> cinematic Hero video + global nav/motion + replayable reveal) = MERGED + PRODUCTION VERIFIED** (`main` @
+> `51b17bc`, PR #15; prod `/vi` `/en` 200 + Hero video 200, no phone, admin deny) — production-serving, 85 band;
+> Projects V2 + Skills V2 redesign still pending. **100% is still not reached** — it requires
 > monitoring + rollback + observability, which are NOT yet in place (Owner-deferred, Wave 07/10). So layers
 > that are production-serving sit in the **85 band**, not 100. Two scopes are tracked separately below:
 > **V1_PRODUCT_SCOPE** (recruiter-facing portfolio — CLOSED) vs **LONG_TERM_PLATFORM_ROADMAP** (observability,

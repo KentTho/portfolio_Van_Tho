@@ -3,7 +3,10 @@
 > Living master status. Updated at the end of every Wave. For contribution rules see
 > [`CLAUDE.md`](CLAUDE.md); for machine state see [`docs/ai/`](docs/ai/).
 >
-> **Cập nhật lần cuối (2026-08-16):** ✅ **`V1_MAIN_MERGED_AND_POST_MERGE_VERIFIED` — V1 CLOSED, Production LIVE.**
+> **Cập nhật lần cuối (2026-08-22):** ✅ **`V2_PR15_MAIN_MERGED_AND_PRODUCTION_VERIFIED` — V2 vivid foundation LIVE.**
+> `main` @ **`51b17bc`** (PR #15 merge; final feature HEAD `ce8c57f`). Cinematic Hero video (committed `public/video/GEMINI_IMAGE_TO_VIDEO.mp4`, serves 200 in prod) + scroll-linked dissolve · transparent scene-integrated header · native scroll · replayable reveal w/ hysteresis + product-state preservation · crisp optical prism / mask-composite portrait · `motion/react` sole authority. Prod smoke `/vi` `/en` 200, video loads, real content, no phone, admin deny (404/307), main CI green. **Remaining V2 (do NOT auto-start):** Projects V2 + Skills V2 full redesign.
+>
+> **Cập nhật (2026-08-16):** ✅ **`V1_MAIN_MERGED_AND_POST_MERGE_VERIFIED` — V1 CLOSED, Production LIVE.**
 > `main` @ **`feeb0bd`** (PR #6 CV-driven single-landing merged `30b1184` → PR #7 docs reconcile `feeb0bd`).
 > **Vercel Production LIVE:** `https://portfolio-van-tho.vercel.app` (Git-integration deploy on push to `main`;
 > `…-git-main…` alias). Runtime smoke: `/vi` `/en` 200 · 6 anchor live (`#home #about #projects #career #skills
