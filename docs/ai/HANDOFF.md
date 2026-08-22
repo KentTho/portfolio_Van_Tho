@@ -1,6 +1,7 @@
 # HANDOFF
 
-## V2 PR #15 FINAL RELEASE AUDIT — CINEMATIC HERO + REPLAYABLE MOTION · RELEASE CANDIDATE (2026-08-22)
+## V2 PR #15 FINAL RELEASE AUDIT — CINEMATIC HERO + REPLAYABLE MOTION · ✅ MERGED + PRODUCTION VERIFIED (2026-08-22)
+- **✅ PR #15 MERGED → `main` = `51b17bc`** (merge commit `51b17bc`; final feature HEAD `ce8c57f`, confirmed ancestor of `main`). Main CI green. **Vercel Production LIVE + verified:** `https://portfolio-van-tho.vercel.app` `/vi` `/en` 200; **Hero video loads from prod** (`/video/GEMINI_IMAGE_TO_VIDEO.mp4` → 200 `video/mp4` 2.86 MB); Hà Văn/Thọ + Software Engineer + Xem dự án/Liên hệ; Career Học vấn/Education; Projects Expense Tracker; Contact "Cùng xây dựng"/Sao chép email; Footer Lên đầu/Back to top; one h1; **no phone leak**; admin deny (`/vi/admin` 404, `/admin` 307). Owner authorized the merge for THIS task only (not a permanent auto-merge policy). Vercel **Preview** is SSO-protected (curl blocked) → preview runtime was evidenced by local `next start` prod-build smoke + e2e Chromium.
 - **Scope:** Owner-authorized final release audit of the **entire cumulative PR #15** (branch `feat/v2-vivid-visual-substrate-and-motion-rebase-03`), not just the last commit. Owner authorization for THIS task supersedes the earlier "do not merge" (5A) — merge only after all release gates pass; not a permanent auto-merge policy.
 - **Final architecture on this branch (current approved interface):**
   - **Cinematic Hero video** — `hero-section.tsx` renders `AmbientVideoField` (a decorative back layer, `-z-20`) with a **scroll-linked dissolve**: `useScroll`/`useTransform` fade the video out and scale it slightly as the Hero scrolls to About. Video is `muted/loop/playsInline/aria-hidden` and rendered **only when motion is allowed** (`!reduced`) → reduced-motion shows no video and the Hero stays complete; if autoplay is blocked the Hero is unaffected (video is purely atmospheric).
@@ -15,7 +16,7 @@
 - **Suppression/type note:** `LINT PASS ≠ HYDRATION PASS` — hydration is proven separately by the e2e "no hydration or runtime errors" tests (vi+en), not by lint. No `suppressHydrationWarning`; TypeScript strictness unchanged.
 - **Privacy/data:** no DB/schema/auth/env changes; real content only; phone remains PRIVATE; no Resume CTA; no secrets; `vivid_co/`, audit `.md`, Resume PDFs stay untracked (never staged).
 - **Validation GREEN (final HEAD):** check:env 18/0 · typecheck · lint 0/0 · **test 198/6** · arch 10/10 · **build** · **e2e:public 11/11** · diff-check clean.
-- **Release:** merge PR #15 normally once CI on final HEAD is green and the Preview is Ready + runtime-verified; then verify Vercel Production. **OPEN (do NOT auto-start):** Projects V2 redesign · Skills V2 redesign · `PENDING_OWNER_EXPERIENCE_DETAILS` · `PENDING_PUBLIC_SAFE_RESUME` · Contact backend (Wave 06A) · INFRA-DB-ISO · observability.
+- **Release:** ✅ merged + Production verified (above). V2 **vivid foundation = MERGED + PRODUCTION VERIFIED**. **OPEN (do NOT auto-start):** Projects V2 redesign · Skills V2 redesign · `PENDING_OWNER_EXPERIENCE_DETAILS` · `PENDING_PUBLIC_SAFE_RESUME` · Contact backend (Wave 06A) · INFRA-DB-ISO · observability.
 
 ## V2 VIVID VISUAL SUBSTRATE + SECTION SCENE MOTION · CHỜ OWNER VISUAL ACCEPTANCE (2026-08-20)
 - **Branch:** `feat/v2-vivid-visual-substrate-and-motion-rebase-03` (from `main` @ `ab4b5a8`). **PR open (base main). NOT merged** (Owner Decision 5A — no auto-merge; prior task merge-authority EXPIRED).
