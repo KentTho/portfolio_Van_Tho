@@ -28,6 +28,12 @@ export interface Dictionary {
     "eyebrow" | "title" | "lead" | "tabExperience" | "tabEducation" | "present",
     string
   >;
+  journey: {
+    eyebrow: string;
+    frontend: { title: string; description: string };
+    backend: { title: string; description: string };
+    infrastructureData: { title: string; description: string };
+  };
   sections: Record<
     "focus" | "techMatrix" | "featured" | "principles" | "writing" | "experience" | "contactCta",
     string

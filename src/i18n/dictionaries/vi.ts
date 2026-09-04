@@ -42,6 +42,21 @@ export const vi: Dictionary = {
     tabEducation: "Học vấn",
     present: "Hiện tại",
   },
+  journey: {
+    eyebrow: "KIẾN TRÚC",
+    frontend: {
+      title: "FRONTEND",
+      description: "Kiến trúc client-side và giao diện tương tác.",
+    },
+    backend: {
+      title: "BACKEND",
+      description: "Dịch vụ cốt lõi, API và logic nghiệp vụ.",
+    },
+    infrastructureData: {
+      title: "HẠ TẦNG & DỮ LIỆU",
+      description: "Triển khai, CI/CD và quản lý cơ sở dữ liệu.",
+    },
+  },
   sections: {
     focus: "Trọng tâm chuyên môn",
     techMatrix: "Năng lực & công nghệ",

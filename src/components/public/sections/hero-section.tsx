@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUpRight, Mail } from "lucide-react";
-import { motion, useScroll, useTransform, type Variants } from "motion/react";
+import { motion, useScroll, useTransform, type MotionValue, type Variants } from "motion/react";
 import type { SocialLink } from "@/modules/public-portfolio/domain/types";
 import { PortraitFrame } from "@/components/public/visual/portrait-frame";
 import { KineticText } from "@/components/public/motion/kinetic-text";
@@ -85,9 +85,9 @@ export function HeroSection({
     offset: ["start start", "end start"],
   });
 
-  // Scroll-linked transition: video fades and scales slightly as user scrolls down.
-  const videoOpacity = useTransform(scrollYProgress, [0, 0.45, 1], [1, 1, 0]);
-  const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.05]);
+  // Scroll-linked transition: video fades and moves down in parallax as user scrolls down.
+  const videoOpacity = useTransform(scrollYProgress, [0, 0.55, 1], [1, 0.85, 0]);
+  const videoY = useTransform(scrollYProgress, [0, 1], ["0px", "140px"]);
 
   const state = reduced ? false : (ready && hasEntered) ? "visible" : "hidden";
 
@@ -99,9 +99,7 @@ export function HeroSection({
   return (
     <section ref={heroRef} aria-label="Giới thiệu" className="relative w-full overflow-hidden" style={{ perspective: "1200px" }}>
       {!reduced && (
-        <motion.div style={{ opacity: videoOpacity, scale: videoScale }} className="pointer-events-none absolute inset-0 -z-20">
-          <AmbientVideoField />
-        </motion.div>
+        <AmbientHeroSubstrate videoY={videoY} videoOpacity={videoOpacity} />
       )}
       <div className="mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col items-center justify-center gap-8 px-6 pb-24 pt-28 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,auto)_minmax(0,0.78fr)] lg:items-center lg:gap-x-6 lg:pb-0 lg:pt-0" style={{ transformStyle: "preserve-3d" }}>
         {/* ── LEFT — identity ─────────────────────────────────────────────── */}
@@ -111,17 +109,29 @@ export function HeroSection({
           initial={reduced ? false : "hidden"}
           animate={state}
         >
-          <motion.span variants={reduced ? undefined : rise} className="label-mono text-brand-primary-soft">
-            {intro}
-          </motion.span>
+          {/* Micro-workspace sandbox status badge */}
+          <motion.div
+            variants={reduced ? undefined : rise}
+            className="inline-flex items-center gap-2.5 rounded-full border border-border/80 bg-surface/70 px-3.5 py-1.5 backdrop-blur-md"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-primary opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-primary" />
+            </span>
+            <span className="font-mono text-[11px] uppercase tracking-widest text-brand-primary-soft">
+              {intro}
+            </span>
+          </motion.div>
 
           <h1
             aria-label={name}
-            className="mt-3 font-display font-bold leading-[0.92] tracking-[-0.03em] text-fg text-[clamp(2.6rem,4.6vw+0.5rem,4.5rem)]"
+            className="mt-4 font-display font-bold leading-[0.92] tracking-[-0.03em] text-fg text-[clamp(2.6rem,4.6vw+0.5rem,4.5rem)]"
           >
             <KineticText text={nameHead} as="span" className="block" play={!reduced && ready && hasEntered} delay={0.05} stagger={0.028} />
             {nameTail && (
-              <KineticText text={nameTail} as="span" className="block" play={!reduced && ready && hasEntered} delay={0.2} stagger={0.028} />
+              <span className="block bg-gradient-to-r from-fg via-brand-primary-soft to-[#38bdf8] bg-clip-text text-transparent">
+                <KineticText text={nameTail} as="span" play={!reduced && ready && hasEntered} delay={0.2} stagger={0.028} />
+              </span>
             )}
           </h1>
 
@@ -133,8 +143,7 @@ export function HeroSection({
             <Magnetic>
               <Link
                 href={primary.href}
-                className="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-canvas transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-                style={{ boxShadow: "var(--glow-primary-soft)" }}
+                className="group relative inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-canvas transition-all duration-300 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas shadow-[0_0_28px_rgba(56,189,248,0.32)] hover:shadow-[0_0_42px_rgba(56,189,248,0.55)]"
               >
                 {primary.label}
                 <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -255,26 +264,56 @@ export function HeroSection({
 }
 
 /**
- * Atmospheric video field that sits at the very back of the Hero scene.
- * Uses a deep radial mask to ensure rectangular edges vanish, combined
- * with screen blend mode and blur to feel like an optical light source.
+ * Atmospheric video and ambient substrate field that sits behind the Hero scene.
+ * Implements the exact micro-workspace protocol architecture from docs/code_pattern:
+ * - Real lightweight video: /video/enter_portfolio_micro_workspace_Protocol.mp4 (714 KB)
+ * - mix-blend-screen with controlled opacity
+ * - terminal-grid texture + ambient warm/cyan lamp glow
+ * - subtle drift particles
+ * - seamless bottom gradient transition into canvas
  */
-function AmbientVideoField() {
+function AmbientHeroSubstrate({
+  videoY,
+  videoOpacity,
+}: {
+  readonly videoY: MotionValue<string>;
+  readonly videoOpacity: MotionValue<number>;
+}) {
+  const reduced = useReducedMotionSafe();
+
+  const particles = [
+    { left: "12%", size: 3, duration: 5.2, delay: 0 },
+    { left: "34%", size: 2, duration: 4.4, delay: 1.1 },
+    { left: "68%", size: 3.5, duration: 5.8, delay: 2.2 },
+    { left: "86%", size: 2.5, duration: 4.8, delay: 0.6 },
+    { left: "52%", size: 2, duration: 5.4, delay: 3.0 },
+  ];
+
   return (
-    <motion.div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
-      initial={{ opacity: 0, scale: 1.05 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 2.4, ease: EASE_OUT }}
-      style={{ transform: "translateZ(-100px)" }}
-    >
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* Terminal grid texture inspired by micro-workspace protocol */}
       <div
-        className="relative h-[110vh] w-[110vw] max-w-[1400px] opacity-[0.35] mix-blend-screen"
+        className="absolute inset-0 opacity-[0.22]"
         style={{
-          maskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)",
-          WebkitMaskImage: "radial-gradient(ellipse at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 70%)"
+          backgroundSize: "40px 40px",
+          backgroundImage:
+            "linear-gradient(to right, rgba(56, 189, 248, 0.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.12) 1px, transparent 1px)",
         }}
+      />
+
+      {/* Ambient lamp: warm incandescent glow meeting cyan atmospheric aura */}
+      <div
+        className="absolute left-1/2 top-[35%] h-[60vw] w-[60vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[140px] opacity-70"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.08) 0%, rgba(56, 189, 248, 0.09) 42%, transparent 72%)",
+        }}
+      />
+
+      {/* Hero Video Field with scroll parallax */}
+      <motion.div
+        style={{ y: reduced ? 0 : videoY, opacity: videoOpacity }}
+        className="absolute inset-0 flex items-center justify-center will-change-transform"
       >
         <video
           autoPlay
@@ -282,11 +321,42 @@ function AmbientVideoField() {
           loop
           playsInline
           aria-hidden="true"
-          className="h-full w-full object-cover blur-[1px]"
+          className="h-full w-full object-cover opacity-45 mix-blend-screen select-none"
         >
-          <source src="/video/GEMINI_IMAGE_TO_VIDEO.mp4" type="video/mp4" />
+          <source src="/video/enter_portfolio_micro_workspace_Protocol.mp4" type="video/mp4" />
         </video>
-      </div>
-    </motion.div>
+      </motion.div>
+
+      {/* Ambient drift particles (reduced-motion safe) */}
+      {!reduced &&
+        particles.map((p, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-[#38bdf8] pointer-events-none"
+            style={{
+              left: p.left,
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              boxShadow: "0 0 10px rgba(56, 189, 248, 0.8), 0 0 18px rgba(56, 189, 248, 0.4)",
+            }}
+            initial={{ y: "-5vh", opacity: 0 }}
+            animate={{
+              y: ["0vh", "110vh"],
+              x: [0, 18, -12, 0],
+              opacity: [0, 0.8, 0.7, 0],
+            }}
+            transition={{
+              duration: p.duration,
+              delay: p.delay,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+        ))}
+
+      {/* Bottom gradient mask: guarantees 100% seamless transition into background */}
+      <div className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/30 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-canvas via-canvas/85 to-transparent" />
+    </div>
   );
 }

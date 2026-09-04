@@ -42,14 +42,7 @@ const lines = (viBody: string, enBody: string): readonly Localized<string>[] => 
 type Sections = ReadonlyArray<{ readonly kind: string; readonly bodyMd: string }>;
 const section = (s: Sections, kind: string) => s.find((x) => x.kind === kind)?.bodyMd ?? "";
 
-/** "2022 — nay" / "2022 — 2025" / "" from ISO-ish date strings. */
-const eduYears = (start: string | null, end: string | null, isCurrent: boolean): string => {
-  const y = (d: string | null) => (d ? d.slice(0, 4) : "");
-  const s = y(start);
-  if (!s) return "";
-  const e = isCurrent ? "nay" : y(end);
-  return e ? `${s} — ${e}` : s;
-};
+
 
 export class NeonPortfolioRepository implements PortfolioRepository {
   // Injectable for unit tests; defaults to the live Neon read model in production wiring.
@@ -61,22 +54,24 @@ export class NeonPortfolioRepository implements PortfolioRepository {
       ? [{ kind: "email", label: p.publicEmail, href: `mailto:${p.publicEmail}` }]
       : [];
     // Education has no translation table; fold the visible rows into a single flat line the
-    // Career section renders (mirrored across locales). Empty when the Owner has authored none.
-    const educationLine = edu
+    // Career section renders. Translate the 'present' word appropriately.
+    const eduLine = (presentWord: string) => edu
       .map((e) => {
         const field = e.fieldOfStudy ? `${e.institution} — ${e.fieldOfStudy}` : e.institution;
-        const years = eduYears(e.startDate, e.endDate, e.isCurrent);
+        const start = e.startDate ? e.startDate.slice(0, 4) : "";
+        const end = e.isCurrent ? presentWord : (e.endDate ? e.endDate.slice(0, 4) : "");
+        const years = start ? (end ? `${start} — ${end}` : start) : "";
         return years ? `${field} (${years})` : field;
       })
       .join("; ");
-    // The profile row is flat (no per-locale translation table); mirror it across locales.
+
     return {
       name: p.fullName,
       role: loc(p.professionalTitle, p.professionalTitle),
       headline: loc("", ""),
       summary: loc("", ""),
       location: loc(p.location, p.location),
-      education: loc(educationLine, educationLine),
+      education: loc(eduLine("nay"), eduLine("present")),
       focusAreas: [],
       languages: [],
       socials,

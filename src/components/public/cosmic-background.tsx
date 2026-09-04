@@ -195,14 +195,16 @@ export function CosmicBackground() {
         }}
       />
 
-      {/* Brand PRISM artifact — the signature chromatic optical anchor. Same
-          language, repositioned/rescaled per scene. Fades out at footer. */}
-      <div
-        className={`absolute h-[34rem] w-[34rem] transition-[transform,opacity] duration-[1200ms] [transition-timing-function:var(--ease-scene-focus)] ${cfg.prism}`}
-        style={{ opacity: scene === "footer" ? 0.12 : 0.85 }}
-      >
-        <BrandPrism still={still} />
-      </div>
+      {/* Brand PRISM artifact — the signature chromatic optical anchor.
+          Per Owner visual directive: completely omitted in 'home' scene to eliminate any rectangular shards/boxes behind the hero portrait. Fades out at footer. */}
+      {scene !== "home" && (
+        <div
+          className={`absolute h-[34rem] w-[34rem] transition-[transform,opacity] duration-[1200ms] [transition-timing-function:var(--ease-scene-focus)] ${cfg.prism}`}
+          style={{ opacity: scene === "footer" ? 0.12 : 0.85 }}
+        >
+          <BrandPrism still={still} />
+        </div>
+      )}
 
       {/* Atmospheric grid — barely-there texture (retained), quiets at footer. */}
       <div

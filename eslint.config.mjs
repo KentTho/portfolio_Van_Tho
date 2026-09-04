@@ -69,6 +69,9 @@ const eslintConfig = defineConfig([
     // Local Understand-Anything tool artifacts (gitignored) — not application source.
     ".ua/**",
     ".understand-anything/**",
+    "three.js/**",
+    "vivid_co/**",
+    "docs/**",
   ]),
 ]);
 

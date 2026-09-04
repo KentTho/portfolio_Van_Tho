@@ -4,6 +4,8 @@ import { isLocale, pick } from "@/shared/i18n";
 import { getDictionary } from "@/i18n/dictionary";
 import { getPortfolioRepository } from "@/composition/public-portfolio";
 import { buildLocaleMetadata } from "@/lib/seo";
+import fs from "fs";
+import path from "path";
 import { SITE } from "@/config/site";
 import { JsonLd } from "@/components/public/json-ld";
 import { HeroSection } from "@/components/public/sections/hero-section";
@@ -12,6 +14,7 @@ import { FeaturedProjectsSection } from "@/components/public/sections/featured-p
 import { ExperienceSection } from "@/components/public/sections/experience-section";
 import { TechMatrixSection } from "@/components/public/sections/tech-matrix-section";
 import { ContactCtaSection } from "@/components/public/sections/contact-cta-section";
+import { EngineeringJourney } from "@/components/public/visual/engineering-journey";
 
 export async function generateMetadata({
   params,
@@ -50,6 +53,15 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
     repo.listExperience(),
     repo.listEducation(),
   ]);
+
+  let availableLogos: string[] = [];
+  try {
+    const logosDir = path.join(process.cwd(), "public", "technology-logos");
+    const files = fs.readdirSync(logosDir);
+    availableLogos = files.map((f) => f.split(".")[0] as string);
+  } catch {
+    // Graceful fallback if directory is missing
+  }
 
   // Graceful empty-state fallbacks (Owner fills the real profile via Admin; these
   // use established config/dict identity, never fabricated personal claims).
@@ -111,17 +123,26 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
         />
       </div>
 
-      <div id="about" className="scroll-mt-20">
-        <AboutSection profile={profile} locale={locale} dict={dict} />
-      </div>
-
-      <div id="projects" className="scroll-mt-20">
-        <FeaturedProjectsSection projects={projects} locale={locale} dict={dict} />
-      </div>
-
-      <div id="career" className="scroll-mt-20">
-        <ExperienceSection experience={experience} education={education} locale={locale} t={dict.career} />
-      </div>
+      <EngineeringJourney
+        locale={locale}
+        dict={dict}
+        availableLogos={availableLogos}
+        aboutNode={
+          <div id="about" className="scroll-mt-20">
+            <AboutSection profile={profile} locale={locale} dict={dict} />
+          </div>
+        }
+        projectsNode={
+          <div id="projects" className="scroll-mt-20">
+            <FeaturedProjectsSection projects={projects} locale={locale} dict={dict} />
+          </div>
+        }
+        careerNode={
+          <div id="career" className="scroll-mt-20">
+            <ExperienceSection experience={experience} education={education} locale={locale} t={dict.career} />
+          </div>
+        }
+      />
 
       <div id="skills" className="scroll-mt-20">
         <TechMatrixSection groups={groups} locale={locale} dict={dict} />

@@ -66,3 +66,7 @@ skills-lock.json
 
 # Local visual-QA screenshots (Prompt 12 QA loop)
 .qa-shots/
+
+# External cloned reference repos (never commit)
+three.js/
+vivid_co/
