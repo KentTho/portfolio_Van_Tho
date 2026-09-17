@@ -33,6 +33,8 @@ export const metadata: Metadata = {
   description: SITE.description,
 };
 
+import { ThemeScript } from "@/components/theme/theme-script";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -40,8 +42,12 @@ export default function RootLayout({
     <html
       lang={SITE.defaultLocale}
       className={`${inter.variable} ${syne.variable} ${mono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col bg-canvas text-fg">
+      <head>
+        <ThemeScript />
+      </head>
+      <body className="flex min-h-full flex-col bg-canvas text-fg transition-colors duration-300">
         <SkipLink />
         {children}
       </body>

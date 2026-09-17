@@ -42,6 +42,21 @@ export const en: Dictionary = {
     tabEducation: "Education",
     present: "Present",
   },
+  journey: {
+    eyebrow: "ARCHITECTURE RAIL",
+    frontend: {
+      title: "FRONTEND",
+      description: "Client-side architecture and interactive interfaces.",
+    },
+    backend: {
+      title: "BACKEND",
+      description: "Core services, APIs, and domain logic.",
+    },
+    infrastructureData: {
+      title: "INFRASTRUCTURE & DATA",
+      description: "Deployment, CI/CD, and data persistence.",
+    },
+  },
   sections: {
     focus: "Professional focus",
     techMatrix: "Capabilities & technology",

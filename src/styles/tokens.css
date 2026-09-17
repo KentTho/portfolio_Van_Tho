@@ -10,34 +10,80 @@
  * aliases onto the brand tokens so existing components render in-brand with no churn.
  * All text/control colors meet WCAG AA on --canvas.
  */
-:root {
+:root,
+[data-theme="dark"] {
   /* ── Brand (from logo) ─────────────────────────────────────────────────── */
-  --brand-primary: #3b82f6; /* core electric blue — fills, glows, focal */
-  --brand-primary-soft: #6ba5ff; /* luminous blue — text/links/accents on dark (AA) */
-  --brand-secondary: #e9a93e; /* metallic gold — restrained highlight */
-  --brand-secondary-soft: #f3c877; /* soft gold */
-  --brand-highlight: #fbe3a6; /* gold sheen */
+  --brand-primary: #3b82f6; /* core electric blue */
+  --brand-primary-soft: #38bdf8; /* luminous sky blue — text/accents on dark */
+  --brand-secondary: #f59e0b; /* metallic amber-gold */
+  --brand-secondary-soft: #fbbf24; /* soft gold */
+  --brand-highlight: #fef08a; /* gold sheen */
 
-  /* ── Neutrals / depth ──────────────────────────────────────────────────── */
-  --canvas: #050912; /* deep space black-navy */
-  --canvas-elevated: #0a1220;
-  --surface: #0d1526;
-  --surface-raised: #131f38;
-  --surface-hover: #1b2743; /* interactive card hover */
+  /* ── Neutrals / depth — Deep Navy & Midnight Blue Foundation ─────────── */
+  --canvas: #060b16; /* Deep space navy-black */
+  --canvas-elevated: #0b1326; /* Midnight blue */
+  --surface: #0f1a34; /* Deep slate-blue */
+  --surface-raised: #152446;
+  --surface-hover: #1e315d; /* interactive card hover */
 
-  --foreground: #eaf1fb; /* primary text — ~17:1 */
-  --foreground-muted: #a6b4cd; /* secondary — ~9:1 */
-  --foreground-subtle: #6f8099; /* tertiary/meta — ~4.6:1, non-essential only */
+  --foreground: #f0f6fc; /* primary text — ~17:1 */
+  --foreground-muted: #94a3b8; /* secondary text */
+  --foreground-subtle: #64748b; /* tertiary text */
 
-  --border: #1e2b47;
-  --border-strong: #2f4470;
+  --border: #1e293b;
+  --border-strong: #334155;
 
-  --focus-ring: #6ba5ff;
+  --focus-ring: #38bdf8;
 
-  /* ── Depth / glow — selective (one focal point per viewport) ───────────── */
-  --glow-primary-soft: 0 0 30px color-mix(in oklab, var(--brand-primary) 20%, transparent);
-  --glow-primary-strong: 0 0 64px color-mix(in oklab, var(--brand-primary) 34%, transparent);
-  --glow-secondary-soft: 0 0 30px color-mix(in oklab, var(--brand-secondary) 18%, transparent);
+  --navbar-bg: rgba(6, 11, 22, 0.78);
+  --navbar-border: rgba(56, 189, 248, 0.15);
+  --route-glow-bottom: #06b6d4; /* cyan */
+  --route-glow-mid: #0284c7;    /* bright blue */
+  --route-glow-top: #1d4ed8;    /* deep blue */
+
+  /* ── Depth / glow ──────────────────────────────────────────────────────── */
+  --glow-primary-soft: 0 0 30px rgba(56, 189, 248, 0.28);
+  --glow-primary-strong: 0 0 64px rgba(56, 189, 248, 0.45);
+  --glow-secondary-soft: 0 0 30px rgba(245, 158, 11, 0.22);
+}
+
+[data-theme="light"] {
+  /* ── Brand — refined for clean engineering light canvas ────────────────── */
+  --brand-primary: #2563eb; /* vivid royal blue */
+  --brand-primary-soft: #0284c7; /* deep cyan-blue */
+  --brand-secondary: #d97706; /* rich warm amber */
+  --brand-secondary-soft: #b45309;
+  --brand-highlight: #fef3c7;
+
+  /* ── Neutrals / depth — Cool Architectural Ice-Slate ──────────────────── */
+  --canvas: #f8fafc; /* Crisp ice-cool white */
+  --canvas-elevated: #f1f5f9; /* Soft pale slate */
+  --surface: #ffffff; /* Clean white card */
+  --surface-raised: #e2e8f0;
+  --surface-hover: #cbd5e1;
+
+  --foreground: #0f172a; /* Deep navy text */
+  --foreground-muted: #475569; /* Balanced slate */
+  --foreground-subtle: #64748b;
+
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  --focus-ring: #0284c7;
+
+  --navbar-bg: rgba(248, 250, 252, 0.85);
+  --navbar-border: rgba(203, 213, 225, 0.7);
+  --route-glow-bottom: #0891b2; /* cyan */
+  --route-glow-mid: #2563eb;    /* bright blue */
+  --route-glow-top: #1e40af;    /* deep blue */
+
+  /* ── Depth / glow ──────────────────────────────────────────────────────── */
+  --glow-primary-soft: 0 0 25px rgba(37, 99, 235, 0.18);
+  --glow-primary-strong: 0 0 45px rgba(37, 99, 235, 0.28);
+  --glow-secondary-soft: 0 0 25px rgba(217, 119, 6, 0.16);
+}
+
+:root {
 
   /* ── Semantic status ───────────────────────────────────────────────────── */
   --success: #34d399;
