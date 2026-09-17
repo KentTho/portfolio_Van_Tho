@@ -9,7 +9,12 @@
 > `portfolio-van-tho.vercel.app`, post-merge smoke green). **V2 public visual — vivid foundation (substrate +
 > cinematic Hero video + global nav/motion + replayable reveal) = MERGED + PRODUCTION VERIFIED** (`main` @
 > `51b17bc`, PR #15; prod `/vi` `/en` 200 + Hero video 200, no phone, admin deny) — production-serving, 85 band;
-> Projects V2 + Skills V2 redesign still pending. **100% is still not reached** — it requires
+> Projects V2 + Skills V2 redesign still pending. **V2 Engineering Journey + light/dark theme system =
+> MERGED + PRODUCTION VERIFIED** (`main` @ `bc676dd`, PR #17; prod `/vi` `/en` 200, theme-toggle + favicon
+> live, 0 leak, admin gated). ⚠️ Light mode is LIVE but OWNER-REVIEW-PENDING (dark-hardcoded accents need a
+> visual pass); the Journey visual will be replaced by the V3 Ariyana rebase (`feat/v3-ariyana-visual-rebase`
+> baselined at `bc676dd`). e2e:public 9/11 (2 scroll-spy failures = Journey-layout; CI does not run e2e).
+> **100% is still not reached** — it requires
 > monitoring + rollback + observability, which are NOT yet in place (Owner-deferred, Wave 07/10). So layers
 > that are production-serving sit in the **85 band**, not 100. Two scopes are tracked separately below:
 > **V1_PRODUCT_SCOPE** (recruiter-facing portfolio — CLOSED) vs **LONG_TERM_PLATFORM_ROADMAP** (observability,
