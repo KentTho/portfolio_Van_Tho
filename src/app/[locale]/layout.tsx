@@ -8,6 +8,7 @@ import { CursorHalo } from "@/components/public/motion/cursor-halo";
 import { IntroCurtain } from "@/components/public/motion/intro-curtain";
 import { PublicHeader, type NavItem } from "@/components/public/public-header";
 import { PublicFooter } from "@/components/public/public-footer";
+import { ThemeProvider } from "@/components/theme/theme-context";
 
 // Public data now comes from the live Neon read model, so the [locale] subtree renders
 // on demand (revalidated per request) rather than at build. This keeps the build secret-free
@@ -43,22 +44,24 @@ export default async function LocaleLayout({
   ];
 
   return (
-    <div lang={locale} className="flex min-h-full flex-col">
-      <CosmicBackground />
-      <CursorHalo />
-      <IntroCurtain name={brand} />
-      <PublicHeader
-        locale={locale}
-        brand={brand}
-        items={nav}
-        switchLanguageLabel={dict.actions.switchLanguage}
-        openLabel={dict.actions.openMenu}
-        closeLabel={dict.actions.closeMenu}
-      />
-      <main id="main-content" className="flex-1">
-        {children}
-      </main>
-      <PublicFooter profile={profile} locale={locale} dict={dict} />
-    </div>
+    <ThemeProvider>
+      <div lang={locale} className="flex min-h-full flex-col">
+        <CosmicBackground />
+        <CursorHalo />
+        <IntroCurtain name={brand} />
+        <PublicHeader
+          locale={locale}
+          brand={brand}
+          items={nav}
+          switchLanguageLabel={dict.actions.switchLanguage}
+          openLabel={dict.actions.openMenu}
+          closeLabel={dict.actions.closeMenu}
+        />
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
+        <PublicFooter profile={profile} locale={locale} dict={dict} />
+      </div>
+    </ThemeProvider>
   );
 }

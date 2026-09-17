@@ -157,22 +157,33 @@ export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps
             <ul className="flex flex-wrap items-center justify-center gap-2">
               {channels.map((c) => (
                 <li key={c.href}>
-                  <a
-                    href={c.href}
-                    target={c.kind === "email" ? undefined : "_blank"}
-                    rel={c.kind === "email" ? undefined : "noopener noreferrer"}
-                    className="group inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-surface/40 px-4 text-sm text-fg-muted transition-colors hover:border-brand-primary-soft/50 hover:text-brand-primary-soft focus-visible:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  >
-                    <ChannelIcon kind={c.kind} />
-                    {c.label}
-                    {c.kind !== "email" && (
-                      <ArrowUpRight
-                        size={13}
-                        aria-hidden
-                        className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                      />
-                    )}
-                  </a>
+                  {c.href === "#linkedin-pending" ? (
+                    <div
+                      title="LinkedIn profile URL to be provided by Owner"
+                      className="group inline-flex min-h-11 items-center gap-2 rounded-full border border-border/60 bg-surface/30 px-4 text-sm text-fg-muted/70 cursor-default"
+                    >
+                      <ChannelIcon kind={c.kind} />
+                      {c.label}
+                      <span className="text-[10px] font-mono tracking-wider opacity-60">(Pending)</span>
+                    </div>
+                  ) : (
+                    <a
+                      href={c.href}
+                      target={c.kind === "email" ? undefined : "_blank"}
+                      rel={c.kind === "email" ? undefined : "noopener noreferrer"}
+                      className="group inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-surface/40 px-4 text-sm text-fg-muted transition-colors hover:border-brand-primary-soft/50 hover:text-brand-primary-soft focus-visible:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <ChannelIcon kind={c.kind} />
+                      {c.label}
+                      {c.kind !== "email" && (
+                        <ArrowUpRight
+                          size={13}
+                          aria-hidden
+                          className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        />
+                      )}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>

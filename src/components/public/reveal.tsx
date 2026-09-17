@@ -46,13 +46,12 @@ export function Reveal({
   const reduced = useReducedMotionSafe();
   const Tag = as === "li" ? motion.li : motion.div;
 
-  // Custom hysteresis hooks for enter/exit (replaces whileInView with once: true)
-  // approx heuristic based on amount
-  const marginOffset = Math.max(0, Math.min(40, (1 - amount) * 100));
+  // Natural viewport threshold scaled smoothly with amount
+  const enterOffset = Math.round(Math.max(6, Math.min(18, (1 - amount) * 16)));
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { ref, hasEntered } = useReplayableReveal<any>(
-    `-${marginOffset}% 0px -${marginOffset}% 0px`, // Enter threshold
-    "20% 0px 20% 0px" // Exit arm threshold
+    `-${enterOffset}% 0px -${enterOffset + 2}% 0px`, // Enter threshold (fires cleanly when entering viewport)
+    "25% 0px 25% 0px"    // Exit arm threshold (stays settled until pushed comfortably offscreen)
   );
 
   if (reduced) {

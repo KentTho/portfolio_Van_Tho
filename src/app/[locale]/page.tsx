@@ -78,12 +78,26 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
   if (!contactChannels.some((s) => s.kind === "github" || s.kind === "source")) {
     contactChannels.push({ kind: "github", label: "GitHub", href: SITE.repositoryUrl });
   }
+  if (SITE.linkedinUrl && !contactChannels.some((s) => s.kind === "linkedin")) {
+    contactChannels.push({
+      kind: "linkedin",
+      label: "LinkedIn",
+      href: SITE.linkedinUrl,
+    });
+  }
 
   // Hero social rail — real socials only (resume excluded: PENDING_PUBLIC_SAFE_RESUME).
   // Guarantee a GitHub anchor via the real repository link if the profile has none.
   const heroSocials = profile.socials.filter((s) => s.kind !== "resume");
   if (!heroSocials.some((s) => s.kind === "github" || s.kind === "source")) {
     heroSocials.push({ kind: "github", label: "GitHub", href: SITE.repositoryUrl });
+  }
+  if (SITE.linkedinUrl && !heroSocials.some((s) => s.kind === "linkedin")) {
+    heroSocials.push({
+      kind: "linkedin",
+      label: "LinkedIn",
+      href: SITE.linkedinUrl,
+    });
   }
 
   const personLd = {

@@ -151,18 +151,16 @@ export function CosmicBackground() {
       )}
 
       {/* Scene motifs — one is emphasised per scene (opacity crossfade). */}
-      {/* Projects: technical perspective plane */}
+      {/* Projects: technical spatial plane without tilted road transform */}
       <div
         className="vivid-grid absolute inset-x-0 bottom-0 top-1/3 transition-opacity duration-[1000ms] [transition-timing-function:var(--ease-scene-focus)]"
         style={{
-          opacity: scene === "projects" ? 0.5 : 0,
+          opacity: scene === "projects" ? 0.35 : 0,
           backgroundImage:
-            "linear-gradient(color-mix(in oklab, var(--brand-primary-soft) 22%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklab, var(--brand-primary-soft) 22%, transparent) 1px, transparent 1px)",
+            "linear-gradient(color-mix(in oklab, var(--brand-primary-soft) 18%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in oklab, var(--brand-primary-soft) 18%, transparent) 1px, transparent 1px)",
           backgroundSize: "64px 64px",
-          maskImage: "radial-gradient(70% 60% at 62% 30%, #000 10%, transparent 80%)",
-          WebkitMaskImage: "radial-gradient(70% 60% at 62% 30%, #000 10%, transparent 80%)",
-          transform: "perspective(700px) rotateX(58deg)",
-          transformOrigin: "center top",
+          maskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, #000 10%, transparent 80%)",
+          WebkitMaskImage: "radial-gradient(ellipse 70% 60% at 50% 50%, #000 10%, transparent 80%)",
         }}
       />
       {/* Career: vertical refractive channel */}
@@ -195,14 +193,14 @@ export function CosmicBackground() {
         }}
       />
 
-      {/* Brand PRISM artifact — the signature chromatic optical anchor.
-          Per Owner visual directive: completely omitted in 'home' scene to eliminate any rectangular shards/boxes behind the hero portrait. Fades out at footer. */}
+      {/* Organic Luminous Aura (No rectangles, no road, purely circular/diffuse)
+          Omitted in 'home' scene to preserve clean hero atmosphere. Fades out at footer. */}
       {scene !== "home" && (
         <div
           className={`absolute h-[34rem] w-[34rem] transition-[transform,opacity] duration-[1200ms] [transition-timing-function:var(--ease-scene-focus)] ${cfg.prism}`}
           style={{ opacity: scene === "footer" ? 0.12 : 0.85 }}
         >
-          <BrandPrism still={still} />
+          <LuminousAura still={still} />
         </div>
       )}
 
@@ -222,50 +220,45 @@ export function CosmicBackground() {
   );
 }
 
-/** Brand-recoloured chromatic prism (CSS). Rebuilt as a sharp optical field
- *  (refractive fragments + linear gradient masks) rather than a blurry blob.
- *  Uses restrained gold and cool blue. One slow shimmer nudges the fragments;
- *  off under reduced motion + on mobile (CSS). */
-function BrandPrism({ still }: { readonly still: boolean }) {
-  const float1 = still ? undefined : { y: [-8, 8, -8], rotate: [-2, 2, -2] };
-  const float2 = still ? undefined : { y: [6, -6, 6], rotate: [1, -1, 1] };
-  const pulse = still ? undefined : { opacity: [0.4, 0.8, 0.4] };
+/**
+ * Organic Luminous Aura — purely circular and diffuse optical field.
+ * Completely eliminates any rectangles, capsule segments, borders, or sharp edges.
+ */
+function LuminousAura({ still }: { readonly still: boolean }) {
+  const float1 = still ? undefined : { scale: [1, 1.08, 1], x: [-10, 10, -10], y: [-8, 8, -8] };
+  const float2 = still ? undefined : { scale: [1.05, 0.96, 1.05], x: [8, -8, 8], y: [6, -6, 6] };
+  const pulse = still ? undefined : { opacity: [0.5, 0.85, 0.5] };
 
   return (
-    <div className="vivid-prism relative h-full w-full opacity-75 mix-blend-screen">
-      {/* Primary Optical Shard — crisp glass plane */}
+    <div className="vivid-prism relative h-full w-full opacity-80 pointer-events-none">
+      {/* Primary Circular Aura — deep navy / cyan blend */}
       <motion.div
-        className="absolute left-[20%] top-[20%] h-[60%] w-[60%] -rotate-12 rounded-[2rem] border border-brand-primary/20 backdrop-blur-lg"
+        className="absolute inset-[15%] rounded-full blur-[80px]"
         style={{
-          background: "linear-gradient(135deg, color-mix(in oklab, var(--brand-primary) 12%, transparent), transparent 60%)",
-          boxShadow: "inset 1px 1px 0 color-mix(in oklab, var(--brand-primary-soft) 30%, transparent)",
-          maskImage: "linear-gradient(135deg, #000 20%, transparent 80%)",
-          WebkitMaskImage: "linear-gradient(135deg, #000 20%, transparent 80%)",
+          background: "radial-gradient(circle at 45% 45%, color-mix(in oklab, var(--brand-primary-soft) 28%, transparent), color-mix(in oklab, var(--brand-primary) 18%, transparent) 50%, transparent 75%)",
         }}
         animate={float1}
-        transition={{ duration: 9, ease: "easeInOut", repeat: Infinity }}
+        transition={{ duration: 10, ease: "easeInOut", repeat: Infinity }}
       />
 
-      {/* Secondary Refractive Fragment — restrained gold accent */}
+      {/* Secondary Circular Halo — restrained gold/cyan fringe */}
       <motion.div
-        className="absolute left-[35%] top-[35%] h-[45%] w-[45%] rotate-6 rounded-[1.5rem] border border-brand-secondary/15 backdrop-blur-md"
+        className="absolute inset-[25%] rounded-full blur-[60px]"
         style={{
-          background: "linear-gradient(225deg, color-mix(in oklab, var(--brand-secondary) 8%, transparent), transparent 70%)",
-          maskImage: "linear-gradient(225deg, #000 30%, transparent 90%)",
-          WebkitMaskImage: "linear-gradient(225deg, #000 30%, transparent 90%)",
+          background: "radial-gradient(circle at 55% 55%, color-mix(in oklab, var(--brand-secondary) 14%, transparent), color-mix(in oklab, var(--brand-primary) 12%, transparent) 45%, transparent 70%)",
         }}
         animate={float2}
-        transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, delay: 0.5 }}
+        transition={{ duration: 8, ease: "easeInOut", repeat: Infinity, delay: 0.5 }}
       />
 
-      {/* Chromatic Edge / Light Streak — intersecting the fragments */}
+      {/* Soft central radiant pulse */}
       <motion.div
-        className="absolute left-[45%] top-[15%] h-[70%] w-px rotate-[35deg]"
+        className="absolute inset-[35%] rounded-full blur-[40px]"
         style={{
-          background: "linear-gradient(to bottom, transparent, var(--brand-primary-soft) 40%, var(--brand-secondary) 60%, transparent)",
+          background: "radial-gradient(circle at 50% 50%, color-mix(in oklab, var(--brand-primary-soft) 25%, transparent), transparent 60%)",
         }}
         animate={pulse}
-        transition={{ duration: 5, ease: "easeInOut", repeat: Infinity }}
+        transition={{ duration: 6, ease: "easeInOut", repeat: Infinity }}
       />
     </div>
   );

@@ -8,6 +8,7 @@ import { AnimatePresence, motion } from "motion/react";
 import type { Locale } from "@/shared/i18n";
 import { LanguageSwitcher } from "@/components/public/language-switcher";
 import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 export interface NavItem {
   readonly href: string;
@@ -45,6 +46,7 @@ const idOf = (href: string) => href.split("#")[1] ?? "";
  * dead-zone; Contact stays active through the footer). Mobile keeps an explicit
  * icon + full-label drawer (no icon-only mystery menu). Reduced-motion safe.
  */
+
 export function PublicHeader({
   locale,
   brand,
@@ -57,7 +59,18 @@ export function PublicHeader({
   const isLanding = pathname === `/${locale}`;
   const [open, setOpen] = useState(false);
   const [activeId, setActiveId] = useState("");
+  const [scrolled, setScrolled] = useState(false);
   const reduced = useReducedMotionSafe();
+
+  // Scroll listener for translucent navbar transition
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 30);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Scroll-spy: one observer, all six blocks. Only on the landing page.
   useEffect(() => {
@@ -86,9 +99,15 @@ export function PublicHeader({
   const atHome = isLanding && activeId === "";
 
   return (
-    <header className="sticky top-0 z-50 pointer-events-none w-full transition-all duration-300">
+    <header
+      className={`sticky top-0 z-50 pointer-events-none w-full transition-all duration-300 ${
+        scrolled
+          ? "bg-[var(--navbar-bg)] backdrop-blur-md border-b border-[var(--navbar-border)] shadow-[0_4px_30px_rgba(0,0,0,0.12)]"
+          : "bg-transparent border-b border-transparent"
+      }`}
+    >
       {/*
-        Header shell is completely transparent to avoid a full-width colored bar seam.
+        Header shell is transparent at Hero to avoid a full-width colored bar seam.
         pointer-events-none allows clicks to pass through to the active scene below,
         while pointer-events-auto on the inner container restores interactivity for nav items.
       */}
@@ -151,10 +170,12 @@ export function PublicHeader({
           })}
           <span className="mx-1 h-4 w-px bg-border" aria-hidden />
           <LanguageSwitcher locale={locale} label={switchLanguageLabel} />
+          <ThemeToggle />
         </nav>
 
         {/* Mobile controls */}
         <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
           <LanguageSwitcher locale={locale} label={switchLanguageLabel} />
           <button
             type="button"
@@ -175,7 +196,7 @@ export function PublicHeader({
           <motion.nav
             id="mobile-nav"
             aria-label="Mobile"
-            className="pointer-events-auto border-t border-border bg-canvas md:hidden"
+            className="pointer-events-auto border-t border-[var(--navbar-border)] bg-[var(--navbar-bg)] backdrop-blur-xl md:hidden"
             initial={reduced ? false : { height: 0, opacity: 0 }}
             animate={reduced ? {} : { height: "auto", opacity: 1 }}
             exit={reduced ? {} : { height: 0, opacity: 0 }}

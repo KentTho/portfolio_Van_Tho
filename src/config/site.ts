@@ -12,6 +12,8 @@ export const SITE = {
   url: publicEnv.NEXT_PUBLIC_SITE_URL,
   defaultLocale: publicEnv.NEXT_PUBLIC_DEFAULT_LOCALE,
   repositoryUrl: "https://github.com/KentTho/portfolio_Van_Tho",
+  /** Configurable LinkedIn URL — populated when Owner supplies the link */
+  linkedinUrl: process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "",
 } as const;
 
 export type Site = typeof SITE;

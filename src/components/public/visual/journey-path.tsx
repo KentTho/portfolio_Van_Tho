@@ -66,34 +66,49 @@ export function JourneyPath({ containerRef }: JourneyPathProps) {
         <defs>
           {/* Vertical Gradient Glow: TOP (deep blue) -> MIDDLE (bright blue) -> BOTTOM (cyan / turquoise) */}
           <linearGradient id={`${pfx}route-glow-grad`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#1d4ed8" /> {/* Top: Deep Blue */}
-            <stop offset="48%" stopColor="#0ea5e9" /> {/* Middle: Bright Blue */}
+            <stop offset="0%" stopColor="#1e40af" /> {/* Top: Deep Blue */}
+            <stop offset="45%" stopColor="#0284c7" /> {/* Middle: Bright Blue */}
             <stop offset="100%" stopColor="#06b6d4" /> {/* Bottom: Cyan / Turquoise */}
           </linearGradient>
 
           {/* Soft Energy Core Gradient */}
           <linearGradient id={`${pfx}route-core-grad`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#3b82f6" />
-            <stop offset="50%" stopColor="#38bdf8" />
+            <stop offset="48%" stopColor="#38bdf8" />
             <stop offset="100%" stopColor="#22d3ee" />
           </linearGradient>
 
           {/* Forward-only Energy Packet Gradient */}
           <linearGradient id={`${pfx}packet-grad`} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="transparent" />
-            <stop offset="40%" stopColor="#0ea5e9" stopOpacity="0.4" />
-            <stop offset="75%" stopColor="#38bdf8" stopOpacity="0.9" />
-            <stop offset="95%" stopColor="#bae6fd" stopOpacity="1" />
+            <stop offset="35%" stopColor="#0284c7" stopOpacity="0.4" />
+            <stop offset="70%" stopColor="#38bdf8" stopOpacity="0.9" />
+            <stop offset="92%" stopColor="#bae6fd" stopOpacity="1" />
             <stop offset="100%" stopColor="#ffffff" stopOpacity="1" />
           </linearGradient>
 
-          {/* Blur Filters */}
-          <filter id={`${pfx}glow-ambient`} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation={isMobile ? "4" : "7"} result="blur" />
-          </filter>
-          <filter id={`${pfx}glow-core`} x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation={isMobile ? "1.5" : "2.5"} result="blur" />
-          </filter>
+          {/* Terminal Arrowhead Marker — compact glowing arrowhead aligned with curve tangent */}
+          <marker
+            id={`${pfx}arrowhead`}
+            viewBox="0 0 12 12"
+            refX="7"
+            refY="6"
+            markerWidth={isMobile ? "7" : "9"}
+            markerHeight={isMobile ? "7" : "9"}
+            orient="auto"
+          >
+            {/* Outer halo */}
+            <path
+              d="M 1 2 L 10 6 L 1 10 L 3.5 6 Z"
+              fill="#0ea5e9"
+              opacity="0.85"
+            />
+            {/* Sharp luminous core */}
+            <path
+              d="M 2 3.2 L 8.5 6 L 2 8.8 L 3.8 6 Z"
+              fill="#cffafe"
+            />
+          </marker>
 
           {/* Scroll Progress Mask for dynamic route unlocking */}
           <mask id={`${pfx}scroll-mask`}>
@@ -101,7 +116,7 @@ export function JourneyPath({ containerRef }: JourneyPathProps) {
               d={d}
               fill="none"
               stroke="white"
-              strokeWidth={isMobile ? "40" : "70"}
+              strokeWidth={isMobile ? "60" : "100"}
               strokeLinecap="round"
               vectorEffect="non-scaling-stroke"
               style={{ pathLength: pathLengthProgress }}
@@ -109,73 +124,80 @@ export function JourneyPath({ containerRef }: JourneyPathProps) {
           </mask>
         </defs>
 
-        {/* ── UNLOCKED GHOST / LATENT ROUTE ─────────────────────────────── */}
-        {/* Subtle dormant path indicating continuity before the energy wave arrives */}
-        <g opacity="0.6">
-          {/* Latent Ambient Aura */}
+        {/* ── LATENT ROUTE (Continuous organic guide without segmented capsules) ── */}
+        <g
+          opacity="0.65"
+          style={{
+            filter: "drop-shadow(0 0 6px rgba(14, 165, 233, 0.45)) drop-shadow(0 0 2px rgba(56, 189, 248, 0.6))",
+          }}
+        >
+          {/* Latent Ambient Glow: continuous soft line */}
           <path
             d={d}
             fill="none"
             stroke={`url(#${pfx}route-glow-grad)`}
-            strokeWidth={isMobile ? "10" : "16"}
-            filter={`url(#${pfx}glow-ambient)`}
-            opacity="0.1"
+            strokeWidth={isMobile ? "3" : "4.5"}
+            opacity="0.5"
             vectorEffect="non-scaling-stroke"
           />
-          {/* Latent Dashed Route */}
+          {/* Latent Dashed Track */}
           <path
             d={d}
             fill="none"
-            stroke="rgba(148, 163, 184, 0.22)"
+            stroke="rgba(203, 213, 225, 0.35)"
             strokeWidth={isMobile ? "1" : "1.2"}
             strokeDasharray={isMobile ? "4 6" : "6 7"}
             vectorEffect="non-scaling-stroke"
           />
         </g>
 
-        {/* ── ACTIVE LUMINOUS ROUTE (Revealed by Scroll Mask) ──────────── */}
-        <g mask={`url(#${pfx}scroll-mask)`}>
-          {/* LAYER A — AMBIENT GLOW: Very wide, high blur, cyan -> bright blue -> deep blue */}
+        {/* ── ACTIVE LUMINOUS ROUTE (Unlocked by Scroll Progress) ────────── */}
+        <g
+          mask={`url(#${pfx}scroll-mask)`}
+          style={{
+            filter: isMobile
+              ? "drop-shadow(0 0 10px rgba(14, 165, 233, 0.85)) drop-shadow(0 0 4px rgba(56, 189, 248, 0.95))"
+              : "drop-shadow(0 0 16px rgba(14, 165, 233, 0.85)) drop-shadow(0 0 6px rgba(56, 189, 248, 0.95)) drop-shadow(0 0 2px rgba(207, 250, 254, 0.9))",
+          }}
+        >
+          {/* LAYER A — AMBIENT GLOW: continuous luminous gradient aura */}
           <path
             d={d}
             fill="none"
             stroke={`url(#${pfx}route-glow-grad)`}
-            strokeWidth={isMobile ? "16" : "30"}
-            filter={`url(#${pfx}glow-ambient)`}
-            opacity="0.34"
-            vectorEffect="non-scaling-stroke"
-          />
-
-          {/* LAYER B — SOFT ENERGY CORE: 5–8px, luminous aura */}
-          <path
-            d={d}
-            fill="none"
-            stroke={`url(#${pfx}route-core-grad)`}
-            strokeWidth={isMobile ? "4.5" : "6.5"}
-            filter={`url(#${pfx}glow-core)`}
-            opacity="0.7"
-            vectorEffect="non-scaling-stroke"
-          />
-
-          {/* LAYER C — MAIN DASHED LINE: THE VISUAL HERO */}
-          {/* 1–2px crisp dashed line in bright white, dash and gap uniform */}
-          <path
-            d={d}
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth={isMobile ? "1.2" : "1.8"}
-            strokeDasharray={isMobile ? "5 6" : "7 7"}
+            strokeWidth={isMobile ? "4" : "6"}
             opacity="0.85"
             vectorEffect="non-scaling-stroke"
           />
 
-          {/* LAYER D — ENERGY PACKET: Forward-only pulse */}
-          {/* Looping continuously in forward direction, never reverses on scroll */}
+          {/* LAYER B — ENERGY CORE: bright cyan/blue core along centerline */}
+          <path
+            d={d}
+            fill="none"
+            stroke={`url(#${pfx}route-core-grad)`}
+            strokeWidth={isMobile ? "2" : "3"}
+            opacity="0.95"
+            vectorEffect="non-scaling-stroke"
+          />
+
+          {/* LAYER C — MAIN DASHED ROUTE: 1-2px, crisp white, THE VISUAL HERO */}
+          <path
+            d={d}
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth={isMobile ? "1.4" : "1.8"}
+            strokeDasharray={isMobile ? "5 6" : "7 7"}
+            opacity="0.95"
+            markerEnd={`url(#${pfx}arrowhead)`}
+            vectorEffect="non-scaling-stroke"
+          />
+
+          {/* LAYER D — ENERGY PACKET: Forward-only pulse, never reverses */}
           <motion.path
             d={d}
             fill="none"
             stroke={`url(#${pfx}packet-grad)`}
-            strokeWidth={isMobile ? "2.2" : "2.8"}
+            strokeWidth={isMobile ? "2.4" : "3.2"}
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
             style={{
@@ -184,7 +206,7 @@ export function JourneyPath({ containerRef }: JourneyPathProps) {
             initial={{ strokeDashoffset: "114%" }}
             animate={{ strokeDashoffset: "-14%" }}
             transition={{
-              duration: isMobile ? 4.5 : 5.6,
+              duration: isMobile ? 4.2 : 5.2,
               ease: "linear",
               repeat: Infinity,
             }}

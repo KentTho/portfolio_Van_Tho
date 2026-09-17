@@ -22,71 +22,77 @@ export function RoadmapRail({ title, description, techIds, availableLogos, compa
 
   return (
     <div className={`relative flex flex-col z-20 items-center text-center max-w-[3rem] md:max-w-[4rem] lg:max-w-xs`}>
-      {/* Node Bloom & Label */}
-      <motion.div 
-        className="flex flex-col items-center gap-2 lg:gap-4 cursor-default"
+      {/* Phase-based Circular Milestone Bloom & Label */}
+      <motion.div
+        className="flex flex-col items-center gap-2 lg:gap-3 cursor-default"
         initial="idle"
         whileInView="active"
-        viewport={{ amount: 0.5, margin: "0px 0px -15% 0px" }} // Safe replay contract via layout shift avoidance
+        viewport={{ amount: 0.4, margin: "0px 0px -10% 0px" }}
       >
-        {/* Phase-based Junction Bloom */}
-        <motion.div 
-          className="relative flex items-center justify-center w-8 h-8 lg:w-12 lg:h-12 rounded-full border border-brand-primary/30 bg-surface/50 backdrop-blur-sm"
+        {/* Circular Milestone Node: Soft outer glow + thin ring + bright core */}
+        <motion.div
+          className="relative flex items-center justify-center w-10 h-10 lg:w-14 lg:h-14 rounded-full border border-cyan-400/40 bg-surface/70 backdrop-blur-md"
           variants={{
-            idle: { borderColor: "rgba(var(--brand-primary-rgb), 0.3)", boxShadow: "0 0 0px 0px transparent" },
-            active: { borderColor: "rgba(var(--brand-primary-rgb), 0.6)", boxShadow: "0 0 20px 2px color-mix(in oklab, var(--brand-primary) 20%, transparent)" }
+            idle: {
+              borderColor: "rgba(56, 189, 248, 0.35)",
+              boxShadow: "0 0 14px 1px rgba(14, 165, 233, 0.2)"
+            },
+            active: {
+              borderColor: "rgba(56, 189, 248, 0.75)",
+              boxShadow: "0 0 28px 4px rgba(14, 165, 233, 0.45)"
+            }
           }}
-          transition={{ duration: 0.7 }}
+          transition={{ duration: 0.6 }}
         >
-          {/* Inner architecture ring */}
-          <div className="absolute inset-0 rounded-full border border-brand-primary/10 m-1" />
-          
-          {/* Gold Handoff Flash (transient) */}
-          <motion.div 
+          {/* Inner architectural ring */}
+          <div className="absolute inset-1 rounded-full border border-brand-primary-soft/30" />
+
+          {/* Subtle gold handoff pulse */}
+          <motion.div
             className="absolute inset-0 rounded-full bg-brand-accent/20"
             variants={{
               idle: { opacity: 0 },
-              active: { opacity: [0, 0.8, 0] }
+              active: { opacity: [0, 0.65, 0] }
             }}
-            transition={{ duration: 1.5, times: [0, 0.2, 1] }}
+            transition={{ duration: 1.4, times: [0, 0.25, 1] }}
           />
-          
-          {/* Hot Core */}
-          <motion.div 
-            className="relative z-10 w-1.5 h-1.5 lg:w-2 lg:h-2 rounded-full bg-brand-primary-soft shadow-[0_0_10px_1px_var(--brand-primary)]"
+
+          {/* Bright Luminous Hot Core */}
+          <motion.div
+            className="relative z-10 w-2.5 h-2.5 lg:w-3.5 lg:h-3.5 rounded-full bg-[#cffafe] shadow-[0_0_12px_2px_#38bdf8]"
             variants={{
-              idle: { backgroundColor: "var(--brand-primary-soft)", boxShadow: "0 0 10px 1px var(--brand-primary)" },
-              active: { backgroundColor: "#cffafe", boxShadow: "0 0 15px 3px var(--brand-primary)" }
+              idle: { scale: 0.9, backgroundColor: "#38bdf8", boxShadow: "0 0 10px 1px rgba(56,189,248,0.7)" },
+              active: { scale: 1.15, backgroundColor: "#ffffff", boxShadow: "0 0 18px 4px rgba(56,189,248,0.95)" }
             }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.15 }}
           />
         </motion.div>
-        
+
         <div className="hidden lg:block">
-          <h3 className="label-mono text-fg tracking-wider">{title}</h3>
+          <h3 className="font-mono text-sm lg:text-base font-bold tracking-wider text-fg uppercase">{title}</h3>
           {!compact && (
-            <p className="mt-3 text-sm text-fg-muted leading-relaxed">
+            <p className="mt-2 text-xs lg:text-sm text-fg/80 leading-relaxed max-w-[260px]">
               {description}
             </p>
           )}
         </div>
-        
-        {/* Mobile-only title rotated or just tiny */}
+
+        {/* Mobile-only title badge */}
         <div className="lg:hidden mt-2">
-           <h3 className="text-[10px] uppercase font-mono tracking-tighter text-fg-muted opacity-80" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>{title}</h3>
+           <h3 className="text-[11px] font-mono font-bold tracking-tight text-fg-muted uppercase" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>{title}</h3>
         </div>
       </motion.div>
 
       {/* Verified Logos Cluster with Thin Branch Lines */}
-      <motion.div 
+      <motion.div
         className="flex flex-col lg:flex-row flex-wrap gap-3 lg:gap-4 mt-6 lg:mt-8 justify-center relative"
         initial="hidden"
         whileInView="visible"
         viewport={{ amount: 0.3 }} // Replay safely
       >
         {activeTechIds.map((id, index) => (
-          <motion.div 
-            key={id} 
+          <motion.div
+            key={id}
             className="relative flex items-center justify-center group"
             variants={{
               hidden: { opacity: 0, y: 10 },
@@ -96,7 +102,7 @@ export function RoadmapRail({ title, description, techIds, availableLogos, compa
           >
             {/* Secondary Branch Line connecting to node */}
             <div className="hidden lg:block absolute -top-6 left-1/2 w-[1px] h-6 bg-gradient-to-b from-brand-primary/40 to-transparent -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-            
+
             <TechnologyNode id={id as TechId} delay={index * 0.1} />
           </motion.div>
         ))}

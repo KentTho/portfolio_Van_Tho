@@ -213,15 +213,25 @@ export function HeroSection({
         >
           {socials.map((s) => (
             <motion.li key={s.href} variants={reduced ? undefined : rise} className="pointer-events-auto">
-              <a
-                href={s.href}
-                target={s.kind === "email" ? undefined : "_blank"}
-                rel={s.kind === "email" ? undefined : "noopener noreferrer"}
-                aria-label={s.label}
-                className="group flex h-10 w-10 items-center justify-center rounded-full text-fg-subtle transition-all duration-300 hover:translate-x-1 hover:text-brand-primary-soft focus-visible:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <SocialIcon kind={s.kind} />
-              </a>
+              {s.href === "#linkedin-pending" ? (
+                <div
+                  title="LinkedIn (Sắp cập nhật / URL pending)"
+                  aria-label={`${s.label} (Pending)`}
+                  className="group flex h-10 w-10 items-center justify-center rounded-full text-fg-subtle opacity-50 cursor-default"
+                >
+                  <SocialIcon kind={s.kind} />
+                </div>
+              ) : (
+                <a
+                  href={s.href}
+                  target={s.kind === "email" ? undefined : "_blank"}
+                  rel={s.kind === "email" ? undefined : "noopener noreferrer"}
+                  aria-label={s.label}
+                  className="group flex h-10 w-10 items-center justify-center rounded-full text-fg-subtle transition-all duration-300 hover:translate-x-1 hover:text-brand-primary-soft focus-visible:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  <SocialIcon kind={s.kind} />
+                </a>
+              )}
             </motion.li>
           ))}
           <li aria-hidden className="ml-[19px] mt-1 h-14 w-px bg-gradient-to-b from-border-strong to-transparent" />
@@ -231,18 +241,29 @@ export function HeroSection({
       {/* Mobile social row */}
       {socials.length > 0 && (
         <div className="mx-auto -mt-4 flex max-w-6xl items-center justify-center gap-4 px-6 pb-10 lg:hidden">
-          {socials.map((s) => (
-            <a
-              key={s.href}
-              href={s.href}
-              target={s.kind === "email" ? undefined : "_blank"}
-              rel={s.kind === "email" ? undefined : "noopener noreferrer"}
-              aria-label={s.label}
-              className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-fg-subtle transition-colors hover:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <SocialIcon kind={s.kind} />
-            </a>
-          ))}
+          {socials.map((s) =>
+            s.href === "#linkedin-pending" ? (
+              <div
+                key={s.href}
+                title="LinkedIn (Sắp cập nhật / URL pending)"
+                aria-label={`${s.label} (Pending)`}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-border/50 text-fg-subtle opacity-50 cursor-default"
+              >
+                <SocialIcon kind={s.kind} />
+              </div>
+            ) : (
+              <a
+                key={s.href}
+                href={s.href}
+                target={s.kind === "email" ? undefined : "_blank"}
+                rel={s.kind === "email" ? undefined : "noopener noreferrer"}
+                aria-label={s.label}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-fg-subtle transition-colors hover:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <SocialIcon kind={s.kind} />
+              </a>
+            )
+          )}
         </div>
       )}
 
@@ -301,12 +322,21 @@ function AmbientHeroSubstrate({
         }}
       />
 
-      {/* Ambient lamp: warm incandescent glow meeting cyan atmospheric aura */}
+      {/* Deep Navy / Electric Blue / Cyan unified visual atmosphere */}
       <div
-        className="absolute left-1/2 top-[35%] h-[60vw] w-[60vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[140px] opacity-70"
+        className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.08) 0%, rgba(56, 189, 248, 0.09) 42%, transparent 72%)",
+            "radial-gradient(ellipse 85% 65% at 50% 32%, rgba(14, 165, 233, 0.16) 0%, rgba(30, 64, 175, 0.22) 38%, rgba(11, 19, 38, 0.45) 70%, transparent 100%)",
+        }}
+      />
+
+      {/* Ambient lamp: subtle warm incandescent core meeting cyan atmospheric aura */}
+      <div
+        className="absolute left-1/2 top-[35%] h-[65vw] w-[65vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[130px] opacity-80"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05) 0%, rgba(56, 189, 248, 0.14) 40%, rgba(30, 58, 138, 0.15) 68%, transparent 85%)",
         }}
       />
 
@@ -321,7 +351,7 @@ function AmbientHeroSubstrate({
           loop
           playsInline
           aria-hidden="true"
-          className="h-full w-full object-cover opacity-45 mix-blend-screen select-none"
+          className="h-full w-full object-cover opacity-50 mix-blend-screen select-none"
         >
           <source src="/video/enter_portfolio_micro_workspace_Protocol.mp4" type="video/mp4" />
         </video>
@@ -355,8 +385,8 @@ function AmbientHeroSubstrate({
         ))}
 
       {/* Bottom gradient mask: guarantees 100% seamless transition into background */}
-      <div className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/30 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-canvas via-canvas/85 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/25 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-canvas via-canvas/80 to-transparent" />
     </div>
   );
 }
