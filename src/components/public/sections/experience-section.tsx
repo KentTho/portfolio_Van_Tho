@@ -93,15 +93,34 @@ export function ExperienceSection({ experience, education, locale, t }: CareerSe
   };
 
   return (
-    <section aria-labelledby="career-heading" className="mx-auto w-full max-w-6xl px-6 py-28 lg:py-32">
-      {/* Header — stays stationary while the panel content changes. */}
-      <div className="mx-auto max-w-2xl text-center">
-        <p className="label-mono text-brand-primary-soft">{t.eyebrow}</p>
-        <h2 id="career-heading" className="mt-3 font-display text-h2 font-semibold tracking-tight text-fg">
-          {t.title}
-        </h2>
-        <p className="mx-auto mt-4 max-w-[52ch] text-body text-fg-muted">{t.lead}</p>
-      </div>
+    <section
+      id="career"
+      aria-labelledby="career-heading"
+      className="relative w-full border-t border-white/10 py-24 lg:py-36 overflow-hidden bg-canvas"
+    >
+      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16">
+        {/* Caption Header */}
+        <div className="flex items-center gap-3 mb-10">
+          <span className="caption-pill">
+            <span className="size-1.5 rounded-full bg-brand-primary" />
+            <span>CHRONOLOGY // BACKGROUND</span>
+          </span>
+          <span className="h-px flex-1 bg-white/10" />
+          <span className="font-mono text-xs text-brand-primary-soft uppercase tracking-widest hidden sm:inline-block">
+            04 // TIMELINE
+          </span>
+        </div>
+
+        {/* Header */}
+        <div className="max-w-3xl mb-12">
+          <h2
+            id="career-heading"
+            className="text-4xl sm:text-5xl md:text-6xl font-display uppercase tracking-tight text-fg leading-tight"
+          >
+            {t.title}
+          </h2>
+          <p className="mt-4 text-body-l text-fg-muted">{t.lead}</p>
+        </div>
 
       {/* Tablist — only when BOTH datasets exist. */}
       {hasTabs && (
@@ -169,6 +188,7 @@ export function ExperienceSection({ experience, education, locale, t }: CareerSe
             </div>
           );
         })}
+      </div>
       </div>
     </section>
   );

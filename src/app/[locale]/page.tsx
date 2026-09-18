@@ -4,17 +4,21 @@ import { isLocale, pick } from "@/shared/i18n";
 import { getDictionary } from "@/i18n/dictionary";
 import { getPortfolioRepository } from "@/composition/public-portfolio";
 import { buildLocaleMetadata } from "@/lib/seo";
-import fs from "fs";
-import path from "path";
 import { SITE } from "@/config/site";
 import { JsonLd } from "@/components/public/json-ld";
 import { HeroSection } from "@/components/public/sections/hero-section";
 import { AboutSection } from "@/components/public/sections/about-section";
+import { JourneySection } from "@/components/public/sections/journey-section";
+import { HorizontalTimelineSection } from "@/components/public/sections/horizontal-timeline-section";
 import { FeaturedProjectsSection } from "@/components/public/sections/featured-projects-section";
+import { ShowreelSection } from "@/components/public/sections/showreel-section";
 import { ExperienceSection } from "@/components/public/sections/experience-section";
+import { TechMarqueeSection } from "@/components/public/sections/tech-marquee-section";
 import { TechMatrixSection } from "@/components/public/sections/tech-matrix-section";
+import { CapabilitiesSection } from "@/components/public/sections/capabilities-section";
+import { AchievementsSection } from "@/components/public/sections/achievements-section";
+import { WritingSection } from "@/components/public/sections/writing-section";
 import { ContactCtaSection } from "@/components/public/sections/contact-cta-section";
-import { EngineeringJourney } from "@/components/public/visual/engineering-journey";
 
 export async function generateMetadata({
   params,
@@ -33,12 +37,20 @@ export async function generateMetadata({
 }
 
 /**
- * SINGLE LANDING PAGE — the canonical public experience per locale.
+ * SINGLE LANDING PAGE — Ariyana V3 Canonical Experience (§80).
  *
- * All public content is composed here as anchored sections (#home … #contact).
- * The former /about, /projects, /articles, /resume, /contact routes redirect to
- * these anchors; project/article detail routes are preserved. Data is read live
- * from Neon via the PortfolioRepository port (FULL_LIVE_NEON, no fixture fallback).
+ * Section rhythm and narrative flow:
+ * 1. Identity & Value (Hero)
+ * 2. Profile & Summary (About)
+ * 3. Architecture & Methodology (Journey / Process)
+ * 4. Production Proof & Case Studies (Featured Projects)
+ * 5. Continuous Tech Marquee (Verified Logos)
+ * 6. Career & Verified Education (Experience)
+ * 7. Technology Architecture Matrix (Skills)
+ * 8. Services / Capabilities (Conditional: hidden if 0 rows)
+ * 9. Honors & Certifications (Conditional: hidden if 0 rows)
+ * 10. Technical Writing (Conditional: hidden if 0 rows)
+ * 11. Conversion & Direct Inquiry (Contact CTA)
  */
 export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -54,24 +66,11 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
     repo.listEducation(),
   ]);
 
-  let availableLogos: string[] = [];
-  try {
-    const logosDir = path.join(process.cwd(), "public", "technology-logos");
-    const files = fs.readdirSync(logosDir);
-    availableLogos = files.map((f) => f.split(".")[0] as string);
-  } catch {
-    // Graceful fallback if directory is missing
-  }
-
-  // Graceful empty-state fallbacks (Owner fills the real profile via Admin; these
-  // use established config/dict identity, never fabricated personal claims).
   const heroName = profile.name.trim() || SITE.owner;
   const heroRole = pick(profile.role, locale).trim() || dict.meta.homeTitle;
   const heroHeadline = pick(profile.headline, locale).trim() || dict.meta.homeDescription;
 
-  // Contact — real public email as the primary action + verified professional
-  // channels (GitHub via the real repository link if the profile has none). No
-  // fabricated platforms; resume excluded (PENDING_PUBLIC_SAFE_RESUME).
+  // Contact emails & channels
   const emailSocial = profile.socials.find((s) => s.kind === "email");
   const contactEmail = emailSocial ? { address: emailSocial.label, href: emailSocial.href } : null;
   const contactChannels = profile.socials.filter((s) => s.kind !== "email" && s.kind !== "resume");
@@ -86,8 +85,7 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
     });
   }
 
-  // Hero social rail — real socials only (resume excluded: PENDING_PUBLIC_SAFE_RESUME).
-  // Guarantee a GitHub anchor via the real repository link if the profile has none.
+  // Hero social links
   const heroSocials = profile.socials.filter((s) => s.kind !== "resume");
   if (!heroSocials.some((s) => s.kind === "github" || s.kind === "source")) {
     heroSocials.push({ kind: "github", label: "GitHub", href: SITE.repositoryUrl });
@@ -122,49 +120,57 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       <JsonLd data={personLd} />
       <JsonLd data={websiteLd} />
 
-      <div id="home" className="scroll-mt-20">
-        <HeroSection
-          name={heroName}
-          role={heroRole}
-          headline={heroHeadline}
-          availability={dict.hero.availability}
-          intro={dict.hero.intro}
-          focusLabel={dict.hero.focus}
-          scrollLabel={dict.hero.scroll}
-          primary={{ label: dict.actions.viewProjects, href: `/${locale}#projects` }}
-          secondary={{ label: dict.actions.contactMe, href: `/${locale}#contact` }}
-          socials={heroSocials}
-        />
-      </div>
-
-      <EngineeringJourney
-        locale={locale}
-        dict={dict}
-        availableLogos={availableLogos}
-        aboutNode={
-          <div id="about" className="scroll-mt-20">
-            <AboutSection profile={profile} locale={locale} dict={dict} />
-          </div>
-        }
-        projectsNode={
-          <div id="projects" className="scroll-mt-20">
-            <FeaturedProjectsSection projects={projects} locale={locale} dict={dict} />
-          </div>
-        }
-        careerNode={
-          <div id="career" className="scroll-mt-20">
-            <ExperienceSection experience={experience} education={education} locale={locale} t={dict.career} />
-          </div>
-        }
+      {/* 1. Identity & Value (Hero) */}
+      <HeroSection
+        name={heroName}
+        role={heroRole}
+        headline={heroHeadline}
+        availability={dict.hero.availability}
+        intro={dict.hero.intro}
+        focusLabel={dict.hero.focus}
+        scrollLabel={dict.hero.scroll}
+        primary={{ label: dict.actions.viewProjects, href: `/${locale}#projects` }}
+        secondary={{ label: dict.actions.contactMe, href: `/${locale}#contact` }}
+        socials={heroSocials}
       />
 
+      {/* 2. Profile & Summary (About) */}
+      <AboutSection profile={profile} locale={locale} dict={dict} />
+
+      {/* 3. Architecture & Methodology (Process Steps) */}
+      <JourneySection dict={dict} />
+
+      {/* 4. Evolution & Milestones (Ariyana Horizontal Scrub Timeline) */}
+      <HorizontalTimelineSection dict={dict} />
+
+      {/* 5. Production Proof & Case Studies (Featured Projects) */}
+      <FeaturedProjectsSection projects={projects} locale={locale} dict={dict} />
+
+      {/* 6. Continuous Tech Marquee (Verified Logos) */}
+      <TechMarqueeSection />
+
+      {/* 7. Cinematic Showreel Environment (GEMINI Motion Protocol) */}
+      <ShowreelSection />
+
+      {/* 8. Career & Verified Education (Experience) */}
+      <ExperienceSection experience={experience} education={education} locale={locale} t={dict.career} />
+
+      {/* 7. Technology Architecture Matrix (Skills) */}
       <div id="skills" className="scroll-mt-20">
         <TechMatrixSection groups={groups} locale={locale} dict={dict} />
       </div>
 
-      <div id="contact" className="scroll-mt-20">
-        <ContactCtaSection email={contactEmail} channels={contactChannels} t={dict.contact} />
-      </div>
+      {/* 8. Capabilities / Services (Conditional: hidden if 0 real rows) */}
+      <CapabilitiesSection />
+
+      {/* 9. Honors & Certifications (Conditional: hidden if 0 real rows) */}
+      <AchievementsSection />
+
+      {/* 10. Technical Writing (Conditional: hidden if 0 real rows) */}
+      <WritingSection locale={locale} />
+
+      {/* 11. Conversion & Direct Inquiry (Contact CTA) */}
+      <ContactCtaSection email={contactEmail} channels={contactChannels} t={dict.contact} />
     </>
   );
 }

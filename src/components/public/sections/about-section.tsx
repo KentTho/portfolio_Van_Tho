@@ -2,15 +2,15 @@ import { pick, type Locale } from "@/shared/i18n";
 import type { Dictionary } from "@/i18n/dictionary";
 import type { Profile } from "@/modules/public-portfolio/domain/types";
 import { Reveal } from "@/components/public/reveal";
+import { ArrowUpRight } from "lucide-react";
 
 /**
- * SINGLE LANDING — About (V2). Continuation of the hero's cinematic grammar:
- * the same dark canvas + restrained blue backlight, Syne headline / Inter lead /
- * mono facts. Editorial asymmetry — a narrative statement (left) beside a backlit
- * "identity panel" fact rail (right), vertically centred with generous negative
- * space. Not a card grid, not a lonely text block. Live data only; when the Owner
- * has not authored a summary it falls back to the site's own description (config,
- * never fabricated) and empty facts simply drop out.
+ * Ariyana V3 About Section (§25).
+ * Replaces old card grid with Ariyana editorial grammar:
+ * - Caption-pill with glowing indicator
+ * - Large typographic headline
+ * - Editorial prose narrative
+ * - Clean facts rail with real verified data only (no fake metrics).
  */
 export function AboutSection({
   profile,
@@ -29,54 +29,73 @@ export function AboutSection({
   ].filter((fact) => fact.value.trim().length > 0);
 
   return (
-    <section aria-labelledby="about-heading" className="mx-auto w-full max-w-6xl overflow-x-clip px-6 py-28 lg:py-36">
-      <div className="grid gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16">
-        {/* ── Statement ─────────────────────────────────────────────────── */}
-        <Reveal direction="left" distance={34} className="max-w-xl">
-          <p className="label-mono text-brand-primary-soft">{dict.about.eyebrow}</p>
-          <h2
-            id="about-heading"
-            className="mt-4 font-display text-h2 font-semibold leading-[1.05] tracking-tight text-fg"
-          >
-            {dict.about.headline}
-          </h2>
-          <p className="mt-6 max-w-[46ch] text-body-l leading-relaxed text-fg-muted">{statement}</p>
-        </Reveal>
+    <section
+      id="about"
+      aria-labelledby="about-heading"
+      className="relative w-full border-t border-white/10 py-24 lg:py-36 overflow-hidden"
+    >
+      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16">
+        {/* Caption Header */}
+        <div className="flex items-center gap-3 mb-8">
+          <span className="caption-pill">
+            <span className="size-1.5 rounded-full bg-brand-primary" />
+            <span>INSIDE // ABOUT</span>
+          </span>
+          <span className="h-px flex-1 bg-white/10" />
+          <span className="font-mono text-xs text-brand-primary-soft uppercase tracking-widest hidden sm:inline-block">
+            01 // PROFILE
+          </span>
+        </div>
 
-        {/* ── Identity panel (visual block) — backlit fact rail ─────────── */}
-        {facts.length > 0 && (
-          <Reveal direction="right" distance={34} delay={0.08} className="relative">
-            {/* Restrained blue backlight tying the panel to the hero. */}
-            <div
-              aria-hidden
-              className="absolute -inset-6 -z-10 rounded-[2rem] blur-3xl"
-              style={{
-                background:
-                  "radial-gradient(60% 55% at 70% 20%, color-mix(in oklab, var(--brand-primary) 16%, transparent), transparent 72%)",
-              }}
-            />
-            <div className="relative overflow-hidden rounded-3xl border border-border-strong/70 bg-surface/40 p-8 backdrop-blur-sm sm:p-10" style={{ boxShadow: "inset 0 1px 0 color-mix(in oklab, var(--brand-primary-soft) 12%, transparent)" }}>
-              {/* Orbital echo of the logo — quiet continuity with the hero. */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full border border-brand-primary/12"
-              />
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full border border-brand-secondary/10"
-              />
+        {/* 2-Column Editorial Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Left Headline & Narrative (7 Cols) */}
+          <div className="lg:col-span-7 space-y-6">
+            <Reveal direction="left" distance={24}>
+              <h2
+                id="about-heading"
+                className="text-3xl sm:text-5xl md:text-6xl font-display uppercase tracking-tight text-fg leading-tight"
+              >
+                {dict.about.headline || "DRIVEN BY ENGINEERING RIGOR & PRODUCT CRAFT"}
+              </h2>
+            </Reveal>
 
-              <dl className="relative divide-y divide-border/60">
-                {facts.map((fact) => (
-                  <div key={fact.label} className="flex flex-col gap-1.5 py-5 first:pt-0 last:pb-0">
-                    <dt className="label-mono text-fg-subtle">{fact.label}</dt>
-                    <dd className="font-display text-lg font-medium text-fg">{fact.value}</dd>
+            <Reveal direction="up" distance={20} delay={0.1}>
+              <p className="text-body-l text-fg-muted leading-relaxed max-w-[62ch]">
+                {statement}
+              </p>
+            </Reveal>
+          </div>
+
+          {/* Right Verified Facts Panel (5 Cols) */}
+          {facts.length > 0 && (
+            <div className="lg:col-span-5">
+              <Reveal direction="right" distance={24} delay={0.15}>
+                <div className="rounded-[2rem] border border-white/15 bg-surface/50 p-8 sm:p-10 backdrop-blur-md shadow-2xl relative overflow-hidden">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+                    <span className="font-mono text-xs uppercase tracking-widest text-brand-primary-soft">
+                      CORE SPECIFICATIONS
+                    </span>
+                    <ArrowUpRight className="size-4 text-fg-subtle" />
                   </div>
-                ))}
-              </dl>
+
+                  <dl className="space-y-6">
+                    {facts.map((fact) => (
+                      <div key={fact.label} className="border-b border-white/5 pb-4 last:border-b-0 last:pb-0">
+                        <dt className="font-mono text-xs uppercase tracking-wider text-fg-subtle mb-1">
+                          {fact.label}
+                        </dt>
+                        <dd className="font-display text-xl text-fg tracking-tight">
+                          {fact.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              </Reveal>
             </div>
-          </Reveal>
-        )}
+          )}
+        </div>
       </div>
     </section>
   );

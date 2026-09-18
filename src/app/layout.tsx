@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Syne, JetBrains_Mono } from "next/font/google";
+import { Inter, Syne, JetBrains_Mono, Bebas_Neue } from "next/font/google";
 import { SITE } from "@/config/site";
 import { SkipLink } from "@/components/accessibility/skip-link";
 import "./globals.css";
@@ -7,6 +7,13 @@ import "./globals.css";
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
   variable: "--font-inter",
+  display: "swap",
+});
+
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-bebas",
   display: "swap",
 });
 
@@ -41,7 +48,7 @@ export default function RootLayout({
   return (
     <html
       lang={SITE.defaultLocale}
-      className={`${inter.variable} ${syne.variable} ${mono.variable} h-full antialiased`}
+      className={`${inter.variable} ${bebasNeue.variable} ${syne.variable} ${mono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

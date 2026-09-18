@@ -71,7 +71,11 @@ const eslintConfig = defineConfig([
     ".understand-anything/**",
     "three.js/**",
     "vivid_co/**",
+    "ariyana-website-template/**",
+    "scratch/**",
     "docs/**",
+    ".agent/**",
+    ".agents/**",
   ]),
 ]);
 

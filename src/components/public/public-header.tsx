@@ -3,12 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, UserRound, FolderKanban, Briefcase, Code2, Mail, type LucideIcon } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
+import { Menu } from "lucide-react";
 import type { Locale } from "@/shared/i18n";
 import { LanguageSwitcher } from "@/components/public/language-switcher";
-import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
+import { V3OverlayMenu } from "@/components/public/v3-overlay-menu";
 
 export interface NavItem {
   readonly href: string;
@@ -24,55 +23,41 @@ interface PublicHeaderProps {
   readonly closeLabel: string;
 }
 
-/** Section id → semantic icon (adapted, not copied, from Menu-Update). */
-const SECTION_ICON: Record<string, LucideIcon> = {
-  about: UserRound,
-  projects: FolderKanban,
-  career: Briefcase,
-  skills: Code2,
-  contact: Mail,
-};
 const idOf = (href: string) => href.split("#")[1] ?? "";
 
 /**
- * COSMIC ENGINEERING EDITORIAL — Public Header (V2 global nav).
- *
- * Precision-instrument navigation adapted from Menu-Update: each section is a
- * compact icon capsule that expands to [icon + label] when it is the ACTIVE
- * section (always) or on hover/focus (temporary). Brand = Home (subtle active
- * treatment at the top). Layout-stable — the label expands via a grid-column
- * transition inside the capsule (no header CLS, brand/locale never jump). One
- * IntersectionObserver drives the active section across all six blocks (no
- * dead-zone; Contact stays active through the footer). Mobile keeps an explicit
- * icon + full-label drawer (no icon-only mystery menu). Reduced-motion safe.
+ * Ariyana V3 Navigation Header (§19).
+ * Features a clean, floating wide top-bar with active dot indicators,
+ * direct action toggles, and an Ariyana-style full-canvas overlay menu trigger.
  */
-
 export function PublicHeader({
   locale,
   brand,
   items,
   switchLanguageLabel,
   openLabel,
-  closeLabel,
 }: PublicHeaderProps) {
   const pathname = usePathname();
   const isLanding = pathname === `/${locale}`;
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [activeId, setActiveId] = useState("");
   const [scrolled, setScrolled] = useState(false);
-  const reduced = useReducedMotionSafe();
 
-  // Scroll listener for translucent navbar transition
+  // Scroll listener for translucent navbar transition and bottom-of-page detection
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30);
+      const isBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 80;
+      if (isBottom) {
+        setActiveId("contact");
+      }
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Scroll-spy: one observer, all six blocks. Only on the landing page.
+  // Scroll-spy observer for section anchors
   useEffect(() => {
     if (!isLanding) return;
     const targets = items
@@ -88,146 +73,122 @@ export function PublicHeader({
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (visible[0]) setActiveId(visible[0].target.id);
       },
-      { rootMargin: "-40% 0px -55% 0px", threshold: [0, 0.5, 1] },
+      { rootMargin: "-30% 0px -50% 0px", threshold: [0, 0.5, 1] },
     );
     targets.forEach((t) => observer.observe(t));
     return () => observer.disconnect();
   }, [isLanding, items]);
 
   const isActive = (href: string) => isLanding && idOf(href) === activeId && activeId !== "";
-  // At the top / Hero (no section active) the brand carries the Home orientation.
   const atHome = isLanding && activeId === "";
 
   return (
-    <header
-      className={`sticky top-0 z-50 pointer-events-none w-full transition-all duration-300 ${
-        scrolled
-          ? "bg-[var(--navbar-bg)] backdrop-blur-md border-b border-[var(--navbar-border)] shadow-[0_4px_30px_rgba(0,0,0,0.12)]"
-          : "bg-transparent border-b border-transparent"
-      }`}
-    >
-      {/*
-        Header shell is transparent at Hero to avoid a full-width colored bar seam.
-        pointer-events-none allows clicks to pass through to the active scene below,
-        while pointer-events-auto on the inner container restores interactivity for nav items.
-      */}
-      <div className="pointer-events-auto mx-auto flex h-[68px] w-full max-w-6xl items-center justify-between px-6">
-        {/* Brand = Home */}
-        <Link
-          href={`/${locale}`}
-          aria-current={atHome ? "page" : undefined}
-          className="group font-display text-base font-bold tracking-tight text-fg transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-        >
-          {brand}
-          <span
-            className={`ml-[3px] transition-all duration-300 ${atHome ? "text-brand-primary-soft" : "text-accent"}`}
-            style={atHome ? { textShadow: "var(--glow-primary-soft)" } : undefined}
-            aria-hidden
+    <>
+      <header
+        className={`sticky top-0 z-40 w-full transition-all duration-300 ${
+          scrolled
+            ? "bg-canvas/85 backdrop-blur-xl border-b border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]"
+            : "bg-transparent border-b border-transparent"
+        }`}
+      >
+        <div className="mx-auto flex h-[72px] w-full max-w-[1680px] items-center justify-between px-6 md:px-12 lg:px-16">
+          {/* Ariyana-style minimal Brand Logo */}
+          <Link
+            href={`/${locale}`}
+            aria-current={atHome ? "page" : undefined}
+            className="group flex items-center gap-2 font-mono text-sm tracking-wider uppercase text-fg hover:text-brand-primary-soft transition-colors"
           >
-            .
-          </span>
-        </Link>
+            <span className="text-brand-primary font-bold">{"//"}</span>
+            <span className="font-display text-lg tracking-tight font-normal text-fg">
+              {brand}
+            </span>
+          </Link>
 
-        {/* Desktop nav — compact/expanded capsules */}
-        <nav aria-label="Primary" className="hidden items-center gap-1.5 md:flex">
-          {items.map((item) => {
-            const active = isActive(item.href);
-            const Icon = SECTION_ICON[idOf(item.href)] ?? UserRound;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-label={item.label}
-                aria-current={active ? "location" : undefined}
-                className={`group relative flex h-9 items-center rounded-full border px-2.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas ${
-                  active
-                    ? "border-brand-primary-soft/40 bg-brand-primary/10 text-brand-primary-soft"
-                    : "border-transparent text-fg-muted hover:border-border-strong/60 hover:bg-surface/50 hover:text-fg focus-visible:text-fg"
-                }`}
-                style={active ? { boxShadow: "inset 0 0 0 1px color-mix(in oklab, var(--brand-secondary) 12%, transparent)" } : undefined}
-              >
-                <Icon size={18} aria-hidden className="shrink-0" />
-                {/* Label expands via grid-column (0fr→1fr): no width jump elsewhere. */}
-                <span
-                  className={`grid overflow-hidden transition-[grid-template-columns] duration-300 ease-out ${
-                    active
-                      ? "grid-cols-[1fr]"
-                      : "grid-cols-[0fr] group-hover:grid-cols-[1fr] group-focus-visible:grid-cols-[1fr]"
-                  }`}
-                >
-                  <span className="min-w-0 overflow-hidden">
-                    <span
-                      className={`block whitespace-nowrap pl-2 pr-0.5 text-sm font-medium transition-opacity duration-300 ${
-                        active ? "opacity-100" : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
-                      }`}
-                    >
-                      {item.label}
-                    </span>
-                  </span>
-                </span>
-              </Link>
-            );
-          })}
-          <span className="mx-1 h-4 w-px bg-border" aria-hidden />
-          <LanguageSwitcher locale={locale} label={switchLanguageLabel} />
-          <ThemeToggle />
-        </nav>
-
-        {/* Mobile controls */}
-        <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
-          <LanguageSwitcher locale={locale} label={switchLanguageLabel} />
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? closeLabel : openLabel}
-            className="grid h-9 w-9 place-items-center rounded-md border border-border text-fg-muted transition-colors hover:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {open ? <X size={18} aria-hidden /> : <Menu size={18} aria-hidden />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile drawer — explicit icon + full label */}
-      <AnimatePresence>
-        {open && (
-          <motion.nav
-            id="mobile-nav"
-            aria-label="Mobile"
-            className="pointer-events-auto border-t border-[var(--navbar-border)] bg-[var(--navbar-bg)] backdrop-blur-xl md:hidden"
-            initial={reduced ? false : { height: 0, opacity: 0 }}
-            animate={reduced ? {} : { height: "auto", opacity: 1 }}
-            exit={reduced ? {} : { height: 0, opacity: 0 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <ul className="mx-auto flex w-full max-w-6xl flex-col gap-1 px-6 py-4">
+          {/* Desktop quick navigation */}
+          <nav aria-label="Primary" className="hidden lg:flex items-center gap-8">
+            <div className="flex items-center gap-8">
               {items.map((item) => {
                 const active = isActive(item.href);
-                const Icon = SECTION_ICON[idOf(item.href)] ?? UserRound;
                 return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      onClick={() => setOpen(false)}
-                      aria-current={active ? "location" : undefined}
-                      className={`flex min-h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    aria-current={active ? "location" : undefined}
+                    className="group relative flex items-center gap-2.5 py-1 text-xs font-mono tracking-widest uppercase"
+                  >
+                    {/* Ariyana Ring Indicator */}
+                    <span
+                      className={`size-2 rounded-full border transition-all duration-300 ${
                         active
-                          ? "bg-brand-primary/10 text-brand-primary-soft"
-                          : "text-fg-muted hover:bg-elevated/60 hover:text-fg"
+                          ? "border-brand-primary bg-brand-primary shadow-[0_0_12px_rgba(0,240,255,0.7)]"
+                          : "border-white/30 bg-transparent group-hover:border-brand-primary-soft"
                       }`}
-                    >
-                      <Icon size={18} aria-hidden className="shrink-0" />
-                      {item.label}
-                    </Link>
-                  </li>
+                    />
+                    {/* Ariyana Roll-up Text */}
+                    <span className="relative h-4 overflow-hidden block">
+                      <span className="block transition-transform duration-300 ease-out group-hover:-translate-y-full">
+                        <span
+                          className={`block h-4 leading-4 transition-colors ${
+                            active ? "text-brand-primary-soft font-bold" : "text-fg-muted"
+                          }`}
+                        >
+                          {item.label}
+                        </span>
+                        <span className="block h-4 leading-4 text-brand-primary font-bold">
+                          {item.label}
+                        </span>
+                      </span>
+                    </span>
+                  </Link>
                 );
               })}
-            </ul>
-          </motion.nav>
-        )}
-      </AnimatePresence>
-    </header>
+            </div>
+
+            <div className="h-4 w-px bg-white/10" aria-hidden />
+
+            <div className="flex items-center gap-3">
+              <LanguageSwitcher locale={locale} label={switchLanguageLabel} />
+              <ThemeToggle />
+            </div>
+
+            {/* Ariyana Canvas Menu Trigger */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label={openLabel}
+              className="flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-mono tracking-widest uppercase text-fg hover:border-brand-primary hover:bg-brand-primary/10 transition-all duration-200"
+            >
+              <span>MENU</span>
+              <Menu className="size-4 text-brand-primary-soft" />
+            </button>
+          </nav>
+
+          {/* Tablet & Mobile controls */}
+          <div className="flex items-center gap-3 lg:hidden">
+            <ThemeToggle />
+            <LanguageSwitcher locale={locale} label={switchLanguageLabel} />
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label={openLabel}
+              className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs font-mono tracking-widest uppercase text-fg hover:border-brand-primary transition-colors"
+            >
+              <span>MENU</span>
+              <Menu className="size-4 text-brand-primary-soft" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Full-Canvas Overlay Navigation */}
+      <V3OverlayMenu
+        isOpen={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        locale={locale}
+        brand={brand}
+        items={items}
+        switchLanguageLabel={switchLanguageLabel}
+      />
+    </>
   );
 }

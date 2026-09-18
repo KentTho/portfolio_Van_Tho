@@ -2,17 +2,15 @@
 
 import Link from "next/link";
 import { ArrowUpRight, Mail } from "lucide-react";
-import { motion, useScroll, useTransform, type MotionValue, type Variants } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import type { SocialLink } from "@/modules/public-portfolio/domain/types";
 import { PortraitFrame } from "@/components/public/visual/portrait-frame";
-import { KineticText } from "@/components/public/motion/kinetic-text";
 import { Magnetic, PointerTilt } from "@/components/public/motion/interactions";
 import { useIntroReady } from "@/components/public/motion/intro-gate";
 import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 import { GithubMark, LinkedinMark } from "@/components/public/visual/brand-icons";
-import { EASE_OUT } from "@/components/public/motion/motion-tokens";
 import { useReplayableReveal } from "@/components/public/motion/use-replayable-reveal";
-import { cn } from "@/lib/utils";
+import { MOTION_DURATION, MOTION_EASING } from "@/styles/motion-tokens";
 
 interface Cta {
   readonly label: string;
@@ -25,40 +23,28 @@ interface HeroSectionProps {
   readonly headline: string;
   readonly availability: string;
   readonly intro: string;
-  readonly focusLabel: string;
-  readonly scrollLabel: string;
+  readonly focusLabel?: string;
+  readonly scrollLabel?: string;
   readonly primary: Cta;
   readonly secondary: Cta;
   readonly socials: readonly SocialLink[];
 }
 
-/** Icon for a social kind. lucide dropped brand marks, so GitHub/LinkedIn are
- *  local SVGs; email uses lucide Mail. `resume` is filtered out before render. */
 function SocialIcon({ kind, size = 18 }: { readonly kind: SocialLink["kind"]; readonly size?: number }) {
   if (kind === "linkedin") return <LinkedinMark size={size} />;
   if (kind === "email") return <Mail size={size} aria-hidden />;
   return <GithubMark size={size} />;
 }
 
-/** Zone container: children stagger in once the intro stage clears. */
-const zone = (delayChildren: number): Variants => ({
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06, delayChildren } },
-});
-const rise: Variants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.62, ease: EASE_OUT } },
-};
-
 /**
- * HERO — #home (V2, corrected). Reference-inspired three-zone cinematic stage:
- * LEFT identity (intro · 2-line name focal · lead · one primary CTA + a light
- * secondary link), CENTER portrait as the vertical anchor (backlit, emerges from
- * the dark, sits high), RIGHT profession (focus · role · availability) tucked
- * close to the portrait's eye-line. Vertical social rail anchors the lower left.
- * Motion: portrait descends while text rises (opposing vectors), released when
- * the intro curtain lifts so the entrance is *seen*, plays once, no loop, and is
- * fully reduced-motion gated. Brand blue accent; gold strictly restrained.
+ * Ariyana V3 Hero Section — True Spatial Parity Rebuild.
+ *
+ * Implements Ariyana's monumental visual grammar:
+ * 1. Edge-to-edge monumental typography (HÀ VĂN THỌ) layered behind the subject.
+ * 2. Full environmental background video (enter_portfolio_micro_workspace_Protocol.mp4)
+ *    seamlessly blended into the canvas with soft radial masking — ZERO rectangular borders.
+ * 3. Authentic portrait seamlessly integrated in the foreground — NO isolated card.
+ * 4. Asymmetric lower editorial anchors (Title Left, Statement + Actions Right).
  */
 export function HeroSection({
   name,
@@ -75,318 +61,224 @@ export function HeroSection({
   const reduced = useReducedMotionSafe();
   const ready = useIntroReady();
 
-  const { ref: heroRef, hasEntered } = useReplayableReveal(
-    "-10% 0px -10% 0px", // Enter threshold
-    "30% 0px 30% 0px"  // Exit arm threshold
-  );
+  const { ref: heroRef, hasEntered } = useReplayableReveal("-10% 0px -10% 0px", "30% 0px 30% 0px");
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
 
-  // Scroll-linked transition: video fades and moves down in parallax as user scrolls down.
-  const videoOpacity = useTransform(scrollYProgress, [0, 0.55, 1], [1, 0.85, 0]);
-  const videoY = useTransform(scrollYProgress, [0, 1], ["0px", "140px"]);
+  const mediaY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  const mediaScale = useTransform(scrollYProgress, [0, 1], [1, 1.08]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
 
-  const state = reduced ? false : (ready && hasEntered) ? "visible" : "hidden";
-
-  // Owner-locked name break: "Hà Văn" / "Thọ" — head = all but last word, tail = last word.
-  const parts = name.trim().split(/\s+/);
-  const nameTail = parts.length > 1 ? parts[parts.length - 1] : "";
-  const nameHead = parts.length > 1 ? parts.slice(0, -1).join(" ") : name.trim();
+  const isAnimated = !reduced && ready && hasEntered;
 
   return (
-    <section ref={heroRef} aria-label="Giới thiệu" className="relative w-full overflow-hidden" style={{ perspective: "1200px" }}>
-      {!reduced && (
-        <AmbientHeroSubstrate videoY={videoY} videoOpacity={videoOpacity} />
-      )}
-      <div className="mx-auto flex min-h-[100dvh] w-full max-w-6xl flex-col items-center justify-center gap-8 px-6 pb-24 pt-28 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,auto)_minmax(0,0.78fr)] lg:items-center lg:gap-x-6 lg:pb-0 lg:pt-0" style={{ transformStyle: "preserve-3d" }}>
-        {/* ── LEFT — identity ─────────────────────────────────────────────── */}
+    <section
+      ref={heroRef}
+      id="home"
+      aria-label="Giới thiệu"
+      className="relative min-h-[95vh] w-full overflow-hidden flex flex-col justify-between pt-6 pb-16 md:pb-24 lg:pb-28"
+    >
+      {/* ── 1. ENVIRONMENTAL VIDEO SURFACE (FULL BLEED, MASK BLENDED) ──────── */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
         <motion.div
-          className={cn("order-2 flex w-full max-w-md flex-col items-center text-center lg:order-1 lg:max-w-none lg:items-start lg:pr-2 lg:text-left")}
-          variants={reduced ? undefined : zone(0.22)}
-          initial={reduced ? false : "hidden"}
-          animate={state}
+          style={{ y: reduced ? 0 : mediaY, scale: reduced ? 1 : mediaScale }}
+          className="absolute -top-[10%] left-1/2 -translate-x-1/2 w-[120vw] max-w-[2000px] h-[110%] opacity-45 sm:opacity-55 mix-blend-screen"
         >
-          {/* Micro-workspace sandbox status badge */}
-          <motion.div
-            variants={reduced ? undefined : rise}
-            className="inline-flex items-center gap-2.5 rounded-full border border-border/80 bg-surface/70 px-3.5 py-1.5 backdrop-blur-md"
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden="true"
+            className="w-full h-full object-cover object-center select-none"
+            style={{
+              maskImage:
+                "radial-gradient(ellipse 75% 65% at 50% 48%, black 30%, rgba(0,0,0,0.5) 65%, transparent 100%)",
+              WebkitMaskImage:
+                "radial-gradient(ellipse 75% 65% at 50% 48%, black 30%, rgba(0,0,0,0.5) 65%, transparent 100%)",
+            }}
           >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-primary opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-brand-primary" />
-            </span>
-            <span className="font-mono text-[11px] uppercase tracking-widest text-brand-primary-soft">
-              {intro}
-            </span>
-          </motion.div>
-
-          <h1
-            aria-label={name}
-            className="mt-4 font-display font-bold leading-[0.92] tracking-[-0.03em] text-fg text-[clamp(2.6rem,4.6vw+0.5rem,4.5rem)]"
-          >
-            <KineticText text={nameHead} as="span" className="block" play={!reduced && ready && hasEntered} delay={0.05} stagger={0.028} />
-            {nameTail && (
-              <span className="block bg-gradient-to-r from-fg via-brand-primary-soft to-[#38bdf8] bg-clip-text text-transparent">
-                <KineticText text={nameTail} as="span" play={!reduced && ready && hasEntered} delay={0.2} stagger={0.028} />
-              </span>
-            )}
-          </h1>
-
-          <motion.p variants={reduced ? undefined : rise} className="mt-5 max-w-[40ch] text-body-l text-fg-muted">
-            {headline}
-          </motion.p>
-
-          <motion.div variants={reduced ? undefined : rise} className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 lg:justify-start">
-            <Magnetic>
-              <Link
-                href={primary.href}
-                className="group relative inline-flex items-center gap-2 rounded-full bg-accent px-7 py-3.5 text-sm font-semibold text-canvas transition-all duration-300 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas shadow-[0_0_28px_rgba(56,189,248,0.32)] hover:shadow-[0_0_42px_rgba(56,189,248,0.55)]"
-              >
-                {primary.label}
-                <ArrowUpRight size={16} aria-hidden className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
-            </Magnetic>
-            {/* Secondary is a light text link — must not compete with the primary CTA. */}
-            <Link
-              href={secondary.href}
-              className="group inline-flex items-center gap-1.5 text-sm font-medium text-fg-muted transition-colors hover:text-fg focus-visible:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-            >
-              <span className="relative">
-                {secondary.label}
-                <span aria-hidden className="absolute -bottom-0.5 left-0 h-px w-full origin-left scale-x-0 bg-brand-primary-soft/60 transition-transform duration-300 group-hover:scale-x-100" />
-              </span>
-            </Link>
-          </motion.div>
+            <source src="/video/enter_portfolio_micro_workspace_Protocol.mp4" type="video/mp4" />
+          </video>
         </motion.div>
 
-        {/* ── CENTER — portrait (vertical anchor, sits high) ───────────────── */}
-        <motion.div
-          className={cn("relative order-1 flex items-center justify-center lg:order-2 lg:-translate-y-2")}
-          initial={reduced ? false : { opacity: 0, scale: 0.985, y: -34 }}
-          animate={reduced ? false : (ready && hasEntered) ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.985, y: -34 }}
-          transition={{ duration: 0.85, ease: EASE_OUT, delay: 0.1 }}
-        >
-          <PointerTilt max={4}>
-            <PortraitFrame alt={`Chân dung ${name}`} priority />
-          </PointerTilt>
-        </motion.div>
-
-        {/* ── RIGHT — profession (tucked near the portrait eye-line) ───────── */}
-        <motion.div
-          className={cn("order-3 flex w-full max-w-md flex-col items-center text-center lg:max-w-none lg:items-end lg:-translate-y-6 lg:text-right")}
-          variants={reduced ? undefined : zone(0.34)}
-          initial={reduced ? false : "hidden"}
-          animate={state}
-        >
-          <motion.span variants={reduced ? undefined : rise} className="label-mono text-brand-secondary-soft">
-            {focusLabel}
-          </motion.span>
-
-          <p className="mt-3 font-display font-semibold leading-[1.02] text-fg text-[clamp(1.75rem,2vw+1rem,2.6rem)]">
-            <KineticText text={role} as="span" play={!reduced && ready && hasEntered} delay={0.12} stagger={0.026} duration={0.7} />
-          </p>
-
-          <motion.span
-            variants={reduced ? undefined : rise}
-            className="mt-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface/50 px-3 py-1.5 label-mono text-fg-muted"
-          >
-            <span className="relative flex h-1.5 w-1.5" aria-hidden>
-              {!reduced && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />}
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
-            </span>
-            {availability}
-          </motion.span>
-        </motion.div>
+        {/* Ambient Cosmic Lights */}
+        <div
+          className="absolute -top-32 left-1/2 -translate-x-1/2 h-[50vw] w-[85vw] rounded-full blur-[150px] opacity-30 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(0, 240, 255, 0.25) 0%, rgba(30, 64, 175, 0.2) 45%, transparent 70%)",
+          }}
+        />
+        <div
+          className="absolute bottom-10 right-1/4 h-[35vw] w-[45vw] rounded-full blur-[140px] opacity-20 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(212, 175, 55, 0.2) 0%, transparent 65%)",
+          }}
+        />
       </div>
 
-      {/* ── Social rail — desktop vertical, lower left ───────────────────── */}
-      {socials.length > 0 && (
-        <motion.ul
-          aria-label="Liên kết mạng xã hội"
-          className={cn("pointer-events-none absolute bottom-16 left-6 z-10 hidden flex-col gap-1 lg:flex")}
-          variants={reduced ? undefined : zone(0.46)}
-          initial={reduced ? false : "hidden"}
-          animate={state}
+      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16 flex-1 flex flex-col justify-between relative z-10">
+        {/* ── 2. TOP METADATA RIBBON ────────────────────────────────────────── */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={isAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+          transition={{ duration: MOTION_DURATION.section, ease: MOTION_EASING.out }}
+          className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-5 mb-4 sm:mb-8"
         >
-          {socials.map((s) => (
-            <motion.li key={s.href} variants={reduced ? undefined : rise} className="pointer-events-auto">
-              {s.href === "#linkedin-pending" ? (
-                <div
-                  title="LinkedIn (Sắp cập nhật / URL pending)"
-                  aria-label={`${s.label} (Pending)`}
-                  className="group flex h-10 w-10 items-center justify-center rounded-full text-fg-subtle opacity-50 cursor-default"
-                >
-                  <SocialIcon kind={s.kind} />
+          <div className="flex items-center gap-3">
+            <span className="caption-pill">
+              <span className="size-1.5 rounded-full bg-brand-primary animate-pulse" />
+              <span>{intro || "SENIOR SOFTWARE ENGINEER"}</span>
+            </span>
+            <span className="hidden sm:inline-block font-mono text-xs text-fg-subtle tracking-wider uppercase">
+              {"//"} ARCHITECTURE · FULL-STACK · CLOUD
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="inline-flex size-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-mono text-xs uppercase tracking-widest text-fg-muted">
+              {availability || "Available for high-impact contracts"}
+            </span>
+          </div>
+        </motion.div>
+
+        {/* ── 3. MONUMENTAL IDENTITY & INTEGRATED PORTRAIT CENTER ──────────── */}
+        <div className="relative my-auto py-8 sm:py-12 lg:py-16 flex flex-col items-center justify-center">
+          {/* Giant Monumental Wordmark (Behind Subject) */}
+          <motion.div
+            style={{ y: reduced ? 0 : textY }}
+            className="w-full text-center select-none pointer-events-none"
+          >
+            <motion.h1
+              initial={{ opacity: 0, y: 60 }}
+              animate={isAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 60 }}
+              transition={{ duration: 0.9, ease: MOTION_EASING.cinematic, delay: 0.1 }}
+              className="text-mega font-display text-white/95 uppercase tracking-tighter leading-none"
+              style={{
+                textShadow:
+                  "0 0 80px rgba(0, 240, 255, 0.25), 0 20px 40px rgba(0, 0, 0, 0.8)",
+              }}
+            >
+              {name || "HÀ VĂN THỌ"}
+            </motion.h1>
+          </motion.div>
+
+          {/* Integrated Portrait Anchor (Organically Blended, NO CARD FRAME) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={isAnimated ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.94 }}
+            transition={{ duration: 0.85, ease: MOTION_EASING.cinematic, delay: 0.25 }}
+            className="relative -mt-16 sm:-mt-24 md:-mt-32 lg:-mt-40 z-20 pointer-events-auto"
+          >
+            <PointerTilt max={6}>
+              <div className="relative w-48 sm:w-60 md:w-72 lg:w-80 group">
+                {/* Backlit Silhouette Halo */}
+                <div className="absolute inset-0 -top-4 rounded-full bg-gradient-to-t from-brand-primary/30 via-brand-secondary/20 to-transparent blur-2xl opacity-75 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                {/* Chân dung nguyên bản, không đóng khung hộp chữ nhật */}
+                <div className="relative drop-shadow-[0_25px_35px_rgba(0,0,0,0.85)] filter">
+                  <PortraitFrame alt={`Chân dung ${name}`} priority />
                 </div>
-              ) : (
-                <a
-                  href={s.href}
-                  target={s.kind === "email" ? undefined : "_blank"}
-                  rel={s.kind === "email" ? undefined : "noopener noreferrer"}
-                  aria-label={s.label}
-                  className="group flex h-10 w-10 items-center justify-center rounded-full text-fg-subtle transition-all duration-300 hover:translate-x-1 hover:text-brand-primary-soft focus-visible:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                >
-                  <SocialIcon kind={s.kind} />
-                </a>
-              )}
-            </motion.li>
-          ))}
-          <li aria-hidden className="ml-[19px] mt-1 h-14 w-px bg-gradient-to-b from-border-strong to-transparent" />
-        </motion.ul>
-      )}
 
-      {/* Mobile social row */}
-      {socials.length > 0 && (
-        <div className="mx-auto -mt-4 flex max-w-6xl items-center justify-center gap-4 px-6 pb-10 lg:hidden">
-          {socials.map((s) =>
-            s.href === "#linkedin-pending" ? (
-              <div
-                key={s.href}
-                title="LinkedIn (Sắp cập nhật / URL pending)"
-                aria-label={`${s.label} (Pending)`}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-border/50 text-fg-subtle opacity-50 cursor-default"
-              >
-                <SocialIcon kind={s.kind} />
+                {/* Minimalist Signature Pill below Portrait */}
+                <div className="mt-3 flex justify-center">
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-canvas/80 px-4 py-1 backdrop-blur-md font-mono text-[11px] tracking-widest text-brand-primary-soft uppercase">
+                    <span className="size-1 rounded-full bg-brand-primary" />
+                    <span>LEAD FULLSTACK ARCHITECT</span>
+                  </span>
+                </div>
               </div>
-            ) : (
-              <a
-                key={s.href}
-                href={s.href}
-                target={s.kind === "email" ? undefined : "_blank"}
-                rel={s.kind === "email" ? undefined : "noopener noreferrer"}
-                aria-label={s.label}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-border text-fg-subtle transition-colors hover:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                <SocialIcon kind={s.kind} />
-              </a>
-            )
-          )}
+            </PointerTilt>
+          </motion.div>
         </div>
-      )}
 
-      {/* Scroll cue — desktop only, bottom center */}
-      <div aria-hidden className="pointer-events-none absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 lg:flex">
-        <span className="label-mono text-fg-subtle">{scrollLabel}</span>
-        <span className="relative h-9 w-px overflow-hidden bg-border-strong">
-          {!reduced && (
-            <motion.span
-              className="absolute inset-x-0 top-0 h-3 bg-brand-primary-soft"
-              animate={{ y: ["-100%", "300%"] }}
-              transition={{ duration: 1.8, ease: "easeInOut", repeat: Infinity }}
-            />
-          )}
-        </span>
+        {/* ── 4. LOWER EDITORIAL ANCHORS (ARIYANA ASYMMETRIC 2-COL) ────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end pt-6 border-t border-white/10">
+          {/* Bottom Left: Bold Condensed Role & Subtitle (6 cols) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: MOTION_DURATION.section, ease: MOTION_EASING.out, delay: 0.35 }}
+            className="lg:col-span-6 space-y-3"
+          >
+            <div className="flex items-center gap-2 font-mono text-xs tracking-widest text-brand-primary-soft uppercase">
+              <span>{focusLabel || "01 // DIRECTION"}</span>
+              <span className="h-px w-8 bg-brand-primary/40" />
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display uppercase tracking-tight text-fg leading-none">
+              {role || "FULL-STACK ENGINEER // SOFTWARE ARCHITECT"}
+            </h2>
+          </motion.div>
+
+          {/* Bottom Right: Narrative Statement & Actions (6 cols) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isAnimated ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: MOTION_DURATION.section, ease: MOTION_EASING.out, delay: 0.45 }}
+            className="lg:col-span-6 space-y-6 lg:pl-6"
+          >
+            <p className="text-body-l text-fg-muted leading-relaxed max-w-[54ch]">
+              {headline ||
+                "Xây dựng nền tảng ứng dụng web hiện đại, hệ thống phân tán chịu tải cao và kiến trúc phần mềm type-safe với tiêu chuẩn kiểm thử khắt khe."}
+            </p>
+
+            <div className="flex flex-wrap items-center justify-between gap-6 pt-2">
+              {/* CTAs */}
+              <div className="flex items-center gap-4">
+                <Magnetic>
+                  <Link
+                    href={primary.href}
+                    className="group inline-flex items-center gap-3 rounded-full bg-brand-primary px-8 py-4 text-xs font-mono tracking-widest uppercase text-canvas font-bold transition-all duration-300 hover:bg-brand-primary-soft hover:shadow-[0_0_35px_rgba(0,240,255,0.4)]"
+                  >
+                    <span>{primary.label}</span>
+                    <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </Link>
+                </Magnetic>
+
+                <Link
+                  href={secondary.href}
+                  className="group inline-flex items-center gap-2 px-6 py-4 rounded-full border border-white/15 bg-white/5 text-xs font-mono tracking-widest uppercase text-fg hover:border-brand-primary-soft hover:bg-white/10 transition-all duration-200"
+                >
+                  <span>{secondary.label}</span>
+                  <ArrowUpRight className="size-3.5 text-fg-subtle group-hover:text-brand-primary-soft transition-colors" />
+                </Link>
+              </div>
+
+              {/* Social Icon Pills */}
+              {socials.length > 0 && (
+                <div className="flex items-center gap-2.5">
+                  {socials.map((s) => (
+                    <a
+                      key={s.href}
+                      href={s.href}
+                      target={s.kind === "email" ? undefined : "_blank"}
+                      rel={s.kind === "email" ? undefined : "noopener noreferrer"}
+                      aria-label={s.label}
+                      className="size-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-fg-subtle hover:text-brand-primary-soft hover:border-brand-primary hover:bg-white/10 transition-all duration-200"
+                    >
+                      <SocialIcon kind={s.kind} size={16} />
+                    </a>
+                  ))}
+                </div>
+              )}
+
+              {/* Scroll Label Indicator */}
+              {scrollLabel && (
+                <div className="hidden xl:flex items-center gap-2 font-mono text-[10px] tracking-widest uppercase text-fg-muted pl-3 border-l border-white/10">
+                  <span className="size-1 rounded-full bg-brand-primary animate-pulse" />
+                  <span>{scrollLabel}</span>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
-  );
-}
-
-/**
- * Atmospheric video and ambient substrate field that sits behind the Hero scene.
- * Implements the exact micro-workspace protocol architecture from docs/code_pattern:
- * - Real lightweight video: /video/enter_portfolio_micro_workspace_Protocol.mp4 (714 KB)
- * - mix-blend-screen with controlled opacity
- * - terminal-grid texture + ambient warm/cyan lamp glow
- * - subtle drift particles
- * - seamless bottom gradient transition into canvas
- */
-function AmbientHeroSubstrate({
-  videoY,
-  videoOpacity,
-}: {
-  readonly videoY: MotionValue<string>;
-  readonly videoOpacity: MotionValue<number>;
-}) {
-  const reduced = useReducedMotionSafe();
-
-  const particles = [
-    { left: "12%", size: 3, duration: 5.2, delay: 0 },
-    { left: "34%", size: 2, duration: 4.4, delay: 1.1 },
-    { left: "68%", size: 3.5, duration: 5.8, delay: 2.2 },
-    { left: "86%", size: 2.5, duration: 4.8, delay: 0.6 },
-    { left: "52%", size: 2, duration: 5.4, delay: 3.0 },
-  ];
-
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* Terminal grid texture inspired by micro-workspace protocol */}
-      <div
-        className="absolute inset-0 opacity-[0.22]"
-        style={{
-          backgroundSize: "40px 40px",
-          backgroundImage:
-            "linear-gradient(to right, rgba(56, 189, 248, 0.12) 1px, transparent 1px), linear-gradient(to bottom, rgba(56, 189, 248, 0.12) 1px, transparent 1px)",
-        }}
-      />
-
-      {/* Deep Navy / Electric Blue / Cyan unified visual atmosphere */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(ellipse 85% 65% at 50% 32%, rgba(14, 165, 233, 0.16) 0%, rgba(30, 64, 175, 0.22) 38%, rgba(11, 19, 38, 0.45) 70%, transparent 100%)",
-        }}
-      />
-
-      {/* Ambient lamp: subtle warm incandescent core meeting cyan atmospheric aura */}
-      <div
-        className="absolute left-1/2 top-[35%] h-[65vw] w-[65vw] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[130px] opacity-80"
-        style={{
-          background:
-            "radial-gradient(circle at 50% 50%, rgba(245, 158, 11, 0.05) 0%, rgba(56, 189, 248, 0.14) 40%, rgba(30, 58, 138, 0.15) 68%, transparent 85%)",
-        }}
-      />
-
-      {/* Hero Video Field with scroll parallax */}
-      <motion.div
-        style={{ y: reduced ? 0 : videoY, opacity: videoOpacity }}
-        className="absolute inset-0 flex items-center justify-center will-change-transform"
-      >
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          aria-hidden="true"
-          className="h-full w-full object-cover opacity-50 mix-blend-screen select-none"
-        >
-          <source src="/video/enter_portfolio_micro_workspace_Protocol.mp4" type="video/mp4" />
-        </video>
-      </motion.div>
-
-      {/* Ambient drift particles (reduced-motion safe) */}
-      {!reduced &&
-        particles.map((p, i) => (
-          <motion.div
-            key={i}
-            className="absolute rounded-full bg-[#38bdf8] pointer-events-none"
-            style={{
-              left: p.left,
-              width: `${p.size}px`,
-              height: `${p.size}px`,
-              boxShadow: "0 0 10px rgba(56, 189, 248, 0.8), 0 0 18px rgba(56, 189, 248, 0.4)",
-            }}
-            initial={{ y: "-5vh", opacity: 0 }}
-            animate={{
-              y: ["0vh", "110vh"],
-              x: [0, 18, -12, 0],
-              opacity: [0, 0.8, 0.7, 0],
-            }}
-            transition={{
-              duration: p.duration,
-              delay: p.delay,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-        ))}
-
-      {/* Bottom gradient mask: guarantees 100% seamless transition into background */}
-      <div className="absolute inset-0 bg-gradient-to-t from-canvas via-canvas/25 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-canvas via-canvas/80 to-transparent" />
-    </div>
   );
 }

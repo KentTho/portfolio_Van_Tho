@@ -1,7 +1,6 @@
 import { pick, type Locale } from "@/shared/i18n";
 import type { Dictionary } from "@/i18n/dictionary";
 import type { TechGroup } from "@/modules/public-portfolio/domain/types";
-import { SectionHeading } from "@/components/public/section-heading";
 import { Reveal } from "@/components/public/reveal";
 import { TechnologyLogo } from "@/components/technology/technology-logo";
 
@@ -23,18 +22,34 @@ export function TechMatrixSection({
   return (
     <section
       aria-labelledby="tech-heading"
-      className="mx-auto w-full max-w-6xl px-6 py-24"
+      className="relative w-full border-t border-white/10 py-24 lg:py-36 overflow-hidden bg-canvas"
     >
-      {/* Hairline divider above section */}
-      <div className="mb-12 h-px w-full bg-border/50" aria-hidden />
+      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16">
+        {/* Caption Header */}
+        <div className="flex items-center gap-3 mb-10">
+          <span className="caption-pill">
+            <span className="size-1.5 rounded-full bg-brand-primary" />
+            <span>ARCHITECTURE // MATRIX</span>
+          </span>
+          <span className="h-px flex-1 bg-white/10" />
+          <span className="font-mono text-xs text-brand-primary-soft uppercase tracking-widest hidden sm:inline-block">
+            05 // CLUSTERS
+          </span>
+        </div>
 
-      <Reveal>
-        <SectionHeading
-          id="tech-heading"
-          title={dict.sections.techMatrix}
-          subtitle={dict.home.techSubtitle}
-        />
-      </Reveal>
+        <Reveal>
+          <div className="max-w-3xl mb-14">
+            <h2
+              id="tech-heading"
+              className="text-4xl sm:text-5xl md:text-6xl font-display uppercase tracking-tight text-fg leading-tight"
+            >
+              {dict.sections?.techMatrix || "TECHNOLOGY ARCHITECTURE MATRIX"}
+            </h2>
+            <p className="mt-4 text-body-l text-fg-muted">
+              {dict.home?.techSubtitle || "Structured domain clusters powering full-stack scalability."}
+            </p>
+          </div>
+        </Reveal>
 
       {groups.length === 0 ? (
         <div className="rounded-2xl border border-border border-dashed bg-surface/20 px-8 py-12 text-center">
@@ -73,6 +88,7 @@ export function TechMatrixSection({
           ))}
         </div>
       )}
+      </div>
     </section>
   );
 }
