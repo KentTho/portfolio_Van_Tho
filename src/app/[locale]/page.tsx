@@ -16,7 +16,7 @@ import { ExperienceSection } from "@/components/public/sections/experience-secti
 import { TechMarqueeSection } from "@/components/public/sections/tech-marquee-section";
 import { TechMatrixSection } from "@/components/public/sections/tech-matrix-section";
 import { CapabilitiesSection } from "@/components/public/sections/capabilities-section";
-import { AchievementsSection } from "@/components/public/sections/achievements-section";
+import { SelectedProofSection } from "@/components/public/sections/selected-proof-section";
 import { WritingSection } from "@/components/public/sections/writing-section";
 import { ContactCtaSection } from "@/components/public/sections/contact-cta-section";
 
@@ -143,33 +143,33 @@ export default async function LandingPage({ params }: { params: Promise<{ locale
       {/* 4. Evolution & Milestones (Ariyana Horizontal Scrub Timeline) */}
       <HorizontalTimelineSection dict={dict} />
 
-      {/* 5. Production Proof & Case Studies (Featured Projects) */}
+      {/* 5. Production Proof & Case Studies (Featured Projects + Authentic Videos) */}
       <FeaturedProjectsSection projects={projects} locale={locale} dict={dict} />
 
       {/* 6. Continuous Tech Marquee (Verified Logos) */}
       <TechMarqueeSection />
 
-      {/* 7. Cinematic Showreel Environment (GEMINI Motion Protocol) */}
+      {/* 7. Specialized Engineering Capabilities (Ariyana Expert Solutions) */}
+      <CapabilitiesSection locale={locale} />
+
+      {/* 8. Cinematic Showreel Environment (GEMINI Motion Protocol with Scroll Scrub) */}
       <ShowreelSection />
 
-      {/* 8. Career & Verified Education (Experience) */}
+      {/* 9. Selected Proof & Engineering Highlights (Ariyana Section 08 Parity) */}
+      <SelectedProofSection />
+
+      {/* 10. Career & Verified Education (Experience) */}
       <ExperienceSection experience={experience} education={education} locale={locale} t={dict.career} />
 
-      {/* 7. Technology Architecture Matrix (Skills) */}
+      {/* 11. Technology Architecture Matrix (Skills) */}
       <div id="skills" className="scroll-mt-20">
         <TechMatrixSection groups={groups} locale={locale} dict={dict} />
       </div>
 
-      {/* 8. Capabilities / Services (Conditional: hidden if 0 real rows) */}
-      <CapabilitiesSection />
-
-      {/* 9. Honors & Certifications (Conditional: hidden if 0 real rows) */}
-      <AchievementsSection />
-
-      {/* 10. Technical Writing (Conditional: hidden if 0 real rows) */}
+      {/* 12. Technical Writing (Conditional: hidden if 0 real rows) */}
       <WritingSection locale={locale} />
 
-      {/* 11. Conversion & Direct Inquiry (Contact CTA) */}
+      {/* 13. Conversion & Direct Inquiry (Kinetic Contact CTA) */}
       <ContactCtaSection email={contactEmail} channels={contactChannels} t={dict.contact} />
     </>
   );

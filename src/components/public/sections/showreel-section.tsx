@@ -1,19 +1,70 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Volume2, VolumeX, Sparkles, Maximize2 } from "lucide-react";
-import { Reveal } from "@/components/public/reveal";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Magnetic } from "@/components/public/motion/interactions";
 
+gsap.registerPlugin(ScrollTrigger);
+
 /**
- * Ariyana V3 Showreel Surface (§10, §19).
- * Features GEMINI_IMAGE_TO_VIDEO.mp4 as the canonical showreel media.
- * Replicates Ariyana's signature "PLAY REEL" centerpiece typography and interactive controls.
+ * Ariyana V3 Showreel Surface (§25–30).
+ * Features GEMINI_IMAGE_TO_VIDEO.mp4 with authentic scroll-scrubbed geometry:
+ * - ENTER (top 85%): compact 82% width, 48px radius, 0.94 scale with negative space
+ * - MID -> FULL (top 25%): expands progressively to 100% full width, 24px radius, 1.0 scale
+ * - SCROLL UP: smooth reverse contraction back to compact state
+ * - Center "PLAY REEL" magnetic trigger and interactive controls
  */
 export function ShowreelSection() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    const container = containerRef.current;
+    const frame = frameRef.current;
+    if (!container || !frame) return;
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 768px)", () => {
+      const anim = gsap.fromTo(
+        frame,
+        {
+          width: "82%",
+          borderRadius: "48px",
+          scale: 0.94,
+        },
+        {
+          width: "100%",
+          borderRadius: "24px",
+          scale: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: container,
+            start: "top 85%",
+            end: "top 25%",
+            scrub: 1.2,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+
+      return () => {
+        anim.kill();
+      };
+    });
+
+    return () => {
+      mm.revert();
+    };
+  }, []);
 
   const togglePlay = () => {
     if (!videoRef.current) return;
@@ -43,12 +94,13 @@ export function ShowreelSection() {
 
   return (
     <section
+      ref={containerRef}
       id="showreel"
       aria-label="Showreel Media"
       className="relative w-full border-t border-white/10 py-20 lg:py-32 overflow-hidden bg-canvas"
     >
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16">
-        <div className="flex items-center justify-between gap-4 mb-8">
+      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16 flex flex-col items-center">
+        <div className="w-full flex items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
             <span className="caption-pill">
               <span className="size-1.5 rounded-full bg-brand-primary" />
@@ -65,9 +117,11 @@ export function ShowreelSection() {
           </div>
         </div>
 
-        {/* Full-width Ariyana Showreel Frame */}
-        <Reveal direction="up" distance={30}>
-          <div className="group relative aspect-[16/9] md:aspect-[21/9] w-full rounded-[2.5rem] overflow-hidden border border-white/20 bg-surface/90 shadow-[0_30px_90px_rgba(0,0,0,0.8)]">
+        {/* Scroll-Scrubbed Ariyana Showreel Frame */}
+        <div
+          ref={frameRef}
+          className="group relative aspect-[16/9] md:aspect-[21/9] w-full mx-auto rounded-[2.5rem] overflow-hidden border border-white/20 bg-surface/90 shadow-[0_30px_90px_rgba(0,0,0,0.8)] will-change-transform"
+        >
             <video
               ref={videoRef}
               autoPlay
@@ -131,7 +185,6 @@ export function ShowreelSection() {
               </span>
             </div>
           </div>
-        </Reveal>
       </div>
     </section>
   );

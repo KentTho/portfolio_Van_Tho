@@ -8,6 +8,7 @@ import type { ProjectSummary } from "@/modules/public-portfolio/domain/types";
 import { TechnologyLogo } from "@/components/technology/technology-logo";
 import { Reveal } from "@/components/public/reveal";
 import { PointerTilt } from "@/components/public/motion/interactions";
+import { VERIFIED_PROJECT_MEDIA, getProjectMedia } from "@/config/project-media";
 
 function GithubIcon({ className = "size-4" }: { className?: string }) {
   return (
@@ -25,9 +26,8 @@ interface FeaturedProjectsSectionProps {
 }
 
 /**
- * Ariyana V3 Selected Works / Projects Section (§28).
- * Adapts Ariyana's high-impact Selected Works grammar to real portfolio projects (Expense Tracker).
- * Features split layout (Left narrative + Right visual surface), oversized project number, and verified tech tags.
+ * Ariyana V3 Selected Works / Projects Section (§28, §35–43).
+ * Seamlessly integrates verified client production proof videos with real architecture data.
  */
 export function FeaturedProjectsSection({
   projects,
@@ -35,6 +35,25 @@ export function FeaturedProjectsSection({
   dict,
   viewAllHref,
 }: FeaturedProjectsSectionProps) {
+  // Merge DB projects with verified client media projects (avoiding duplicate slugs)
+  const existingSlugs = new Set(projects.map((p) => p.slug));
+  const verifiedAdditional: ProjectSummary[] = VERIFIED_PROJECT_MEDIA
+    .filter((m) => !existingSlugs.has(m.slug))
+    .map((m) => ({
+      slug: m.slug,
+      title: { vi: m.title.vi, en: m.title.en },
+      summary: { vi: m.summary.vi, en: m.summary.en },
+      techIds: m.techStack.map((t) => t.toLowerCase().replace(/[^a-z0-9]/g, "")),
+      status: "published" as const,
+      sample: false,
+      year: m.year,
+      demoUrl: m.liveUrl,
+      repoUrl: m.githubUrl,
+      coverAlt: { vi: m.title.vi, en: m.title.en },
+    }));
+
+  const allDisplayProjects = [...projects, ...verifiedAdditional];
+
   return (
     <section
       id="projects"
@@ -80,7 +99,7 @@ export function FeaturedProjectsSection({
         </div>
 
         {/* Projects List */}
-        {projects.length === 0 ? (
+        {allDisplayProjects.length === 0 ? (
           <div className="rounded-[2rem] border border-dashed border-white/20 bg-surface/20 p-16 text-center">
             <p className="font-mono text-xs text-fg-subtle uppercase tracking-widest mb-2">
               NO PROJECTS PUBLISHED
@@ -91,7 +110,7 @@ export function FeaturedProjectsSection({
           </div>
         ) : (
           <div className="space-y-16">
-            {projects.map((project, index) => (
+            {allDisplayProjects.map((project, index) => (
               <Reveal key={project.slug} direction="up" distance={30} delay={index * 0.1}>
                 <AriyanaProjectItem
                   project={project}
@@ -131,6 +150,8 @@ function AriyanaProjectItem({
   const title = pick(project.title, locale);
   const summary = pick(project.summary, locale);
   const projectNumber = String(index + 1).padStart(2, "0");
+  const mediaConfig = getProjectMedia(project.slug);
+  const hasVideo = Boolean(mediaConfig?.videoSrc);
 
   return (
     <div className="group relative rounded-[2.5rem] border border-white/15 bg-surface/40 p-8 sm:p-12 lg:p-16 backdrop-blur-md transition-all duration-500 hover:border-brand-primary/40 hover:shadow-[0_20px_70px_rgba(0,0,0,0.6)]">
@@ -143,7 +164,9 @@ function AriyanaProjectItem({
             </span>
             <div className="h-6 w-px bg-white/15" />
             <span className="font-mono text-xs uppercase tracking-widest text-fg-subtle">
-              CASE STUDY // PRODUCTION
+              {mediaConfig?.isVerifiedOwnerUrl
+                ? "VERIFIED CLIENT WORK // PRODUCTION"
+                : "CASE STUDY // PRODUCTION"}
             </span>
           </div>
 
@@ -155,8 +178,19 @@ function AriyanaProjectItem({
             {summary}
           </p>
 
-          {/* Technology Badges with Real Logos */}
-          {project.techIds && project.techIds.length > 0 && (
+          {/* Technology Badges */}
+          {mediaConfig?.techStack && mediaConfig.techStack.length > 0 ? (
+            <div className="pt-2 flex flex-wrap gap-2">
+              {mediaConfig.techStack.map((tech) => (
+                <span
+                  key={tech}
+                  className="font-mono text-[11px] uppercase tracking-wider px-3 py-1 rounded-full border border-white/10 bg-white/5 text-fg-muted"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          ) : project.techIds && project.techIds.length > 0 ? (
             <div className="pt-2 flex flex-wrap gap-2.5">
               {project.techIds.map((techId) => (
                 <div
@@ -168,21 +202,33 @@ function AriyanaProjectItem({
                 </div>
               ))}
             </div>
-          )}
+          ) : null}
 
           {/* Action Links */}
           <div className="flex flex-wrap items-center gap-4 pt-4">
-            <Link
-              href={`/${locale}/projects/${project.slug}`}
-              className="group/btn inline-flex items-center gap-2.5 rounded-full bg-brand-primary px-7 py-3.5 text-xs font-mono uppercase tracking-widest text-canvas font-bold transition-all duration-300 hover:bg-brand-primary-soft hover:shadow-[0_0_30px_rgba(0,240,255,0.4)]"
-            >
-              <span>EXPLORE CASE STUDY</span>
-              <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-            </Link>
-
-            {project.repoUrl && (
+            {mediaConfig?.liveUrl ? (
               <a
-                href={project.repoUrl}
+                href={mediaConfig.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/btn inline-flex items-center gap-2.5 rounded-full bg-brand-primary px-7 py-3.5 text-xs font-mono uppercase tracking-widest text-canvas font-bold transition-all duration-300 hover:bg-brand-primary-soft hover:shadow-[0_0_30px_rgba(0,240,255,0.4)]"
+              >
+                <span>VISIT LIVE PLATFORM</span>
+                <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+              </a>
+            ) : (
+              <Link
+                href={`/${locale}/projects/${project.slug}`}
+                className="group/btn inline-flex items-center gap-2.5 rounded-full bg-brand-primary px-7 py-3.5 text-xs font-mono uppercase tracking-widest text-canvas font-bold transition-all duration-300 hover:bg-brand-primary-soft hover:shadow-[0_0_30px_rgba(0,240,255,0.4)]"
+              >
+                <span>EXPLORE CASE STUDY</span>
+                <ArrowUpRight className="size-4 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+              </Link>
+            )}
+
+            {(project.repoUrl || mediaConfig?.githubUrl) && (
+              <a
+                href={project.repoUrl || mediaConfig?.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="GitHub Repository"
@@ -192,7 +238,7 @@ function AriyanaProjectItem({
               </a>
             )}
 
-            {project.demoUrl && (
+            {project.demoUrl && !mediaConfig?.liveUrl && (
               <a
                 href={project.demoUrl}
                 target="_blank"
@@ -209,54 +255,94 @@ function AriyanaProjectItem({
         {/* Right: Visual Showcase Surface (6 Cols) */}
         <div className="lg:col-span-6">
           <PointerTilt max={4}>
-            <div className="relative aspect-[16/10] w-full rounded-[2rem] overflow-hidden border border-white/15 bg-gradient-to-br from-[#0c1322] via-[#090d16] to-canvas p-8 shadow-2xl group/img flex flex-col justify-between">
-              {/* Top Bar of Blueprint Preview */}
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                <div className="flex items-center gap-2">
-                  <span className="size-2.5 rounded-full bg-brand-primary animate-pulse" />
-                  <span className="font-mono text-xs uppercase tracking-widest text-brand-primary-soft font-semibold">
-                    SYSTEM ARCHITECTURE // PRODUCTION
+            {hasVideo && mediaConfig?.videoSrc ? (
+              <div className="relative aspect-[16/10] w-full rounded-[2rem] overflow-hidden border border-white/20 bg-surface shadow-2xl group/img">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="metadata"
+                  className="h-full w-full object-cover object-top transition-transform duration-700 group-hover/img:scale-105"
+                >
+                  <source src={mediaConfig.videoSrc} type="video/webm" />
+                </video>
+
+                {/* Subtle gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-canvas/80 via-transparent to-canvas/20 pointer-events-none" />
+
+                {/* Top Badge */}
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-brand-primary-soft backdrop-blur-md border border-white/15">
+                    <span className="size-1.5 rounded-full bg-brand-primary animate-pulse" />
+                    <span>AUTHENTIC RECORDED PROOF</span>
+                  </span>
+                  <span className="font-mono text-xs text-white/60 bg-black/60 px-2.5 py-0.5 rounded-full backdrop-blur-md border border-white/15">
+                    {mediaConfig.year}
                   </span>
                 </div>
-                <span className="font-mono text-xs text-white/40">
-                  {project.year ?? 2026}
-                </span>
-              </div>
 
-              {/* Center Architecture Spec Graphic */}
-              <div className="my-auto py-6">
-                <div className="relative z-10 space-y-3">
-                  <div className="inline-flex items-center gap-2 rounded-md bg-brand-primary/10 border border-brand-primary/30 px-3 py-1 font-mono text-[11px] text-brand-primary-soft">
-                    <Sparkles className="size-3" />
-                    <span>FULLSTACK & SERVICE LAYER</span>
+                {/* Bottom Bar */}
+                <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-fg font-medium bg-canvas/70 backdrop-blur-md px-3 py-1 rounded-full border border-white/15">
+                    {mediaConfig.category}
+                  </span>
+                  <div className="flex items-center gap-1 text-xs font-mono text-brand-primary-soft bg-black/70 backdrop-blur-md px-3 py-1 rounded-full border border-white/15">
+                    <span>LIVE ON VERCEL</span>
+                    <ArrowUpRight className="size-3.5" />
                   </div>
-                  <h4 className="text-2xl sm:text-3xl font-display uppercase tracking-tight text-fg">
-                    {title}
-                  </h4>
-                  <p className="font-mono text-xs text-fg-subtle line-clamp-2">
-                    Atomic transaction isolation · Redis caching · 2FA TOTP · Celery worker orchestration
-                  </p>
-                </div>
-
-                {/* Ambient Glows */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-primary/15 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute bottom-4 right-8 w-48 h-48 bg-brand-accent/10 rounded-full blur-2xl pointer-events-none" />
-              </div>
-
-              {/* Bottom Tech Rail */}
-              <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                <span className="font-mono text-[11px] uppercase tracking-wider text-fg-subtle">
-                  NEON POSTGRESQL · FASTAPI · REDIS
-                </span>
-                <div className="flex items-center gap-1.5 text-brand-primary-soft text-xs font-mono">
-                  <span>VERIFIED LIVE</span>
-                  <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover/img:translate-x-0.5 group-hover/img:-translate-y-0.5" />
                 </div>
               </div>
+            ) : (
+              <div className="relative aspect-[16/10] w-full rounded-[2rem] overflow-hidden border border-white/15 bg-gradient-to-br from-[#0c1322] via-[#090d16] to-canvas p-8 shadow-2xl group/img flex flex-col justify-between">
+                {/* Top Bar of Blueprint Preview */}
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <div className="flex items-center gap-2">
+                    <span className="size-2.5 rounded-full bg-brand-primary animate-pulse" />
+                    <span className="font-mono text-xs uppercase tracking-widest text-brand-primary-soft font-semibold">
+                      SYSTEM ARCHITECTURE // PRODUCTION
+                    </span>
+                  </div>
+                  <span className="font-mono text-xs text-white/40">
+                    {project.year ?? 2026}
+                  </span>
+                </div>
 
-              {/* Glass subtle shimmer overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-            </div>
+                {/* Center Architecture Spec Graphic */}
+                <div className="my-auto py-6">
+                  <div className="relative z-10 space-y-3">
+                    <div className="inline-flex items-center gap-2 rounded-md bg-brand-primary/10 border border-brand-primary/30 px-3 py-1 font-mono text-[11px] text-brand-primary-soft">
+                      <Sparkles className="size-3" />
+                      <span>FULLSTACK &amp; SERVICE LAYER</span>
+                    </div>
+                    <h4 className="text-2xl sm:text-3xl font-display uppercase tracking-tight text-fg">
+                      {title}
+                    </h4>
+                    <p className="font-mono text-xs text-fg-subtle line-clamp-2">
+                      Atomic transaction isolation · Redis caching · 2FA TOTP · Celery worker orchestration
+                    </p>
+                  </div>
+
+                  {/* Ambient Glows */}
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-primary/15 rounded-full blur-3xl pointer-events-none" />
+                  <div className="absolute bottom-4 right-8 w-48 h-48 bg-brand-accent/10 rounded-full blur-2xl pointer-events-none" />
+                </div>
+
+                {/* Bottom Tech Rail */}
+                <div className="pt-4 border-t border-white/10 flex items-center justify-between">
+                  <span className="font-mono text-[11px] uppercase tracking-wider text-fg-subtle">
+                    NEON POSTGRESQL · FASTAPI · REDIS
+                  </span>
+                  <div className="flex items-center gap-1.5 text-brand-primary-soft text-xs font-mono">
+                    <span>VERIFIED LIVE</span>
+                    <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover/img:translate-x-0.5 group-hover/img:-translate-y-0.5" />
+                  </div>
+                </div>
+
+                {/* Glass subtle shimmer overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+              </div>
+            )}
           </PointerTilt>
         </div>
       </div>

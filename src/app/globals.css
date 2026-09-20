@@ -34,9 +34,16 @@
   --font-display: var(--font-display);
   --font-editorial: var(--font-editorial);
   --font-bebas: var(--font-bebas);
+  --font-oswald: var(--font-oswald);
   --font-mono: var(--font-mono);
   --radius: var(--radius);
   --radius-sm: var(--radius-sm);
+}
+
+/* ─── Locale-Aware Typography Authority (Owner Lock 1A) ──────────────────── */
+:lang(vi),
+[lang="vi"] {
+  --font-display: var(--font-oswald), var(--font-inter), sans-serif;
 }
 
 /* ─── Base & Lenis Smooth Scroll Integration ─────────────────────────────── */

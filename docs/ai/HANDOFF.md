@@ -1,5 +1,21 @@
 # HANDOFF
 
+## V3 FINAL FIDELITY / TYPOGRAPHY / MOTION PARITY / PROJECT-EVIDENCE REFINEMENT · 🎯 MILESTONE READY FOR OWNER ACCEPTANCE (2026-09-21)
+- **Branch:** `feat/v3-ariyana-visual-rebase` (continuing same branch, one V3 PR).
+- **Owner Locks Executed:**
+  - **TYPOGRAPHY = 1A:** Unified semantic typography with Vietnamese optical companion. Google Font `Oswald` (`subsets: ["latin", "vietnamese"]`) paired with `Bebas Neue` (`subsets: ["latin"]`) via `:lang(vi), [lang="vi"]` so Vietnamese display titles render with 100% native diacritics, identical condensed visual mass, zero glyph clipping, and optical baseline harmony.
+  - **SECTION 08 = 2A:** Semantic mapping = `SELECTED PROOF & ENGINEERING HIGHLIGHTS`. Zero fake testimonials. Five verified proofs from official resumes (NTTU Data Science Challenge Consolation Prize, NTTU Software Engineering Competition Consolation Prize, Degree GPA 3.09/4.0, Budget Race Condition `SELECT FOR UPDATE`, and Mini CDP 7 Diagnostic Checks).
+  - **PROJECT VIDEO PIPELINE = 3A:** Three verified live client web apps recorded via Playwright built-in video capture (1280x720, 16:9, ~12s per clip):
+    1. `https://bbotech.vercel.app/` -> `public/media/projects/bbotech-platform-preview.webm` (1.53 MB)
+    2. `https://bbotech-vegetarian-restaurant.vercel.app/` -> `public/media/projects/bbotech-vegetarian-preview.webm` (1.34 MB)
+    3. `https://photomaubbotech.vercel.app/` -> `public/media/projects/photomau-bbotech-preview.webm` (1.21 MB)
+    - All assets within the ≤ 4–5 MB budget. Centralized manifest in `src/config/project-media.ts` (`PENDING_ADMIN_PROJECT_MEDIA_DOMAIN_EXPANSION`).
+  - **Section 06 Capabilities:** Ariyana editorial horizontal rows with real skills (Frontend, Backend, Data Architecture, DevSecOps).
+  - **Section 07 Showreel:** GSAP ScrollTrigger bidirectional scrub expansion (82% width / 48px radius -> 100% width / 24px radius) with reverse scroll-up contraction.
+- **Validation Suite:** 100% Green (`check:env`, `typecheck`, `lint` 0/0, `test` 198/6, `test:architecture` 10/10, `build` 0 errors, `e2e:public` 11/11, `git diff --check` 0 errors).
+- **Repo Hygiene:** Staged only explicit runtime assets and components. Local raw videos, scratch scripts, and resume PDFs kept strictly untracked.
+- **Verdict:** `V3_ARIYANA_FINAL_FIDELITY_TYPOGRAPHY_MEDIA_AND_EVIDENCE_VISUAL_ACCEPTANCE_READY`. Stopped before merge awaiting Owner acceptance.
+
 ## V2 PR #15 FINAL RELEASE AUDIT — CINEMATIC HERO + REPLAYABLE MOTION · ✅ MERGED + PRODUCTION VERIFIED (2026-08-22)
 - **✅ PR #15 MERGED → `main` = `51b17bc`** (merge commit `51b17bc`; final feature HEAD `ce8c57f`, confirmed ancestor of `main`). Main CI green. **Vercel Production LIVE + verified:** `https://portfolio-van-tho.vercel.app` `/vi` `/en` 200; **Hero video loads from prod** (`/video/GEMINI_IMAGE_TO_VIDEO.mp4` → 200 `video/mp4` 2.86 MB); Hà Văn/Thọ + Software Engineer + Xem dự án/Liên hệ; Career Học vấn/Education; Projects Expense Tracker; Contact "Cùng xây dựng"/Sao chép email; Footer Lên đầu/Back to top; one h1; **no phone leak**; admin deny (`/vi/admin` 404, `/admin` 307). Owner authorized the merge for THIS task only (not a permanent auto-merge policy). Vercel **Preview** is SSO-protected (curl blocked) → preview runtime was evidenced by local `next start` prod-build smoke + e2e Chromium.
 - **Scope:** Owner-authorized final release audit of the **entire cumulative PR #15** (branch `feat/v2-vivid-visual-substrate-and-motion-rebase-03`), not just the last commit. Owner authorization for THIS task supersedes the earlier "do not merge" (5A) — merge only after all release gates pass; not a permanent auto-merge policy.
