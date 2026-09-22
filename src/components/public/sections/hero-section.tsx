@@ -122,7 +122,7 @@ export function HeroSection({
         />
       </div>
 
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16 flex-1 flex flex-col justify-between relative z-10">
+      <div className="mx-auto w-full max-w-[1440px] px-6 md:px-12 lg:px-16 flex-1 flex flex-col justify-between relative z-10">
         {/* ── 2. TOP METADATA RIBBON ────────────────────────────────────────── */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}

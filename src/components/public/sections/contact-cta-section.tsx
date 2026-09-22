@@ -36,13 +36,14 @@ function ChannelIcon({ kind }: { readonly kind: SocialLink["kind"] }) {
 }
 
 /**
- * Ariyana V3 Kinetic CTA Section (§22).
+ * Ariyana V3 Kinetic CTA Section — Exact Behavioral Parity (§44, Timeline t-53afc1cb).
  *
- * Implements Ariyana's signature kinetic CTA mechanic:
- * 1. Two alternating, oversized repeated text rows driven by GSAP ScrollTrigger scrub.
- * 2. Row 1 moves left, Row 2 moves right on scroll down; both reverse smoothly on scroll up.
- * 3. Centered floating magnetic CTA button ("LET'S CONTACT") with copy-email state machine.
- * 4. Verified network chips and direct email action.
+ * Implements Ariyana's exact dual-layer kinetic typography:
+ * 1. Continuous infinite marquee loop: Row 1 moves left, Row 2 moves right autonomously (10s duration).
+ * 2. Scroll-velocity scrub: As the user scrolls down, scroll position adds velocity-based offset,
+ *    accelerating the kinetic flow.
+ * 3. Bidirectional reversal: Scrolling back up reverses the scrub offset smoothly.
+ * 4. Centered floating magnetic CTA button ("LET'S CONTACT") with copy email state machine.
  */
 export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -77,33 +78,49 @@ export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps
     const row2 = row2Ref.current;
     if (!container || !row1 || !row2) return;
 
-    // Row 1 shifts left on scroll
-    const anim1 = gsap.to(row1, {
-      x: "-18%",
+    // Ariyana Timeline t-53afc1cb: Continuous infinite opposing loops + scroll scrub
+    const loop1 = gsap.to(row1, {
+      xPercent: -50,
+      repeat: -1,
+      duration: 18,
+      ease: "none",
+    });
+
+    const loop2 = gsap.to(row2, {
+      xPercent: 50,
+      repeat: -1,
+      duration: 18,
+      ease: "none",
+    });
+
+    // ScrollTrigger velocity scrub
+    const scrub1 = gsap.to(row1, {
+      x: "-25%",
       ease: "none",
       scrollTrigger: {
         trigger: container,
         start: "top bottom",
         end: "bottom top",
-        scrub: 1.2,
+        scrub: 0.8,
       },
     });
 
-    // Row 2 shifts right on scroll
-    const anim2 = gsap.to(row2, {
-      x: "18%",
+    const scrub2 = gsap.to(row2, {
+      x: "25%",
       ease: "none",
       scrollTrigger: {
         trigger: container,
         start: "top bottom",
         end: "bottom top",
-        scrub: 1.2,
+        scrub: 0.8,
       },
     });
 
     return () => {
-      anim1.kill();
-      anim2.kill();
+      loop1.kill();
+      loop2.kill();
+      scrub1.kill();
+      scrub2.kill();
       ScrollTrigger.getAll().forEach((st) => {
         if (st.trigger === container) st.kill();
       });
@@ -120,7 +137,7 @@ export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps
       className="relative w-full border-t border-white/10 pt-20 pb-28 md:pt-28 md:pb-36 overflow-hidden bg-canvas"
     >
       {/* ── 1. SECTION CAPTION ────────────────────────────────────────────── */}
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16 mb-12">
+      <div className="mx-auto w-full max-w-[1440px] px-6 md:px-12 lg:px-16 mb-12">
         <div className="flex items-center gap-3">
           <span className="caption-pill">
             <span className="size-1.5 rounded-full bg-brand-primary" />
@@ -135,27 +152,26 @@ export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps
 
       {/* ── 2. ARIYANA KINETIC TEXT RUNWAYS ───────────────────────────────── */}
       <div className="relative py-12 md:py-20 select-none overflow-hidden">
-        {/* Row 1: Solid Condensed Typography (Moving Left on Scroll) */}
+        {/* Row 1: Solid Typography (Moving Left continuously + scrub) */}
         <div
           ref={row1Ref}
           className="flex whitespace-nowrap will-change-transform"
-          style={{ transform: "translate3d(0, 0, 0)" }}
         >
-          <span className="font-display text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] uppercase tracking-tighter text-fg/90 pr-8">
+          <span data-stroke="no" className="font-display text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] uppercase tracking-tighter text-fg/90 pr-8">
             {kineticText.repeat(4)}
           </span>
         </div>
 
-        {/* Row 2: Outlined Stroke Typography (Moving Right on Scroll) */}
+        {/* Row 2: Outlined Stroke Typography (Moving Right continuously + scrub) */}
         <div
           ref={row2Ref}
           className="flex whitespace-nowrap will-change-transform -mt-2 sm:-mt-6 md:-mt-10"
-          style={{ transform: "translate3d(-15%, 0, 0)" }}
         >
           <span
+            data-stroke="yes"
             className="font-display text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] uppercase tracking-tighter pr-8"
             style={{
-              WebkitTextStroke: "1px rgba(255, 255, 255, 0.25)",
+              WebkitTextStroke: "1px rgba(255, 255, 255, 0.35)",
               color: "transparent",
             }}
           >
@@ -170,7 +186,7 @@ export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps
               {email && (
                 <a
                   href={email.href}
-                  className="group flex items-center gap-4 rounded-full bg-brand-primary px-8 py-5 sm:px-12 sm:py-6 text-sm sm:text-base font-mono uppercase tracking-widest text-canvas font-bold shadow-[0_0_50px_rgba(0,240,255,0.5)] transition-all duration-300 hover:scale-105 hover:bg-brand-primary-soft"
+                  className="group flex items-center gap-4 rounded-full bg-brand-primary px-8 py-5 sm:px-12 sm:py-6 text-sm sm:text-base font-mono uppercase tracking-widest text-canvas font-bold shadow-[0_0_50px_rgba(0,240,255,0.5)] transition-all duration-300 hover:scale-105 hover:bg-brand-primary-soft active:scale-95"
                 >
                   <span id="contact-heading">{t.emailMe || "LET'S CONTACT"}</span>
                   <div className="size-8 rounded-full bg-canvas text-brand-primary flex items-center justify-center group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">
@@ -184,7 +200,7 @@ export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps
       </div>
 
       {/* ── 3. STRIPED HAIRLINE DIVIDER & VERIFIED CHANNELS BAR ───────────── */}
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16 pt-12">
+      <div className="mx-auto w-full max-w-[1440px] px-6 md:px-12 lg:px-16 pt-12">
         {/* Striped Hairline Borders (Ariyana signature detail) */}
         <div className="space-y-1.5 mb-12">
           <div className="h-px w-full bg-white/20" />

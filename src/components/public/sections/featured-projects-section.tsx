@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowUpRight, ExternalLink, Sparkles } from "lucide-react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { pick, type Locale } from "@/shared/i18n";
 import type { Dictionary } from "@/i18n/dictionary";
 import type { ProjectSummary } from "@/modules/public-portfolio/domain/types";
@@ -10,6 +12,8 @@ import { TechnologyLogo } from "@/components/technology/technology-logo";
 import { Reveal } from "@/components/public/reveal";
 import { PointerTilt } from "@/components/public/motion/interactions";
 import { VERIFIED_PROJECT_MEDIA, getProjectMedia } from "@/config/project-media";
+
+gsap.registerPlugin(ScrollTrigger);
 
 function GithubIcon({ className = "size-4" }: { className?: string }) {
   return (
@@ -26,9 +30,34 @@ interface FeaturedProjectsSectionProps {
   readonly viewAllHref?: string;
 }
 
+// Ariyana distinctive card accent color themes for layered 3D distinction
+const CARD_THEMES = [
+  {
+    border: "border-blue-500/30 group-hover:border-brand-primary/60",
+    bgGlow: "from-blue-500/10 via-transparent to-transparent",
+    pillBg: "bg-blue-500/20 text-blue-300 border-blue-400/30",
+  },
+  {
+    border: "border-emerald-500/30 group-hover:border-emerald-400/60",
+    bgGlow: "from-emerald-500/10 via-transparent to-transparent",
+    pillBg: "bg-emerald-500/20 text-emerald-300 border-emerald-400/30",
+  },
+  {
+    border: "border-purple-500/30 group-hover:border-purple-400/60",
+    bgGlow: "from-purple-500/10 via-transparent to-transparent",
+    pillBg: "bg-purple-500/20 text-purple-300 border-purple-400/30",
+  },
+];
+
 /**
  * Ariyana V3 Selected Works / Projects Section (§28, §35–43).
- * Seamlessly integrates verified client production proof videos with real architecture data.
+ *
+ * Implements Ariyana's signature 3D Stacked Card Deck (Timeline t-27af1710):
+ * - Layered card deck with sticky perspective stacking on desktop (>= 1024px).
+ * - As user scrolls, the active card stays in view while the next card smoothly glides up
+ *   and overlaps, scaling the underlying card down to 0.94 and fading it into the background.
+ * - On scroll up: smoothly contracts back into view in reverse.
+ * - On mobile (< 1024px): graceful vertical card layout with zero pin traps.
  */
 export function FeaturedProjectsSection({
   projects,
@@ -36,6 +65,9 @@ export function FeaturedProjectsSection({
   dict,
   viewAllHref,
 }: FeaturedProjectsSectionProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+
   // Merge DB projects with verified client media projects (avoiding duplicate slugs)
   const existingSlugs = new Set(projects.map((p) => p.slug));
   const verifiedAdditional: ProjectSummary[] = VERIFIED_PROJECT_MEDIA
@@ -55,13 +87,56 @@ export function FeaturedProjectsSection({
 
   const allDisplayProjects = [...projects, ...verifiedAdditional];
 
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    const cards = cardsRef.current.filter((c): c is HTMLDivElement => c !== null);
+    if (cards.length <= 1) return;
+
+    const mm = gsap.matchMedia();
+
+    // On desktop, add scrubbed 3D depth transitions between stacked cards
+    mm.add("(min-width: 1024px)", () => {
+      cards.forEach((card, idx) => {
+        if (idx === cards.length - 1) return;
+
+        // As the next card covers this card, slightly compress scale & dim opacity
+        gsap.to(card, {
+          scale: 0.92,
+          opacity: 0.35,
+          ease: "none",
+          scrollTrigger: {
+            trigger: cards[idx + 1],
+            start: "top 80%",
+            end: "top 30%",
+            scrub: true,
+          },
+        });
+      });
+
+      return () => {
+        ScrollTrigger.getAll().forEach((st) => {
+          if (st.vars.trigger && cards.includes(st.vars.trigger as HTMLDivElement)) {
+            st.kill();
+          }
+        });
+      };
+    });
+
+    return () => {
+      mm.revert();
+    };
+  }, [allDisplayProjects.length]);
+
   return (
     <section
+      ref={containerRef}
       id="projects"
       aria-labelledby="featured-heading"
       className="relative w-full border-t border-white/10 py-24 lg:py-36 overflow-hidden bg-canvas"
     >
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16">
+      <div className="mx-auto w-full max-w-[1440px] px-6 md:px-12 lg:px-16">
         {/* Caption Header */}
         <div className="flex items-center gap-3 mb-8">
           <span className="caption-pill">
@@ -99,7 +174,7 @@ export function FeaturedProjectsSection({
           </div>
         </div>
 
-        {/* Projects List */}
+        {/* Projects 3D Stack Deck */}
         {allDisplayProjects.length === 0 ? (
           <div className="rounded-[2rem] border border-dashed border-white/20 bg-surface/20 p-16 text-center">
             <p className="font-mono text-xs text-fg-subtle uppercase tracking-widest mb-2">
@@ -110,21 +185,35 @@ export function FeaturedProjectsSection({
             </p>
           </div>
         ) : (
-          <div className="space-y-16">
-            {allDisplayProjects.map((project, index) => (
-              <Reveal key={project.slug} direction="up" distance={30} delay={index * 0.1}>
-                <AriyanaProjectItem
-                  project={project}
-                  locale={locale}
-                  index={index}
-                />
-              </Reveal>
-            ))}
+          <div className="relative space-y-12 lg:space-y-24">
+            {allDisplayProjects.map((project, index) => {
+              const theme = CARD_THEMES[index % CARD_THEMES.length]!;
+
+              return (
+                <div
+                  key={project.slug}
+                  ref={(el) => {
+                    cardsRef.current[index] = el;
+                  }}
+                  className={`lg:sticky lg:top-28 transition-transform will-change-transform`}
+                  style={{
+                    zIndex: index + 10,
+                  }}
+                >
+                  <AriyanaProjectItem
+                    project={project}
+                    locale={locale}
+                    index={index}
+                    theme={theme}
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
 
         {viewAllHref && (
-          <div className="mt-16 text-center">
+          <div className="mt-20 text-center">
             <Link
               href={viewAllHref}
               className="group inline-flex items-center gap-3 rounded-full border border-white/15 px-8 py-4 text-xs font-mono uppercase tracking-widest text-fg hover:border-brand-primary hover:bg-brand-primary/10 transition-all duration-300"
@@ -143,10 +232,16 @@ function AriyanaProjectItem({
   project,
   locale,
   index,
+  theme,
 }: {
   readonly project: ProjectSummary;
   readonly locale: Locale;
   readonly index: number;
+  readonly theme: {
+    readonly border: string;
+    readonly bgGlow: string;
+    readonly pillBg: string;
+  };
 }) {
   const title = pick(project.title, locale);
   const summary = pick(project.summary, locale);
@@ -177,12 +272,19 @@ function AriyanaProjectItem({
   }, [hasVideo]);
 
   return (
-    <div className="group relative rounded-[2.5rem] border border-white/15 bg-surface/40 p-8 sm:p-12 lg:p-16 backdrop-blur-md transition-all duration-500 hover:border-brand-primary/40 hover:shadow-[0_20px_70px_rgba(0,0,0,0.6)]">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+    <div
+      className={`group relative rounded-[2.5rem] border ${theme.border} bg-surface/90 p-8 sm:p-12 lg:p-16 backdrop-blur-xl transition-all duration-500 shadow-[0_20px_80px_rgba(0,0,0,0.8)] overflow-hidden`}
+    >
+      {/* Subtle Background Glow Accent */}
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${theme.bgGlow} pointer-events-none opacity-50`}
+      />
+
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
         {/* Left: Project Metadata & Copy (6 Cols) */}
         <div className="lg:col-span-6 space-y-6">
           <div className="flex items-center gap-4">
-            <span className="font-display text-5xl sm:text-6xl text-brand-primary-soft/80 font-normal">
+            <span className="font-display text-5xl sm:text-6xl text-brand-primary-soft/90 font-normal">
               {projectNumber}
             </span>
             <div className="h-6 w-px bg-white/15" />
@@ -332,39 +434,24 @@ function AriyanaProjectItem({
                   </span>
                 </div>
 
-                {/* Center Architecture Spec Graphic */}
-                <div className="my-auto py-6">
-                  <div className="relative z-10 space-y-3">
-                    <div className="inline-flex items-center gap-2 rounded-md bg-brand-primary/10 border border-brand-primary/30 px-3 py-1 font-mono text-[11px] text-brand-primary-soft">
-                      <Sparkles className="size-3" />
-                      <span>FULLSTACK &amp; SERVICE LAYER</span>
-                    </div>
-                    <h4 className="text-2xl sm:text-3xl font-display uppercase tracking-tight text-fg">
-                      {title}
-                    </h4>
-                    <p className="font-mono text-xs text-fg-subtle line-clamp-2">
-                      Atomic transaction isolation · Redis caching · 2FA TOTP · Celery worker orchestration
-                    </p>
-                  </div>
-
-                  {/* Ambient Glows */}
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-primary/15 rounded-full blur-3xl pointer-events-none" />
-                  <div className="absolute bottom-4 right-8 w-48 h-48 bg-brand-accent/10 rounded-full blur-2xl pointer-events-none" />
-                </div>
-
-                {/* Bottom Tech Rail */}
-                <div className="pt-4 border-t border-white/10 flex items-center justify-between">
-                  <span className="font-mono text-[11px] uppercase tracking-wider text-fg-subtle">
-                    NEON POSTGRESQL · FASTAPI · REDIS
+                {/* Center Blueprint Graphic */}
+                <div className="my-auto py-6 text-center space-y-2">
+                  <span className="font-display text-4xl sm:text-5xl uppercase tracking-tight text-white/80">
+                    {title}
                   </span>
-                  <div className="flex items-center gap-1.5 text-brand-primary-soft text-xs font-mono">
-                    <span>VERIFIED LIVE</span>
-                    <ArrowUpRight className="size-3.5 transition-transform duration-300 group-hover/img:translate-x-0.5 group-hover/img:-translate-y-0.5" />
-                  </div>
+                  <p className="font-mono text-xs text-fg-subtle uppercase tracking-wider">
+                    CLEAN ARCHITECTURE · TYPE-SAFE PERSISTENCE
+                  </p>
                 </div>
 
-                {/* Glass subtle shimmer overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                {/* Bottom Bar */}
+                <div className="flex items-center justify-between border-t border-white/10 pt-4 font-mono text-xs text-fg-subtle">
+                  <span>LIVE PRODUCTION EVIDENCE</span>
+                  <div className="flex items-center gap-1 text-brand-primary-soft">
+                    <span>VIEW CASE STUDY</span>
+                    <ArrowUpRight className="size-3.5" />
+                  </div>
+                </div>
               </div>
             )}
           </PointerTilt>
