@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Syne, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Bebas_Neue, Oswald } from "next/font/google";
 import { SITE } from "@/config/site";
 import { SkipLink } from "@/components/accessibility/skip-link";
 import "./globals.css";
@@ -10,10 +10,17 @@ const inter = Inter({
   display: "swap",
 });
 
-const syne = Syne({
+const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
-  weight: ["700", "800"],
-  variable: "--font-syne",
+  weight: ["400"],
+  variable: "--font-bebas",
+  display: "swap",
+});
+
+const oswald = Oswald({
+  subsets: ["latin", "vietnamese"],
+  weight: ["500", "600", "700"],
+  variable: "--font-oswald",
   display: "swap",
 });
 
@@ -41,7 +48,7 @@ export default function RootLayout({
   return (
     <html
       lang={SITE.defaultLocale}
-      className={`${inter.variable} ${syne.variable} ${mono.variable} h-full antialiased`}
+      className={`${inter.variable} ${bebasNeue.variable} ${oswald.variable} ${mono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>

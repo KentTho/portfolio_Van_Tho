@@ -1,15 +1,18 @@
-import { ArrowUp } from "lucide-react";
+import Link from "next/link";
+import { ArrowUp, ArrowUpRight } from "lucide-react";
 import type { Locale } from "@/shared/i18n";
 import type { Dictionary } from "@/i18n/dictionary";
 import type { Profile } from "@/modules/public-portfolio/domain/types";
+import { LanguageSwitcher } from "@/components/public/language-switcher";
+import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 /**
- * COSMIC ENGINEERING EDITORIAL — Public Footer (V2)
- *
- * Minimal page closure — not another section: brand + copyright/year (left),
- * verified links + a restrained Back-to-Top control (right). Hairline top border.
- * Server component, so the year is computed once server-side (deterministic — no
- * client divergence, no hydration risk). Hover INCREASES affordance (never dims).
+ * Ariyana V3 Public Footer (§41).
+ * Features near-clone Ariyana footer visual:
+ * - Monumental brand wordmark (HÀ VĂN THỌ) spanning the bottom
+ * - Navigation links & verified social channels
+ * - Back to Top control with smooth scroll
+ * - Deterministic server-only copyright year
  */
 export function PublicFooter({
   profile,
@@ -20,55 +23,107 @@ export function PublicFooter({
   readonly locale: Locale;
   readonly dict: Dictionary;
 }) {
-  const year = new Date().getFullYear(); // server-only render → deterministic
+  const year = new Date().getFullYear();
+
+  const footerNav = [
+    { href: `/${locale}#home`, label: "Home" },
+    { href: `/${locale}#about`, label: dict.nav.about },
+    { href: `/${locale}#projects`, label: dict.nav.projects },
+    { href: `/${locale}#career`, label: dict.nav.experience },
+    { href: `/${locale}#skills`, label: dict.nav.skills },
+    { href: `/${locale}#contact`, label: dict.nav.contact },
+  ];
 
   return (
-    <footer className="mt-32 border-t border-border/50">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-10 sm:flex-row sm:items-end sm:justify-between">
-        {/* Left: identity + copyright */}
-        <div>
-          <p className="font-display text-base font-bold tracking-tight text-fg">
-            {profile.name}
-            <span className="ml-[3px] text-accent" aria-hidden>
-              .
-            </span>
-          </p>
-          <p className="mt-1 text-xs text-fg-subtle">{dict.footer.madeWith}</p>
-          <p className="mt-0.5 text-xs text-fg-subtle">
-            © {year} {profile.name}
+    <footer className="relative w-full border-t border-white/10 bg-canvas pt-20 pb-12 overflow-hidden">
+      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16">
+        {/* Top Controls & Navigation Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-white/10 items-start">
+          {/* Brand Info & Mission (5 cols) */}
+          <div className="md:col-span-5 space-y-4">
+            <Link
+              href={`/${locale}`}
+              className="inline-flex items-center gap-2 font-mono text-sm tracking-wider uppercase text-fg hover:text-brand-primary-soft transition-colors"
+            >
+              <span className="text-brand-primary font-bold">{"//"}</span>
+              <span className="font-display text-xl">{profile.name}</span>
+            </Link>
+            <p className="text-body-s text-fg-muted max-w-sm leading-relaxed">
+              Software Engineer &amp; Full-Stack Architect specialized in resilient web applications, distributed systems, and modern digital craft.
+            </p>
+            <div className="pt-2">
+              <a
+                href="mailto:kenttho.dev@gmail.com"
+                className="group inline-flex items-center gap-2 text-xs font-mono tracking-widest text-brand-primary-soft hover:text-fg uppercase transition-colors"
+              >
+                <span>kenttho.dev@gmail.com</span>
+                <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Nav Links (4 cols) */}
+          <div className="md:col-span-4">
+            <p className="font-mono text-xs uppercase tracking-widest text-fg-subtle mb-4">
+              DIRECTORY
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {footerNav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="font-mono text-xs uppercase tracking-wider text-fg-muted hover:text-brand-primary-soft transition-colors"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Socials & Back to top (3 cols) */}
+          <div className="md:col-span-3 flex flex-col items-start md:items-end justify-between h-full space-y-6">
+            <div className="flex flex-wrap gap-2">
+              {profile.socials
+                .filter((s) => s.kind !== "resume")
+                .map((s) => (
+                  <a
+                    key={s.href}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="size-10 rounded-full border border-white/10 flex items-center justify-center font-mono text-xs text-fg-muted hover:border-brand-primary hover:text-brand-primary-soft hover:bg-white/5 transition-colors uppercase"
+                    title={s.label}
+                  >
+                    {s.kind.slice(0, 2)}
+                  </a>
+                ))}
+            </div>
+
+            <a
+              href={`/${locale}#home`}
+              className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 font-mono text-xs uppercase tracking-widest text-fg hover:border-brand-primary hover:bg-brand-primary/10 transition-all"
+            >
+              <span>{dict.footer.backToTop || "BACK TO TOP"}</span>
+              <ArrowUp className="size-3.5 text-brand-primary transition-transform duration-300 group-hover:-translate-y-0.5" />
+            </a>
+          </div>
+        </div>
+
+        {/* ── GIANT ARIYANA WORDMARK ────────────────────────────────────────── */}
+        <div className="py-12 sm:py-16 overflow-hidden select-none text-center">
+          <p className="text-mega font-display text-white/[0.08] hover:text-white/[0.14] transition-colors duration-500 tracking-tight leading-none uppercase">
+            {profile.name || "HÀ VĂN THỌ"}
           </p>
         </div>
 
-        {/* Right: verified links + Back-to-Top */}
-        <div className="flex flex-wrap items-center gap-2">
-          {profile.socials
-            .filter((s) => s.kind !== "resume")
-            .map((social) => {
-              const external = social.kind !== "email";
-              return (
-                <a
-                  key={social.kind}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="label-mono flex min-h-11 items-center rounded-full border border-border px-3 text-fg-subtle transition-colors hover:border-brand-primary-soft/50 hover:text-brand-primary-soft focus-visible:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                >
-                  {social.kind}
-                </a>
-              );
-            })}
+        {/* Bottom Legal, Locale & Theme Bar */}
+        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-fg-subtle">
+          <p>© {year} {profile.name}. All rights reserved.</p>
 
-          <a
-            href={`/${locale}#home`}
-            className="group ml-1 flex min-h-11 items-center gap-1.5 rounded-full border border-border px-4 text-xs font-medium text-fg-muted transition-colors hover:border-brand-primary-soft/50 hover:text-fg focus-visible:text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            {dict.footer.backToTop}
-            <ArrowUp
-              size={14}
-              aria-hidden
-              className="transition-transform duration-300 group-hover:-translate-y-0.5"
-            />
-          </a>
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher locale={locale} label={dict.actions?.switchLanguage || "Language"} />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </footer>

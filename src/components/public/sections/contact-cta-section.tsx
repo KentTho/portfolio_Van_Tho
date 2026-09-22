@@ -1,15 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Mail, Copy, Check, AlertCircle } from "lucide-react";
-import { motion, type Variants } from "motion/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowUpRight, Copy, Check, Sparkles } from "lucide-react";
 import type { SocialLink } from "@/modules/public-portfolio/domain/types";
-import { useReducedMotionSafe } from "@/components/public/motion/use-reduced-motion-safe";
 import { GithubMark, LinkedinMark } from "@/components/public/visual/brand-icons";
-import { EASE_OUT } from "@/components/public/motion/motion-tokens";
-import { copyAnnounce, type CopyState } from "@/components/public/sections/contact-copy";
-import { useReplayableReveal } from "@/components/public/motion/use-replayable-reveal";
 import { Magnetic } from "@/components/public/motion/interactions";
+import type { CopyState } from "@/components/public/sections/contact-copy";
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface ContactCopy {
   readonly eyebrow: string;
@@ -25,40 +25,29 @@ interface ContactCopy {
 }
 
 interface ContactCtaSectionProps {
-  /** Real public email (address + mailto href), or null if none is published. */
   readonly email: { readonly address: string; readonly href: string } | null;
-  /** Verified professional channels (GitHub/LinkedIn — never fabricated). */
   readonly channels: readonly SocialLink[];
   readonly t: ContactCopy;
 }
 
 function ChannelIcon({ kind }: { readonly kind: SocialLink["kind"] }) {
   if (kind === "linkedin") return <LinkedinMark size={16} />;
-  if (kind === "email") return <Mail size={16} aria-hidden />;
   return <GithubMark size={16} />;
 }
 
-const container: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.09, delayChildren: 0.04 } },
-};
-const rise: Variants = {
-  hidden: { opacity: 0, y: 26 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.68, ease: EASE_OUT } },
-};
-
 /**
- * CONTACT — #contact (V2). The conversion point: a calm, focused, recruiter-first
- * closing statement with a REAL email as the primary action. Editorial centred
- * composition, large negative space, one dominant accent — no glass card, no
- * decoration competing with the CTA. The copy-email utility is a robust React
- * state machine (idle/copied/error) with clipboard try/catch, a stable-width
- * (grid-stacked) label, timer cleanup, and an aria-live announcement. Verified
- * channels only (no fabricated social platforms). Contact write boundary (form/
- * Turnstile/delivery) stays out of scope (Wave 06A). Reduced-motion → static.
+ * Ariyana V3 Kinetic CTA Section (§22).
+ *
+ * Implements Ariyana's signature kinetic CTA mechanic:
+ * 1. Two alternating, oversized repeated text rows driven by GSAP ScrollTrigger scrub.
+ * 2. Row 1 moves left, Row 2 moves right on scroll down; both reverse smoothly on scroll up.
+ * 3. Centered floating magnetic CTA button ("LET'S CONTACT") with copy-email state machine.
+ * 4. Verified network chips and direct email action.
  */
 export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps) {
-  const reduced = useReducedMotionSafe();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
   const [copyState, setCopyState] = useState<CopyState>("idle");
   const timerRef = useRef<number | null>(null);
 
@@ -68,128 +57,189 @@ export function ContactCtaSection({ email, channels, t }: ContactCtaSectionProps
 
   const onCopy = async () => {
     if (!email) return;
-    if (timerRef.current) window.clearTimeout(timerRef.current); // last click owns the reset
+    if (timerRef.current) window.clearTimeout(timerRef.current);
     try {
       if (!navigator.clipboard?.writeText) throw new Error("clipboard-unavailable");
       await navigator.clipboard.writeText(email.address);
       setCopyState("copied");
     } catch {
-      setCopyState("error"); // primary mailto CTA still works
+      setCopyState("error");
     }
     timerRef.current = window.setTimeout(() => setCopyState("idle"), 2200);
   };
 
-  const { ref, hasEntered } = useReplayableReveal("-10% 0px -10% 0px", "20% 0px 20% 0px");
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedMotion) return;
+
+    const container = containerRef.current;
+    const row1 = row1Ref.current;
+    const row2 = row2Ref.current;
+    if (!container || !row1 || !row2) return;
+
+    // Row 1 shifts left on scroll
+    const anim1 = gsap.to(row1, {
+      x: "-18%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: container,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1.2,
+      },
+    });
+
+    // Row 2 shifts right on scroll
+    const anim2 = gsap.to(row2, {
+      x: "18%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: container,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1.2,
+      },
+    });
+
+    return () => {
+      anim1.kill();
+      anim2.kill();
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.trigger === container) st.kill();
+      });
+    };
+  }, []);
+
+  const kineticText = "LET'S CONNECT AND LET'S WORK TOGETHER • CÙNG NHAU XÂY DỰNG • ";
 
   return (
-    <section aria-labelledby="contact-heading" className="mx-auto w-full max-w-6xl px-6 py-28 lg:py-36">
-      <motion.div
-        ref={ref}
-        className="mx-auto flex max-w-2xl flex-col items-center text-center"
-        variants={reduced ? undefined : container}
-        initial={reduced ? false : "hidden"}
-        animate={hasEntered ? "visible" : "hidden"}
-      >
-        <motion.p variants={reduced ? undefined : rise} className="label-mono text-brand-primary-soft">
-          {t.eyebrow}
-        </motion.p>
-        <motion.h2
-          variants={reduced ? undefined : rise}
-          id="contact-heading"
-          className="mt-4 font-display text-h2 font-semibold tracking-tight text-fg"
+    <section
+      ref={containerRef}
+      id="contact"
+      aria-labelledby="contact-heading"
+      className="relative w-full border-t border-white/10 pt-20 pb-28 md:pt-28 md:pb-36 overflow-hidden bg-canvas"
+    >
+      {/* ── 1. SECTION CAPTION ────────────────────────────────────────────── */}
+      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16 mb-12">
+        <div className="flex items-center gap-3">
+          <span className="caption-pill">
+            <span className="size-1.5 rounded-full bg-brand-primary" />
+            <span>COLLABORATION // DIRECT INQUIRY</span>
+          </span>
+          <span className="h-px flex-1 bg-white/10" />
+          <span className="font-mono text-xs text-brand-primary-soft uppercase tracking-widest hidden sm:inline-block">
+            07 // KINETIC CONVERGENCE
+          </span>
+        </div>
+      </div>
+
+      {/* ── 2. ARIYANA KINETIC TEXT RUNWAYS ───────────────────────────────── */}
+      <div className="relative py-12 md:py-20 select-none overflow-hidden">
+        {/* Row 1: Solid Condensed Typography (Moving Left on Scroll) */}
+        <div
+          ref={row1Ref}
+          className="flex whitespace-nowrap will-change-transform"
+          style={{ transform: "translate3d(0, 0, 0)" }}
         >
-          {t.headline}
-        </motion.h2>
-        <motion.p variants={reduced ? undefined : rise} className="mt-5 max-w-[46ch] text-body-l text-fg-muted">
-          {t.lead}
-        </motion.p>
+          <span className="font-display text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] uppercase tracking-tighter text-fg/90 pr-8">
+            {kineticText.repeat(4)}
+          </span>
+        </div>
 
-        {/* Actions — primary real email, secondary copy utility */}
-        <motion.div variants={reduced ? undefined : rise} className="mt-9 flex flex-col items-center gap-3 sm:flex-row">
-          {email && (
-            <Magnetic>
-              <a
-                href={email.href}
-                className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-accent px-8 text-sm font-semibold text-canvas transition-[filter] hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-                style={{ boxShadow: "var(--glow-primary-soft)" }}
+        {/* Row 2: Outlined Stroke Typography (Moving Right on Scroll) */}
+        <div
+          ref={row2Ref}
+          className="flex whitespace-nowrap will-change-transform -mt-2 sm:-mt-6 md:-mt-10"
+          style={{ transform: "translate3d(-15%, 0, 0)" }}
+        >
+          <span
+            className="font-display text-6xl sm:text-8xl md:text-9xl lg:text-[11rem] uppercase tracking-tighter pr-8"
+            style={{
+              WebkitTextStroke: "1px rgba(255, 255, 255, 0.25)",
+              color: "transparent",
+            }}
+          >
+            {kineticText.repeat(4)}
+          </span>
+        </div>
+
+        {/* Floating Centered Magnetic CTA Pill */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+          <Magnetic>
+            <div className="pointer-events-auto flex items-center gap-4">
+              {email && (
+                <a
+                  href={email.href}
+                  className="group flex items-center gap-4 rounded-full bg-brand-primary px-8 py-5 sm:px-12 sm:py-6 text-sm sm:text-base font-mono uppercase tracking-widest text-canvas font-bold shadow-[0_0_50px_rgba(0,240,255,0.5)] transition-all duration-300 hover:scale-105 hover:bg-brand-primary-soft"
+                >
+                  <span id="contact-heading">{t.emailMe || "LET'S CONTACT"}</span>
+                  <div className="size-8 rounded-full bg-canvas text-brand-primary flex items-center justify-center group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform">
+                    <ArrowUpRight className="size-5" />
+                  </div>
+                </a>
+              )}
+            </div>
+          </Magnetic>
+        </div>
+      </div>
+
+      {/* ── 3. STRIPED HAIRLINE DIVIDER & VERIFIED CHANNELS BAR ───────────── */}
+      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16 pt-12">
+        {/* Striped Hairline Borders (Ariyana signature detail) */}
+        <div className="space-y-1.5 mb-12">
+          <div className="h-px w-full bg-white/20" />
+          <div className="h-px w-full bg-white/10" />
+          <div className="h-px w-full bg-white/5" />
+        </div>
+
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 font-mono text-xs text-brand-primary-soft uppercase tracking-wider">
+              <Sparkles className="size-3.5" />
+              <span>DIRECT AVAILABILITY</span>
+            </div>
+            <p className="text-body text-fg-muted max-w-xl">
+              {t.lead ||
+                "Tôi sẵn sàng cho các cơ hội kỹ sư phần mềm, tư vấn kiến trúc hệ thống và xây dựng sản phẩm công nghệ cao cấp."}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4">
+            {email && (
+              <button
+                type="button"
+                onClick={onCopy}
+                className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-6 py-3.5 text-xs font-mono uppercase tracking-widest text-fg hover:border-brand-primary hover:bg-white/10 transition-colors"
               >
-                <Mail size={16} aria-hidden />
-                {t.emailMe}
+                {copyState === "copied" ? (
+                  <>
+                    <Check className="size-3.5 text-emerald-400" />
+                    <span className="text-emerald-400">{t.copied}</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="size-3.5 text-brand-primary-soft" />
+                    <span>{email.address}</span>
+                  </>
+                )}
+              </button>
+            )}
+
+            {channels.map((channel) => (
+              <a
+                key={channel.href}
+                href={channel.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={channel.label}
+                className="size-11 rounded-full border border-white/15 bg-white/5 flex items-center justify-center text-fg hover:border-brand-primary hover:text-brand-primary-soft transition-all"
+              >
+                <ChannelIcon kind={channel.kind} />
               </a>
-            </Magnetic>
-          )}
-          {email && (
-            <button
-              type="button"
-              onClick={onCopy}
-              className="group relative inline-flex min-h-12 items-center justify-center rounded-full border border-border-strong bg-surface/40 px-6 text-sm font-medium text-fg transition-colors hover:border-brand-primary-soft/50 hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-canvas active:scale-[0.98] motion-reduce:active:scale-100"
-            >
-              {/* Grid-stacked labels → width = widest state → no width jump */}
-              <span className="grid" aria-hidden>
-                <span className={`col-start-1 row-start-1 inline-flex items-center gap-2 transition-opacity ${copyState === "idle" ? "opacity-100" : "opacity-0"}`}>
-                  <Copy size={15} /> {t.copyEmail}
-                </span>
-                <span className={`col-start-1 row-start-1 inline-flex items-center gap-2 transition-opacity ${copyState === "copied" ? "opacity-100" : "opacity-0"}`}>
-                  <Check size={15} className="text-success" /> {t.copied}
-                </span>
-                <span className={`col-start-1 row-start-1 inline-flex items-center gap-2 transition-opacity ${copyState === "error" ? "opacity-100" : "opacity-0"}`}>
-                  <AlertCircle size={15} className="text-warning" /> {t.copyError}
-                </span>
-              </span>
-              {/* Stable accessible name regardless of visual state */}
-              <span className="sr-only">
-                {t.copyEmail}
-                {email ? `: ${email.address}` : ""}
-              </span>
-            </button>
-          )}
-        </motion.div>
-
-        {/* Live region — announces copy result without spamming */}
-        <span role="status" aria-live="polite" className="sr-only">
-          {copyAnnounce(copyState, t)}
-        </span>
-
-        {/* Verified channels — hover INCREASES affordance (never dims) */}
-        {channels.length > 0 && (
-          <motion.div variants={reduced ? undefined : rise} className="mt-12 flex flex-col items-center gap-3">
-            <span className="label-mono text-fg-subtle">{t.channels}</span>
-            <ul className="flex flex-wrap items-center justify-center gap-2">
-              {channels.map((c) => (
-                <li key={c.href}>
-                  {c.href === "#linkedin-pending" ? (
-                    <div
-                      title="LinkedIn profile URL to be provided by Owner"
-                      className="group inline-flex min-h-11 items-center gap-2 rounded-full border border-border/60 bg-surface/30 px-4 text-sm text-fg-muted/70 cursor-default"
-                    >
-                      <ChannelIcon kind={c.kind} />
-                      {c.label}
-                      <span className="text-[10px] font-mono tracking-wider opacity-60">(Pending)</span>
-                    </div>
-                  ) : (
-                    <a
-                      href={c.href}
-                      target={c.kind === "email" ? undefined : "_blank"}
-                      rel={c.kind === "email" ? undefined : "noopener noreferrer"}
-                      className="group inline-flex min-h-11 items-center gap-2 rounded-full border border-border bg-surface/40 px-4 text-sm text-fg-muted transition-colors hover:border-brand-primary-soft/50 hover:text-brand-primary-soft focus-visible:text-brand-primary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                      <ChannelIcon kind={c.kind} />
-                      {c.label}
-                      {c.kind !== "email" && (
-                        <ArrowUpRight
-                          size={13}
-                          aria-hidden
-                          className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                        />
-                      )}
-                    </a>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

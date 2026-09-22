@@ -96,45 +96,49 @@
   --radius-sm: 0.75rem; /* 12px — inputs */
   --radius-pill: 9999px; /* buttons */
 
-  /* ── Typography stacks (next/font injects --font-inter/-syne/-mono) ──────── */
+  /* ── Typography stacks (next/font injects --font-inter/-bebas/-oswald/-mono) ── */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --font-display: var(--font-syne), "Space Grotesk", ui-sans-serif, system-ui,
+  --font-display: var(--font-bebas), var(--font-oswald), ui-sans-serif, system-ui,
     -apple-system, sans-serif;
+  --font-editorial: var(--font-oswald), var(--font-inter), sans-serif;
   --font-mono: var(--font-mono), "JetBrains Mono", "Cascadia Code",
     "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
 
-  /* ── Typographic scale anchors (§8) — responsive, QA-tuned ─────────────── */
-  --text-display: clamp(2.75rem, 6vw + 0.5rem, 5rem); /* Hero name */
-  --text-h1: clamp(2.25rem, 4vw + 0.5rem, 3.75rem);
-  --text-h2: clamp(1.75rem, 2.4vw + 0.75rem, 2.75rem);
-  --text-h3: clamp(1.25rem, 1vw + 0.75rem, 1.6rem);
+  /* ── Typographic scale anchors (Ariyana V3 Rebase) ───────────────────────── */
+  --text-mega: clamp(4rem, 11vw, 10.5rem); /* Ariyana oversized display titles */
+  --text-display: clamp(2.75rem, 6.5vw, 5.5rem); /* Hero name / Large section headlines */
+  --text-h1: clamp(2.25rem, 4.5vw, 4rem);
+  --text-h2: clamp(1.75rem, 3vw, 2.75rem);
+  --text-h3: clamp(1.25rem, 1.5vw + 0.5rem, 1.75rem);
   --text-body-l: clamp(1.075rem, 0.4vw + 1rem, 1.3rem);
   --text-body: 1rem;
   --text-body-s: 0.875rem;
-  --text-label: 0.6875rem; /* 11px mono label */
-  --lh-display: 0.95;
-  --lh-tight: 1.1;
+  --text-label: 0.75rem; /* 12px mono metadata pill */
+  --lh-mega: 0.88;
+  --lh-display: 0.92;
+  --lh-tight: 1.05;
   --lh-body: 1.7;
-  --tracking-display: -0.03em;
-  --tracking-tight: -0.02em;
-  --tracking-label: 0.14em;
+  --tracking-mega: 0.01em;
+  --tracking-display: -0.02em;
+  --tracking-tight: -0.01em;
+  --tracking-label: 0.12em;
 
-  /* ── Spatial grammar (§9) ──────────────────────────────────────────────── */
-  --container-max: 72rem; /* 1152px editorial container */
-  --gutter: 1.5rem; /* horizontal page gutter */
-  --section-py: clamp(4.5rem, 8vw, 7.5rem); /* vertical section rhythm */
-  --measure: 65ch; /* body reading measure */
+  /* ── Spatial grammar (Ariyana Wide Canvas Foundation §17) ────────────────── */
+  --container-max: 105rem; /* 1680px wide canvas equivalent */
+  --container-editorial: 80rem; /* 1280px editorial focus */
+  --gutter: clamp(1.5rem, 4.5vw, 4rem); /* Responsive horizontal page padding ~5% */
+  --section-py: clamp(5.5rem, 9vw, 9rem); /* Large editorial rhythm 90px - 144px */
+  --measure: 68ch; /* body reading measure */
 
-  /* ── Motion grammar — MOTION_INTENSITY≈5 (motivated, not decorative) ───── */
+  /* ── Motion grammar — Ariyana smooth scroll & kinetic reveals ──────────── */
   --motion-fast: 160ms;
   --motion-base: 380ms;
   --motion-slow: 700ms;
+  --motion-cinematic: 1000ms;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  /* Optical-focus (adapted from the vivid substrate reference) — slow start,
-     decisive stop, like pulling optical focus. Scene/substrate transitions ONLY
-     (never buttons/hover/focus-ring). */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-scene-focus: cubic-bezier(0.52, 0.01, 0, 1);
 
   /* ── Legacy aliases (existing components → brand, no churn) ─────────────── */

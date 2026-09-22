@@ -32,14 +32,38 @@
   --color-ring: var(--ring);
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);
+  --font-editorial: var(--font-editorial);
+  --font-bebas: var(--font-bebas);
+  --font-oswald: var(--font-oswald);
   --font-mono: var(--font-mono);
   --radius: var(--radius);
   --radius-sm: var(--radius-sm);
 }
 
-/* ─── Base ───────────────────────────────────────────────────────────────── */
+/* ─── Locale-Aware Typography Authority (Owner Lock 1A) ──────────────────── */
+:lang(vi),
+[lang="vi"] {
+  --font-display: var(--font-oswald), var(--font-inter), sans-serif;
+}
+
+/* ─── Base & Lenis Smooth Scroll Integration ─────────────────────────────── */
 html {
   scroll-behavior: smooth;
+}
+
+/* When Lenis is initialized, prevent double-smoothing conflict */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 body {
@@ -56,34 +80,60 @@ body {
   color: var(--foreground);
 }
 
-/* ─── Semantic typography scale (§8 — one system, consistent everywhere) ──── */
+/* ─── Semantic typography scale (Ariyana V3 Rebase) ──────────────────────── */
+.text-mega {
+  font-family: var(--font-display);
+  font-size: var(--text-mega);
+  font-weight: 400;
+  line-height: var(--lh-mega);
+  letter-spacing: var(--tracking-mega);
+  text-transform: uppercase;
+}
 .text-display {
   font-family: var(--font-display);
   font-size: var(--text-display);
-  font-weight: 800;
+  font-weight: 400;
   line-height: var(--lh-display);
   letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
 }
 .text-h1 {
   font-family: var(--font-display);
   font-size: var(--text-h1);
-  font-weight: 700;
+  font-weight: 400;
   line-height: var(--lh-tight);
   letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
 }
 .text-h2 {
   font-family: var(--font-display);
   font-size: var(--text-h2);
-  font-weight: 700;
+  font-weight: 400;
   line-height: var(--lh-tight);
   letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
 }
 .text-h3 {
-  font-family: var(--font-display);
+  font-family: var(--font-editorial);
   font-size: var(--text-h3);
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: var(--tracking-tight);
+}
+.caption-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  background-color: color-mix(in oklab, var(--brand-primary) 10%, transparent);
+  border: 1px solid color-mix(in oklab, var(--brand-primary) 25%, transparent);
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  font-weight: 500;
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--brand-primary-soft);
 }
 .text-headline {
   /* legacy alias → H2 (kept for any older callers) */
@@ -153,4 +203,23 @@ body {
   .vivid-substrate .vivid-prism svg {
     filter: blur(6px) !important;
   }
+}
+
+/* ─── Ariyana Continuous Marquee Keyframes ─────────────────────────────────── */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
