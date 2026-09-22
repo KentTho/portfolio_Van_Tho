@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowUpRight, ExternalLink, Sparkles } from "lucide-react";
 import { pick, type Locale } from "@/shared/i18n";
@@ -152,6 +153,28 @@ function AriyanaProjectItem({
   const projectNumber = String(index + 1).padStart(2, "0");
   const mediaConfig = getProjectMedia(project.slug);
   const hasVideo = Boolean(mediaConfig?.videoSrc);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Pause video offscreen to prevent simultaneous decode storms (§24, §66, §67)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !hasVideo) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry) return;
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, [hasVideo]);
 
   return (
     <div className="group relative rounded-[2.5rem] border border-white/15 bg-surface/40 p-8 sm:p-12 lg:p-16 backdrop-blur-md transition-all duration-500 hover:border-brand-primary/40 hover:shadow-[0_20px_70px_rgba(0,0,0,0.6)]">
@@ -258,6 +281,7 @@ function AriyanaProjectItem({
             {hasVideo && mediaConfig?.videoSrc ? (
               <div className="relative aspect-[16/10] w-full rounded-[2rem] overflow-hidden border border-white/20 bg-surface shadow-2xl group/img">
                 <video
+                  ref={videoRef}
                   autoPlay
                   loop
                   muted

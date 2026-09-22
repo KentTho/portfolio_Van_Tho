@@ -119,7 +119,7 @@ export function HorizontalTimelineSection({ dict }: HorizontalTimelineSectionPro
   return (
     <div
       ref={containerRef}
-      id="journey"
+      id="timeline"
       aria-label="Tiến trình phát triển kỹ thuật"
       className="relative w-full bg-canvas border-t border-white/10 overflow-hidden"
     >
