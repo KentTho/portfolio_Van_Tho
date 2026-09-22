@@ -75,6 +75,7 @@ const MILESTONES: readonly Milestone[] = [
  * 4. Graceful vertical stack fallback on mobile (< 768px).
  */
 export function HorizontalTimelineSection({ dict }: HorizontalTimelineSectionProps) {
+  void dict;
   const containerRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -123,7 +124,7 @@ export function HorizontalTimelineSection({ dict }: HorizontalTimelineSectionPro
       aria-label="Tiến trình phát triển kỹ thuật"
       className="relative w-full bg-canvas border-t border-white/10 overflow-hidden"
     >
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16 pt-20 pb-8">
+      <div className="mx-auto w-full max-w-[1440px] px-6 md:px-12 lg:px-16 pt-20 pb-8">
         {/* Caption Header */}
         <div className="flex items-center gap-3 mb-4">
           <span className="caption-pill">
@@ -131,8 +132,8 @@ export function HorizontalTimelineSection({ dict }: HorizontalTimelineSectionPro
             <span>EVOLUTION // MILESTONES</span>
           </span>
           <span className="h-px flex-1 bg-white/10" />
-          <span className="font-mono text-xs uppercase tracking-widest text-fg-subtle">
-            {dict.sections?.experience ? `02 // ${dict.sections.experience.toUpperCase()}` : "02 // HORIZONTAL TIMELINE"}
+          <span className="font-mono text-xs text-brand-primary-soft uppercase tracking-widest">
+            03 // MILESTONES
           </span>
         </div>
 

@@ -36,7 +36,7 @@ export function PublicFooter({
 
   return (
     <footer className="relative w-full border-t border-white/10 bg-canvas pt-20 pb-12 overflow-hidden">
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16">
+      <div className="mx-auto w-full max-w-[1440px] px-6 md:px-12 lg:px-16">
         {/* Top Controls & Navigation Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 pb-16 border-b border-white/10 items-start">
           {/* Brand Info & Mission (5 cols) */}

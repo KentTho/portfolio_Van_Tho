@@ -91,7 +91,7 @@ export function PublicHeader({
             : "bg-transparent border-b border-transparent"
         }`}
       >
-        <div className="mx-auto flex h-[72px] w-full max-w-[1680px] items-center justify-between px-6 md:px-12 lg:px-16">
+        <div className="mx-auto flex h-[72px] w-full max-w-[1440px] items-center justify-between px-6 md:px-12 lg:px-16">
           {/* Ariyana-style minimal Brand Logo */}
           <Link
             href={`/${locale}`}

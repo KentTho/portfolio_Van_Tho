@@ -36,7 +36,7 @@ export function TechMarqueeSection({
 
   return (
     <section aria-label="Công nghệ và công cụ" className="relative w-full border-t border-white/10 py-16 lg:py-24 overflow-hidden bg-canvas/60">
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16 mb-10">
+      <div className="mx-auto w-full max-w-[1440px] px-6 md:px-12 lg:px-16 mb-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="caption-pill mb-3 inline-flex">
@@ -55,7 +55,7 @@ export function TechMarqueeSection({
 
       {reduced ? (
         /* Reduced motion: clean static wrap */
-        <div className="mx-auto max-w-[1680px] px-6 md:px-12 lg:px-16">
+        <div className="mx-auto max-w-[1440px] px-6 md:px-12 lg:px-16">
           <div className="flex flex-wrap items-center justify-center gap-6">
             {VERIFIED_TECH_ITEMS.map((item) => (
               <div

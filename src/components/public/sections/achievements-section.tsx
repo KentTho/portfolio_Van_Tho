@@ -32,7 +32,7 @@ export function AchievementsSection({ achievements = [] }: AchievementsSectionPr
       aria-labelledby="achievements-heading"
       className="relative w-full border-t border-white/10 py-24 lg:py-36 overflow-hidden bg-canvas"
     >
-      <div className="mx-auto w-full max-w-[1680px] px-6 md:px-12 lg:px-16">
+      <div className="mx-auto w-full max-w-[1440px] px-6 md:px-12 lg:px-16">
         <div className="flex items-center gap-3 mb-8">
           <span className="caption-pill">
             <span className="size-1.5 rounded-full bg-brand-primary" />
